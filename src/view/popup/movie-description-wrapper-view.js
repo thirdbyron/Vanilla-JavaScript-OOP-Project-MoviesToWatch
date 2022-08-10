@@ -1,13 +1,13 @@
 import { createElement } from '../../render.js';
 
-const createMoviesListContainerTemplate = () => `<div class="film-details__top-container">
+const createMoviesDescriptionWrapperTemplate = () => `<div class="film-details__top-container">
 <div class="film-details__close">
   <button class="film-details__close-btn" type="button">close</button>
 </div> </div>`;
 
-export default class MoviesListContainerView {
+export default class MoviesDescriptionWrapperView {
   getTemplate() {
-    return createMoviesListContainerTemplate();
+    return createMoviesDescriptionWrapperTemplate();
   }
 
   getElement() {

@@ -1,6 +1,6 @@
 import { createElement } from '../../render.js';
 
-const createPopupTemplate = () => `<div class="film-details__bottom-container">
+const createMovieCommentsTemplate = () => `<div class="film-details__bottom-container">
 <section class="film-details__comments-wrap">
   <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
 
@@ -91,9 +91,9 @@ const createPopupTemplate = () => `<div class="film-details__bottom-container">
 </section>
 </div>`;
 
-export default class PopupView {
+export default class MovieCommentsView {
   getTemplate() {
-    return createPopupTemplate();
+    return createMovieCommentsTemplate();
   }
 
   getElement() {
