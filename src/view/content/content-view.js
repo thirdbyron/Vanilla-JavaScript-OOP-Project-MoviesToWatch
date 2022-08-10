@@ -2,7 +2,7 @@ import { createElement } from '../../render.js';
 
 const createContentTemplate = () => '<section class="films"> </section>';
 
-export default class SortingBarView {
+export default class ContentView {
   getTemplate() {
     return createContentTemplate();
   }
