@@ -1,8 +1,8 @@
 import { createElement } from '../../render.js';
 
-const createMovieCardTemplate = () => `<article class="film-card">
+const createMovieCardTemplate = (movie) => `<article class="film-card">
 <a class="film-card__link">
-  <h3 class="film-card__title">The Dance of Life</h3>
+  <h3 class="film-card__title">${movie.film_info.title}</h3>
   <p class="film-card__rating">8.3</p>
   <p class="film-card__info">
     <span class="film-card__year">1929</span>
@@ -21,8 +21,12 @@ const createMovieCardTemplate = () => `<article class="film-card">
 </article>`;
 
 export default class MovieCardView {
+  constructor (movie) {
+    this.movie = movie;
+  }
+
   getTemplate() {
-    return createMovieCardTemplate();
+    return createMovieCardTemplate(this.movie);
   }
 
   getElement() {

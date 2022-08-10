@@ -4,7 +4,6 @@ import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import moviesListView from '../view/content/movies-list-view.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import ShowMoreButtonView from '../view/content/show-more-button-view.js';
-import { INITIAL_MOVIE_CARDS_QUANTITY } from '../const.js';
 
 
 export default class ContentPresenter {
@@ -13,14 +12,17 @@ export default class ContentPresenter {
   moviesListComponent = new moviesListView;
   showMoreButtonComponent = new ShowMoreButtonView;
 
-  init(mainContainer) {
+  init(mainContainer, moviesModel) {
+
+    this.movies = moviesModel.movies;
+
     render(this.contentComponent, mainContainer);
     render(this.moviesListWrapperComponent, this.contentComponent.getElement());
     render(this.moviesListComponent, this.moviesListWrapperComponent.getElement());
     render(this.showMoreButtonComponent, this.moviesListWrapperComponent.getElement());
 
-    for (let i = 1; i <= INITIAL_MOVIE_CARDS_QUANTITY; i++) {
-      render(new MovieCardView, this.moviesListComponent.getElement());
+    for (let i = 0; i < this.movies.length; i++) {
+      render(new MovieCardView(this.movies[i]), this.moviesListComponent.getElement());
     }
   }
 }
