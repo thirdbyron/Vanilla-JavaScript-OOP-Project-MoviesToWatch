@@ -1,10 +1,10 @@
-import { createElement } from '../render.js';
+import { createElement } from '../../render.js';
 
-const createContentTemplate = () => '<section class="films"> </section>';
+const createMoviesListTemplate = () => '<div class="films-list__container"> </div>';
 
-export default class SortingBarView {
+export default class MoviesListView {
   getTemplate() {
-    return createContentTemplate();
+    return createMoviesListTemplate();
   }
 
   getElement() {
