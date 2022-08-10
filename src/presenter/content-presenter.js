@@ -8,19 +8,19 @@ import { INITIAL_MOVIE_CARDS_QUANTITY } from '../const.js';
 
 
 export default class ContentPresenter {
-  contentElement = new ContentView;
-  moviesListElement = new MoviesListView;
-  moviesListContainerElement = new MoviesListContainerView;
-  showMoreButtonElement = new ShowMoreButtonView;
+  contentComponent = new ContentView;
+  moviesListComponent = new MoviesListView;
+  moviesListContainerComponent = new MoviesListContainerView;
+  showMoreButtonComponent = new ShowMoreButtonView;
 
   init(mainContainer) {
     render(this.contentElement, mainContainer);
-    render(this.moviesListElement, this.contentElement.getElement());
-    render(this.moviesListContainerElement, this.moviesListElement.getElement());
-    render(this.showMoreButtonElement, this.moviesListElement.getElement());
+    render(this.moviesListComponent, this.contentElement.getElement());
+    render(this.moviesListContainerComponent, this.moviesListComponent.getElement());
+    render(this.showMoreButtonComponent, this.moviesListComponent.getElement());
 
     for (let i = 1; i <= INITIAL_MOVIE_CARDS_QUANTITY; i++) {
-      render(new MovieCardView, this.moviesListContainerElement.getElement());
+      render(new MovieCardView, this.moviesListContainerComponent.getElement());
     }
 
   }
