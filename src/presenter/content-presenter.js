@@ -29,8 +29,9 @@ export default class ContentPresenter {
 
       // Тестовое добавление обработчика по клику на попап для удобства проверки:
 
+      const popupPresenter = new PopupPresenter();
+
       this.moviesListComponent.getElement().lastChild.addEventListener('click', () => {
-        const popupPresenter = new PopupPresenter();
         popupPresenter.init(mainContainer.parentNode, this.movies[i]);
       });
 

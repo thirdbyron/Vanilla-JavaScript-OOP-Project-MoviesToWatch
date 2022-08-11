@@ -1,5 +1,7 @@
 import { getRandomInteger } from '../utils.js';
 
+const MAX_COMENTS = 4;
+
 const MOVIE_FISH_DICTIONARY = {
   posters: {
     'Made for each other': './images/posters/made-for-each-other.png',
@@ -33,8 +35,8 @@ const generateRandomMovieDescription = (descriptions) => {
 
 const generateRandomCommentsId = () => {
   const ids = [];
-  for (let i = 0; i < 3; i++) {
-    const randomId = getRandomInteger(1, 3);
+  for (let i = 0; i < MAX_COMENTS; i++) {
+    const randomId = getRandomInteger(1, MAX_COMENTS);
     ids.push(randomId);
   }
   return ids;
@@ -47,9 +49,7 @@ export const generateMovieFish = () => {
 
   return {
     'id': '0',
-    'comments': [
-      ...generateRandomCommentsId()
-    ],
+    'comments': [...new Set(generateRandomCommentsId())],
     'film_info': {
       'title': randomTitle,
       'alternative_title': 'Laziness Who Sold Themselves',

@@ -19,8 +19,8 @@ export default class PopupPresenter {
 
   init(mainContainer, movie) {
 
-    const commentPresenter = new PopupCommentsPresenter;
-    const commentsModel = new CommentsModel;
+    this.commentPresenter = new PopupCommentsPresenter;
+    this.commentsModel = new CommentsModel;
 
     render(this.wrapperComponent, mainContainer);
     render(this.contentComponent, this.wrapperComponent.getElement());
@@ -38,9 +38,9 @@ export default class PopupPresenter {
 
     render(this.controlsComponent, this.descriptionWrapperComponent.getElement());
 
-    const comments = commentsModel.comments;
+    const comments = this.commentsModel.comments;
 
-    commentPresenter.init(this.descriptionWrapperComponent.getElement(), movie.comments, comments);
+    this.commentPresenter.init(this.descriptionWrapperComponent.getElement(), movie.comments, comments);
 
   }
 
