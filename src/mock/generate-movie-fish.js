@@ -39,10 +39,10 @@ export const generateMovieFish = () => {
       'age_rating': 0,
       'director': 'Tom Ford',
       'writers': [
-        'Takeshi Kitano'
+        'Takeshi Kitano', 'Kitano Keshi'
       ],
       'actors': [
-        'Morgan Freeman'
+        'Morgan Freeman', 'Elvis Cruise', 'Ronaldo DiCaprio'
       ],
       'release': {
         'date': '2019-05-11T00:00:00.000Z',
@@ -50,7 +50,7 @@ export const generateMovieFish = () => {
       },
       'runtime': 77,
       'genre': [
-        'Comedy'
+        'Comedy', 'Drama'
       ],
       'description': randomDescription
     },

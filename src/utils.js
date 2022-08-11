@@ -9,6 +9,8 @@ export const getRandomInteger = (a = 0, b = 1) => {
 
 export const formatRawDateToRealeaseYear = (releaseDate) => dayjs(releaseDate).format('YYYY');
 
+export const formatRawDateToRealeaseDate = (releaseDate) => dayjs(releaseDate).format('D MMMM YYYY');
+
 export const translateMinutesToRuntime = (minutes) => {
 
   if (minutes > MINUTES_IN_ONE_HOUR) {
@@ -49,4 +51,20 @@ export const validateCommentsNumber = (comments) => {
   return '1 comment';
 };
 
+export const getNameOfSectionWithGenres = (genres) => {
+  if (genres.length > 1) {
+    return 'Genres';
+  }
+  return 'Genre';
+};
 
+export const renderGenresListTemplate = (genres) => {
+  if (genres.length > 0) {
+    let genresListTemplate = '';
+    for (let i = 0; i < genres.length; i++) {
+      genresListTemplate += `<span class="film-details__genre">${genres[i]}</span>`;
+    }
+    return genresListTemplate;
+  }
+  return '';
+};

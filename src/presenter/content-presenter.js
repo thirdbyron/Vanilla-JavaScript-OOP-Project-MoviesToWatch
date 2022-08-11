@@ -1,9 +1,12 @@
 import { render } from '../render.js';
+
 import ContentView from '../view/content/content-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListView from '../view/content/movies-list-view.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import ShowMoreButtonView from '../view/content/show-more-button-view.js';
+
+import PopupPresenter from './popup-presenter.js';
 
 
 export default class ContentPresenter {
@@ -23,6 +26,16 @@ export default class ContentPresenter {
 
     for (let i = 0; i < this.movies.length; i++) {
       render(new MovieCardView(this.movies[i]), this.moviesListComponent.getElement());
+
+      // Тестовое добавление обработчика по клику на попап для удобства проверки:
+
+      this.moviesListComponent.getElement().lastChild.addEventListener('click', () => {
+        const popupPresenter = new PopupPresenter();
+        popupPresenter.init(mainContainer.parentNode, this.movies[i]);
+      });
+
+      // ---
+
     }
   }
 }

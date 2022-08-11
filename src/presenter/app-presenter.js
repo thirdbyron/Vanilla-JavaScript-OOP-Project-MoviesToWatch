@@ -1,9 +1,11 @@
 import { render } from '../render.js';
+
 import ProfileThumbnailView from '../view/profile-thumbnail-view.js';
 import NavigationBarView from '../view/navigation-bar-view.js';
 import SortingBarView from '../view/sorting-bar-view.js';
 import ContentPresenter from './content-presenter.js';
 import MoviesModel from '../model/movies-model.js';
+
 
 export default class AppPresenter {
 
