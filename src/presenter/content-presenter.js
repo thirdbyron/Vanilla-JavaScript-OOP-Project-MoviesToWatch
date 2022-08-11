@@ -32,10 +32,8 @@ export default class ContentPresenter {
     for (let i = 0; i < this.movies.length; i++) {
       render(new MovieCardView(this.movies[i]), this.moviesListComponent.getElement());
 
-      const popupPresenter = new PopupPresenter();
-
       this.moviesListComponent.getElement().lastChild.addEventListener('click', () => {
-        popupPresenter.init(mainContainer.parentNode, this.movies[i], this.commentsModel.comments);
+        new PopupPresenter().init(mainContainer.parentNode, this.movies[i], this.commentsModel.comments);
       });
 
     }

@@ -34,12 +34,17 @@ const generateRandomMovieDescription = (descriptions) => {
 };
 
 const generateRandomCommentsId = () => {
-  const ids = [];
-  for (let i = 0; i < MAX_MOVIE_COMENTS; i++) {
-    const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
-    ids.push(randomId);
+  const idNumbers = [];
+  const randomMaximumOfComments = getRandomInteger(0, MAX_MOVIE_COMENTS);
+  if (randomMaximumOfComments > 0) {
+    for (let i = 0; i < randomMaximumOfComments; i++) {
+      const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
+      idNumbers.push(randomId);
+    }
+  } else {
+    idNumbers.push(null);
   }
-  return ids;
+  return idNumbers;
 };
 
 export const generateMovieFish = () => {

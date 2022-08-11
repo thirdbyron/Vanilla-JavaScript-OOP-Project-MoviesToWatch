@@ -6,7 +6,7 @@ const COMMENT_FISH_DICTIONARY = {
   emotions: ['smile', 'sleeping', 'puke', 'angry']
 };
 
-const getIdNumber = () => {
+const countIdNumber = () => {
   let counter = 0;
   return function () {
     counter += 1;
@@ -14,7 +14,7 @@ const getIdNumber = () => {
   };
 };
 
-const tryf = getIdNumber();
+const getIdNumber = countIdNumber();
 
 export const generateCommentFish = () => {
 
@@ -25,7 +25,7 @@ export const generateCommentFish = () => {
   const randomEmotion = COMMENT_FISH_DICTIONARY.emotions[getRandomInteger(0, COMMENT_FISH_DICTIONARY.emotions.length - 1)];
 
   return {
-    'id': tryf(),
+    'id': getIdNumber(),
     'author': randomAuthor,
     'comment': randomCommentText,
     'date': '2019-05-11T16:12:32.554Z',

@@ -10,26 +10,18 @@ import PopupCommentsPresenter from './popup-comments-presenter.js';
 
 export default class PopupPresenter {
 
-  wrapperComponent = new PopupWrapperView;
-  contentComponent = new PopupContentView;
-  descriptionWrapperComponent = new MovieDescriptionWrapperView;
-  controlsComponent = new MovieControlsView;
-
-  remove(previousPopup) {
-    previousPopup.remove();
-    this.wrapperComponent.removeElement();
-    this.contentComponent.removeElement();
-    this.descriptionWrapperComponent.removeElement();
-    this.controlsComponent.removeElement();
-  }
-
   init(mainContainer, movie, comments) {
 
-    const previousPopup = mainContainer.querySelector('.film-details');
+    const previousPopup = mainContainer.querySelector('.film-details') || null;
 
     if (previousPopup) {
-      this.remove(previousPopup);
+      previousPopup.remove();
     }
+
+    this.wrapperComponent = new PopupWrapperView;
+    this.contentComponent = new PopupContentView;
+    this.descriptionWrapperComponent = new MovieDescriptionWrapperView;
+    this.controlsComponent = new MovieControlsView;
 
     this.commentPresenter = new PopupCommentsPresenter;
 
@@ -38,8 +30,8 @@ export default class PopupPresenter {
     render(this.descriptionWrapperComponent, this.contentComponent.getElement());
 
     this.descriptionWrapperComponent.getElement().children[0].children[0].addEventListener('click', () => {
-      const openedPopup = mainContainer.querySelector('.film-details');
-      this.remove(openedPopup);
+      const currentPopup = mainContainer.querySelector('.film-details');
+      currentPopup.remove();
     });
 
     render(new MovieDescriptionView(movie), this.descriptionWrapperComponent.getElement());
