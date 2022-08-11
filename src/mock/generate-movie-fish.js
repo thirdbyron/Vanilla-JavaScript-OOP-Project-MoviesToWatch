@@ -1,6 +1,6 @@
 import { getRandomInteger } from '../utils.js';
 
-const MAX_COMENTS = 4;
+const MAX_MOVIE_COMENTS = 10;
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -35,8 +35,8 @@ const generateRandomMovieDescription = (descriptions) => {
 
 const generateRandomCommentsId = () => {
   const ids = [];
-  for (let i = 0; i < MAX_COMENTS; i++) {
-    const randomId = getRandomInteger(1, MAX_COMENTS);
+  for (let i = 0; i < MAX_MOVIE_COMENTS; i++) {
+    const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
     ids.push(randomId);
   }
   return ids;

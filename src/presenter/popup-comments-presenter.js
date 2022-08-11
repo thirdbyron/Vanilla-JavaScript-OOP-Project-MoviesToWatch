@@ -10,14 +10,14 @@ export default class PopupCommentsPresenter {
   commentsListComponent = new MovieCommentsListView;
   addCommentFormComponent = new MovieAddCommentFormView;
 
-  init(mainContainer, commentsIds, comments) {
+  init(mainContainer, commentIdNumbers, comments) {
     render(this.commentsWrapperComponent, mainContainer);
     render(this.commentsListComponent, this.commentsWrapperComponent.getElement());
     render(this.addCommentFormComponent, this.commentsWrapperComponent.getElement());
 
 
-    for (let i = 0; i < commentsIds.length; i++) {
-      const rightComment = comments.find((comment) => comment.id === commentsIds[i]);
+    for (let i = 0; i < commentIdNumbers.length; i++) {
+      const rightComment = comments.find((comment) => comment.id === commentIdNumbers[i]);
       if (rightComment === undefined) {
         continue;
       }

@@ -8,12 +8,17 @@ import ShowMoreButtonView from '../view/content/show-more-button-view.js';
 
 import PopupPresenter from './popup-presenter.js';
 
+import CommentsModel from '../model/comments-model.js';
+
 
 export default class ContentPresenter {
+
   contentComponent = new ContentView;
   moviesListWrapperComponent = new MoviesListWrapperView;
   moviesListComponent = new MoviesListView;
   showMoreButtonComponent = new ShowMoreButtonView;
+
+  commentsModel = new CommentsModel;
 
   init(mainContainer, moviesModel) {
 
@@ -27,15 +32,11 @@ export default class ContentPresenter {
     for (let i = 0; i < this.movies.length; i++) {
       render(new MovieCardView(this.movies[i]), this.moviesListComponent.getElement());
 
-      // Тестовое добавление обработчика по клику на попап для удобства проверки:
-
       const popupPresenter = new PopupPresenter();
 
       this.moviesListComponent.getElement().lastChild.addEventListener('click', () => {
-        popupPresenter.init(mainContainer.parentNode, this.movies[i]);
+        popupPresenter.init(mainContainer.parentNode, this.movies[i], this.commentsModel.comments);
       });
-
-      // ---
 
     }
   }

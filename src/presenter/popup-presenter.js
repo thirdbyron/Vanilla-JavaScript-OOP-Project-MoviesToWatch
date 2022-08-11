@@ -8,8 +8,6 @@ import MovieControlsView from '../view/popup/movie-controls-view.js';
 
 import PopupCommentsPresenter from './popup-comments-presenter.js';
 
-import CommentsModel from '../model/comments-model.js';
-
 export default class PopupPresenter {
 
   wrapperComponent = new PopupWrapperView;
@@ -17,28 +15,36 @@ export default class PopupPresenter {
   descriptionWrapperComponent = new MovieDescriptionWrapperView;
   controlsComponent = new MovieControlsView;
 
-  init(mainContainer, movie) {
+  remove(previousPopup) {
+    previousPopup.remove();
+    this.wrapperComponent.removeElement();
+    this.contentComponent.removeElement();
+    this.descriptionWrapperComponent.removeElement();
+    this.controlsComponent.removeElement();
+  }
+
+  init(mainContainer, movie, comments) {
+
+    const previousPopup = mainContainer.querySelector('.film-details');
+
+    if (previousPopup) {
+      this.remove(previousPopup);
+    }
 
     this.commentPresenter = new PopupCommentsPresenter;
-    this.commentsModel = new CommentsModel;
 
     render(this.wrapperComponent, mainContainer);
     render(this.contentComponent, this.wrapperComponent.getElement());
     render(this.descriptionWrapperComponent, this.contentComponent.getElement());
 
-    // Тестовое добавление обработчика по клику на крестик попапа для удобства проверки:
-
     this.descriptionWrapperComponent.getElement().children[0].children[0].addEventListener('click', () => {
-      mainContainer.querySelector('.film-details').remove();
+      const openedPopup = mainContainer.querySelector('.film-details');
+      this.remove(openedPopup);
     });
-
-    // ---
 
     render(new MovieDescriptionView(movie), this.descriptionWrapperComponent.getElement());
 
     render(this.controlsComponent, this.descriptionWrapperComponent.getElement());
-
-    const comments = this.commentsModel.comments;
 
     this.commentPresenter.init(this.descriptionWrapperComponent.getElement(), movie.comments, comments);
 
