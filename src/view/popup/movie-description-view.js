@@ -1,5 +1,21 @@
 import { createElement } from '../../render.js';
-import { formatRawDateToRealeaseDate, translateMinutesToRuntime, getNameOfSectionWithGenres, renderGenresListTemplate } from '../../utils.js';
+import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils.js';
+
+const getNameOfSectionWithGenres = (genres) => {
+  const nameOfSectionWithGenres = genres.length > 1 ? 'Genres' : 'Genre';
+  return nameOfSectionWithGenres;
+};
+
+const createGenresListTemplate = (genres) => {
+  if (genres.length > 0) {
+    let genresListTemplate = '';
+    for (let i = 0; i < genres.length; i++) {
+      genresListTemplate += `<span class="film-details__genre">${genres[i]}</span>`;
+    }
+    return genresListTemplate;
+  }
+  return '';
+};
 
 const createMovieDescriptionTemplate = (movie) => {
 
@@ -56,7 +72,7 @@ const createMovieDescriptionTemplate = (movie) => {
       <tr class="film-details__row">
         <td class="film-details__term">${getNameOfSectionWithGenres(genre)}</td>
         <td class="film-details__cell">
-          ${renderGenresListTemplate(genre)}
+          ${createGenresListTemplate(genre)}
       </tr>
     </table>
   

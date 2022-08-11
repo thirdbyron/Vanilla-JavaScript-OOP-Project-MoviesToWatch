@@ -1,16 +1,27 @@
 import { getRandomInteger } from '../utils.js';
-import { MOVIE_TITLES_DICTIONARY, MOVIE_DESCRIPTIONS } from '../temporary_data.js';
 
-const generateRandomMovieTitle = (dictionary) => {
-  const titles = Object.keys(dictionary);
+const MOVIE_FISH_DICTIONARY = {
+  posters: {
+    'Made for each other': './images/posters/made-for-each-other.png',
+    'Popeye meets Sindbad': './images/posters/popeye-meets-sinbad.png',
+    'Sagebrush trail': './images/posters/sagebrush-trail.jpg',
+    'Santa Claus conquers the martians': './images/posters/santa-claus-conquers-the-martians.jpg',
+    'The dance of life': './images/posters/the-dance-of-life.jpg',
+    'The greate flamarion': './images/posters/the-great-flamarion.jpg',
+    'The man with the golden': './images/posters/the-man-with-the-golden-arm.jpg'
+  },
+  descriptions: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.', 'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.', 'Cras aliqu varius magna, non portafgsgddgsQWEJKLggula gfdhj feughhiat eget.']
+};
+
+
+const generateRandomMovieTitle = (postersDictionary) => {
+  const titles = Object.keys(postersDictionary);
 
   return titles[getRandomInteger(0, titles.length - 1)];
 };
 
 const generateRandomMovieDescription = (descriptions) => {
-
   const descriptionLength = getRandomInteger(1, descriptions.length);
-
   let randomDescription = '';
 
   for (let i = 0; i < descriptionLength; i++) {
@@ -20,16 +31,24 @@ const generateRandomMovieDescription = (descriptions) => {
   return randomDescription;
 };
 
-export const generateMovieFish = () => {
+const generateRandomCommentsId = () => {
+  const ids = [];
+  for (let i = 0; i < 3; i++) {
+    const randomId = getRandomInteger(1, 3);
+    ids.push(randomId);
+  }
+  return ids;
+};
 
-  const randomTitle = generateRandomMovieTitle(MOVIE_TITLES_DICTIONARY);
-  const posterLink = MOVIE_TITLES_DICTIONARY[randomTitle];
-  const randomDescription = generateRandomMovieDescription(MOVIE_DESCRIPTIONS);
+export const generateMovieFish = () => {
+  const randomTitle = generateRandomMovieTitle(MOVIE_FISH_DICTIONARY.posters);
+  const posterLink = MOVIE_FISH_DICTIONARY.posters[randomTitle];
+  const randomDescription = generateRandomMovieDescription(MOVIE_FISH_DICTIONARY.descriptions);
 
   return {
     'id': '0',
     'comments': [
-      'test comment 1', 'test comment 2'
+      ...generateRandomCommentsId()
     ],
     'film_info': {
       'title': randomTitle,

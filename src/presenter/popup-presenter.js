@@ -5,7 +5,10 @@ import PopupContentView from '../view/popup/popup-content-view.js';
 import MovieDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
 import MovieDescriptionView from '../view/popup/movie-description-view.js';
 import MovieControlsView from '../view/popup/movie-controls-view.js';
-// import MovieCommentsView from '../view/popup/movie-comments-view.js';
+
+import PopupCommentsPresenter from './popup-comments-presenter.js';
+
+import CommentsModel from '../model/comments-model.js';
 
 export default class PopupPresenter {
 
@@ -14,8 +17,11 @@ export default class PopupPresenter {
   descriptionWrapperComponent = new MovieDescriptionWrapperView;
   controlsComponent = new MovieControlsView;
 
+  init(mainContainer, movie) {
 
-  init(mainContainer, moviesModel) {
+    const commentPresenter = new PopupCommentsPresenter;
+    const commentsModel = new CommentsModel;
+
     render(this.wrapperComponent, mainContainer);
     render(this.contentComponent, this.wrapperComponent.getElement());
     render(this.descriptionWrapperComponent, this.contentComponent.getElement());
@@ -28,9 +34,13 @@ export default class PopupPresenter {
 
     // ---
 
-    render(new MovieDescriptionView(moviesModel), this.descriptionWrapperComponent.getElement());
+    render(new MovieDescriptionView(movie), this.descriptionWrapperComponent.getElement());
 
     render(this.controlsComponent, this.descriptionWrapperComponent.getElement());
+
+    const comments = commentsModel.comments;
+
+    commentPresenter.init(this.descriptionWrapperComponent.getElement(), movie.comments, comments);
 
   }
 
