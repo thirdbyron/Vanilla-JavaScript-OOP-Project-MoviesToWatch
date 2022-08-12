@@ -10,8 +10,8 @@ import PopupCommentsPresenter from './popup-comments-presenter.js';
 
 export default class PopupPresenter {
 
+  #mainContainer = null;
   #previousPopup = null;
-  #currentPopup = null;
 
   #movie = null;
   #comments = null;
@@ -23,7 +23,22 @@ export default class PopupPresenter {
 
   #commentPresenter = null;
 
+  #onClickClose = () => {
+    const currentPopup = this.#mainContainer.querySelector('.film-details');
+    currentPopup.remove();
+    this.#mainContainer.classList.remove('hide-overflow');
+    window.removeEventListener('keydown', this.#onEscapeClose);
+  };
+
+  #onEscapeClose = (evt) => {
+    if (evt.code === 'Escape') {
+      this.#onClickClose();
+    }
+  };
+
   init(mainContainer, movie, comments) {
+
+    this.#mainContainer = mainContainer;
 
     this.#movie = movie;
     this.#comments = comments;
@@ -32,6 +47,8 @@ export default class PopupPresenter {
 
     if (this.#previousPopup) {
       this.#previousPopup.remove();
+    } else if (!(mainContainer.classList.contains('hide-overflow'))) {
+      mainContainer.classList.add('hide-overflow');
     }
 
     this.#wrapperComponent = new PopupWrapperView;
@@ -45,11 +62,9 @@ export default class PopupPresenter {
     render(this.#contentComponent, this.#wrapperComponent.element);
     render(this.#descriptionWrapperComponent, this.#contentComponent.element);
 
-    this.#currentPopup = mainContainer.querySelector('.film-details');
+    this.#descriptionWrapperComponent.element.children[0].children[0].addEventListener('click', this.#onClickClose);
 
-    this.#descriptionWrapperComponent.element.children[0].children[0].addEventListener('click', () => {
-      this.#currentPopup.remove();
-    });
+    window.addEventListener('keydown', this.#onEscapeClose);
 
     render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
 
