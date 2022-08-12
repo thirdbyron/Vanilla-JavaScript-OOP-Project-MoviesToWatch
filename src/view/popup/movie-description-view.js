@@ -84,23 +84,26 @@ const createMovieDescriptionTemplate = (movie) => {
 };
 
 export default class MovieDescriptionView {
+  #element = null;
+  #movie = null;
+
   constructor (movie) {
-    this.movie = movie;
+    this.#movie = movie;
   }
 
-  getTemplate() {
-    return createMovieDescriptionTemplate(this.movie);
+  get template() {
+    return createMovieDescriptionTemplate(this.#movie);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

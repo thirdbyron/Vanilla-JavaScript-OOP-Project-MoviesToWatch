@@ -13,27 +13,29 @@ import CommentsModel from '../model/comments-model.js';
 
 export default class ContentPresenter {
 
-  contentComponent = new ContentView;
-  moviesListWrapperComponent = new MoviesListWrapperView;
-  moviesListComponent = new MoviesListView;
-  showMoreButtonComponent = new ShowMoreButtonView;
+  #movies = null;
 
-  commentsModel = new CommentsModel;
+  #contentComponent = new ContentView;
+  #moviesListWrapperComponent = new MoviesListWrapperView;
+  #moviesListComponent = new MoviesListView;
+  #showMoreButtonComponent = new ShowMoreButtonView;
+
+  #commentsModel = new CommentsModel;
 
   init(mainContainer, moviesModel) {
 
-    this.movies = moviesModel.movies;
+    this.#movies = moviesModel.movies;
 
-    render(this.contentComponent, mainContainer);
-    render(this.moviesListWrapperComponent, this.contentComponent.getElement());
-    render(this.moviesListComponent, this.moviesListWrapperComponent.getElement());
-    render(this.showMoreButtonComponent, this.moviesListWrapperComponent.getElement());
+    render(this.#contentComponent, mainContainer);
+    render(this.#moviesListWrapperComponent, this.#contentComponent.element);
+    render(this.#moviesListComponent, this.#moviesListWrapperComponent.element);
+    render(this.#showMoreButtonComponent, this.#moviesListWrapperComponent.element);
 
-    for (let i = 0; i < this.movies.length; i++) {
-      render(new MovieCardView(this.movies[i]), this.moviesListComponent.getElement());
+    for (let i = 0; i < this.#movies.length; i++) {
+      render(new MovieCardView(this.#movies[i]), this.#moviesListComponent.element);
 
-      this.moviesListComponent.getElement().lastChild.addEventListener('click', () => {
-        new PopupPresenter().init(mainContainer.parentNode, this.movies[i], this.commentsModel.comments);
+      this.#moviesListComponent.element.lastChild.addEventListener('click', () => {
+        new PopupPresenter().init(mainContainer.parentNode, this.#movies[i], this.#commentsModel.comments);
       });
 
     }

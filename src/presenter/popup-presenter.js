@@ -10,36 +10,54 @@ import PopupCommentsPresenter from './popup-comments-presenter.js';
 
 export default class PopupPresenter {
 
+  #previousPopup = null;
+  #currentPopup = null;
+
+  #movie = null;
+  #comments = null;
+
+  #wrapperComponent = null;
+  #contentComponent = null;
+  #descriptionWrapperComponent = null;
+  #controlsComponent = null;
+
+  #commentPresenter = null;
+
   init(mainContainer, movie, comments) {
 
-    const previousPopup = mainContainer.querySelector('.film-details') || null;
+    this.#movie = movie;
+    this.#comments = comments;
 
-    if (previousPopup) {
-      previousPopup.remove();
+    this.#previousPopup = mainContainer.querySelector('.film-details') || null;
+
+    if (this.#previousPopup) {
+      this.#previousPopup.remove();
     }
 
-    this.wrapperComponent = new PopupWrapperView;
-    this.contentComponent = new PopupContentView;
-    this.descriptionWrapperComponent = new MovieDescriptionWrapperView;
-    this.controlsComponent = new MovieControlsView;
+    this.#wrapperComponent = new PopupWrapperView;
+    this.#contentComponent = new PopupContentView;
+    this.#descriptionWrapperComponent = new MovieDescriptionWrapperView;
+    this.#controlsComponent = new MovieControlsView;
 
-    this.commentPresenter = new PopupCommentsPresenter;
+    this.#commentPresenter = new PopupCommentsPresenter;
 
-    render(this.wrapperComponent, mainContainer);
-    render(this.contentComponent, this.wrapperComponent.getElement());
-    render(this.descriptionWrapperComponent, this.contentComponent.getElement());
+    render(this.#wrapperComponent, mainContainer);
+    render(this.#contentComponent, this.#wrapperComponent.element);
+    render(this.#descriptionWrapperComponent, this.#contentComponent.element);
 
-    this.descriptionWrapperComponent.getElement().children[0].children[0].addEventListener('click', () => {
-      const currentPopup = mainContainer.querySelector('.film-details');
-      currentPopup.remove();
+    this.#currentPopup = mainContainer.querySelector('.film-details');
+
+    this.#descriptionWrapperComponent.element.children[0].children[0].addEventListener('click', () => {
+      this.#currentPopup.remove();
     });
 
-    render(new MovieDescriptionView(movie), this.descriptionWrapperComponent.getElement());
+    render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
 
-    render(this.controlsComponent, this.descriptionWrapperComponent.getElement());
+    render(this.#controlsComponent, this.#descriptionWrapperComponent.element);
 
-    this.commentPresenter.init(this.descriptionWrapperComponent.getElement(), movie.comments, comments);
+    this.#commentPresenter.init(this.#descriptionWrapperComponent.element, this.#movie.comments, this.#comments);
 
   }
 
 }
+
