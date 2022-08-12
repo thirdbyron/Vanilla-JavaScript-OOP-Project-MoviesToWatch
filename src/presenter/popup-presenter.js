@@ -11,7 +11,6 @@ import PopupCommentsPresenter from './popup-comments-presenter.js';
 export default class PopupPresenter {
 
   #mainContainer = null;
-  #previousPopup = null;
 
   #movie = null;
   #comments = null;
@@ -24,8 +23,7 @@ export default class PopupPresenter {
   #commentPresenter = null;
 
   #onClickClose = () => {
-    const currentPopup = this.#mainContainer.querySelector('.film-details');
-    currentPopup.remove();
+    this.#mainContainer.querySelector('.film-details').remove();
     this.#mainContainer.classList.remove('hide-overflow');
     window.removeEventListener('keydown', this.#onEscapeClose);
   };
@@ -36,6 +34,18 @@ export default class PopupPresenter {
     }
   };
 
+  #removePreviousPopup() {
+    if (this.#mainContainer.querySelector('.film-details')) {
+      this.#mainContainer.querySelector('.film-details').remove();
+    }
+  }
+
+  #hideOverflow() {
+    if (!(this.#mainContainer.classList.contains('hide-overflow'))) {
+      this.#mainContainer.classList.add('hide-overflow');
+    }
+  }
+
   init(mainContainer, movie, comments) {
 
     this.#mainContainer = mainContainer;
@@ -43,13 +53,9 @@ export default class PopupPresenter {
     this.#movie = movie;
     this.#comments = comments;
 
-    this.#previousPopup = mainContainer.querySelector('.film-details') || null;
+    this.#removePreviousPopup();
 
-    if (this.#previousPopup) {
-      this.#previousPopup.remove();
-    } else if (!(mainContainer.classList.contains('hide-overflow'))) {
-      mainContainer.classList.add('hide-overflow');
-    }
+    this.#hideOverflow();
 
     this.#wrapperComponent = new PopupWrapperView;
     this.#contentComponent = new PopupContentView;
@@ -75,4 +81,3 @@ export default class PopupPresenter {
   }
 
 }
-

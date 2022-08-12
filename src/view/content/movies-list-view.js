@@ -20,4 +20,5 @@ export default class MoviesListView {
   removeElement() {
     this.#element = null;
   }
+
 }

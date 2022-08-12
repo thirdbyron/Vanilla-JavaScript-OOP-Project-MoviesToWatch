@@ -40,8 +40,6 @@ const generateRandomCommentsId = () => {
       const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
       idNumbers.push(randomId);
     }
-  } else {
-    idNumbers.push(null);
   }
   return idNumbers;
 };
