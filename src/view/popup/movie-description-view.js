@@ -1,10 +1,7 @@
 import { createElement } from '../../render.js';
 import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils.js';
 
-const getNameOfSectionWithGenres = (genres) => {
-  const nameOfSectionWithGenres = genres.length > 1 ? 'Genres' : 'Genre';
-  return nameOfSectionWithGenres;
-};
+const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 
 const createGenresListTemplate = (genres) => {
   if (genres.length > 0) {
