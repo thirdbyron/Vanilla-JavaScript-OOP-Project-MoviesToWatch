@@ -25,11 +25,11 @@ export default class PopupPresenter {
   #onClickClose = () => {
     this.#mainContainer.querySelector('.film-details').remove();
     this.#mainContainer.classList.remove('hide-overflow');
-    window.removeEventListener('keydown', this.#onEscapeClose);
+    window.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
-  #onEscapeClose = (evt) => {
-    if (evt.code === 'Escape') {
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.#onClickClose();
     }
   };
@@ -70,7 +70,7 @@ export default class PopupPresenter {
 
     this.#descriptionWrapperComponent.element.children[0].children[0].addEventListener('click', this.#onClickClose);
 
-    window.addEventListener('keydown', this.#onEscapeClose);
+    window.addEventListener('keydown', this.#onEscKeyDown);
 
     render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
 
