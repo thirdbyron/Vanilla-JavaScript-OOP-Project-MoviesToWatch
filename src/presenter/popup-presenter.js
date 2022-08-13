@@ -22,20 +22,6 @@ export default class PopupPresenter {
 
   #commentPresenter = null;
 
-  #handlePopupCloseClick = (evt) => {
-    evt.preventDefault();
-    this.#mainContainer.querySelector('.film-details').remove();
-    this.#mainContainer.classList.remove('hide-overflow');
-    window.removeEventListener('keydown', this.#onEscKeyDown);
-  };
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#handlePopupCloseClick(evt);
-    }
-  };
-
   #removePreviousPopup() {
     if (this.#mainContainer.querySelector('.film-details')) {
       this.#mainContainer.querySelector('.film-details').remove();
@@ -81,5 +67,19 @@ export default class PopupPresenter {
     this.#commentPresenter.init(this.#descriptionWrapperComponent.element, this.#movie.comments, this.#comments);
 
   }
+
+  #handlePopupCloseClick = (evt) => {
+    evt.preventDefault();
+    this.#mainContainer.querySelector('.film-details').remove();
+    this.#mainContainer.classList.remove('hide-overflow');
+    window.removeEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#handlePopupCloseClick(evt);
+    }
+  };
 
 }
