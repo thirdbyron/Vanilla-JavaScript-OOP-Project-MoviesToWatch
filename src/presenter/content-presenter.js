@@ -24,20 +24,13 @@ export default class ContentPresenter {
 
   #commentsModel = new CommentsModel;
 
-<<<<<<< HEAD
+
   #renderMovie = (movie) => {
-=======
-  #renderMovie(movie) {
->>>>>>> 23068dbe956869801d40de6c91d4cc0a0977e3a0
     const movieCard = new MovieCardView(movie);
 
     render(movieCard, this.#moviesListComponent.element);
     this.#addPopup(movieCard, movie);
-<<<<<<< HEAD
   };
-=======
-  }
->>>>>>> 23068dbe956869801d40de6c91d4cc0a0977e3a0
 
   #addPopup(movieCard, movieData) {
     movieCard.element.addEventListener('click', () => {
@@ -74,11 +67,7 @@ export default class ContentPresenter {
       }
 
       if (this.#movies.length > MOVIES_PER_ROW) {
-<<<<<<< HEAD
         new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element, this.#movies, this.#renderMovie);
-=======
-        new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element);
->>>>>>> 23068dbe956869801d40de6c91d4cc0a0977e3a0
       }
 
     }
