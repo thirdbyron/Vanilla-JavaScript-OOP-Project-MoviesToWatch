@@ -22,7 +22,8 @@ export default class PopupPresenter {
 
   #commentPresenter = null;
 
-  #handlePopupCloseClick = () => {
+  #handlePopupCloseClick = (evt) => {
+    evt.preventDefault();
     this.#mainContainer.querySelector('.film-details').remove();
     this.#mainContainer.classList.remove('hide-overflow');
     window.removeEventListener('keydown', this.#onEscKeyDown);
@@ -31,7 +32,7 @@ export default class PopupPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#handlePopupCloseClick();
+      this.#handlePopupCloseClick(evt);
     }
   };
 
@@ -69,7 +70,7 @@ export default class PopupPresenter {
     render(this.#contentComponent, this.#wrapperComponent.element);
     render(this.#descriptionWrapperComponent, this.#contentComponent.element);
 
-    this.#descriptionWrapperComponent.element.children[0].children[0].addEventListener('click', this.#handlePopupCloseClick);
+    this.#descriptionWrapperComponent.closeButtonElement.addEventListener('click', this.#handlePopupCloseClick);
 
     window.addEventListener('keydown', this.#onEscKeyDown);
 

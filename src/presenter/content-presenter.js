@@ -24,12 +24,12 @@ export default class ContentPresenter {
 
   #commentsModel = new CommentsModel;
 
-  #renderMovie(movie) {
+  #renderMovie = (movie) => {
     const movieCard = new MovieCardView(movie);
 
     render(movieCard, this.#moviesListComponent.element);
     this.#addPopup(movieCard, movie);
-  }
+  };
 
   #addPopup(movieCard, movieData) {
     movieCard.element.addEventListener('click', () => {
@@ -66,7 +66,7 @@ export default class ContentPresenter {
       }
 
       if (this.#movies.length > MOVIES_PER_ROW) {
-        new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element);
+        new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element, this.#movies, this.#renderMovie);
       }
 
     }
