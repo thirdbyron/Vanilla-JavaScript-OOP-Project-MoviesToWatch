@@ -14,7 +14,7 @@ export default class ShowMoreButtonPresenter {
 
   #renderedMoviesCounter = MOVIES_PER_ROW;
 
-  init(mainContainer, movies, renderMovie) {
+  init(mainContainer, movies, onRenderMovie) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
@@ -27,7 +27,7 @@ export default class ShowMoreButtonPresenter {
       this.#movies
         .slice(this.#renderedMoviesCounter, this.#renderedMoviesCounter + MOVIES_PER_ROW)
         .forEach((movie) => {
-          renderMovie(movie);
+          onRenderMovie(movie);
         });
 
       this.#renderedMoviesCounter += MOVIES_PER_ROW;
