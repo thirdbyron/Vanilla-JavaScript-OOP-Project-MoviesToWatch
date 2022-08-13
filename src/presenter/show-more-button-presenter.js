@@ -2,12 +2,16 @@ import { render } from '../render.js';
 
 import ShowMoreButtonView from '../view/content/show-more-button-view.js';
 
+<<<<<<< HEAD
 import { MOVIES_PER_ROW } from '../const.js';
 
+=======
+>>>>>>> 23068dbe956869801d40de6c91d4cc0a0977e3a0
 export default class ShowMoreButtonPresenter {
 
   #mainContainer = null;
 
+<<<<<<< HEAD
   #movies = null;
 
   #showMoreButtonComponent = new ShowMoreButtonView;
@@ -38,5 +42,14 @@ export default class ShowMoreButtonPresenter {
       }
 
     });
+=======
+  #showMoreButtonComponent = new ShowMoreButtonView;
+
+  init(mainContainer) {
+
+    this.#mainContainer = mainContainer;
+
+    render(this.#showMoreButtonComponent, this.#mainContainer);
+>>>>>>> 23068dbe956869801d40de6c91d4cc0a0977e3a0
   }
 }
