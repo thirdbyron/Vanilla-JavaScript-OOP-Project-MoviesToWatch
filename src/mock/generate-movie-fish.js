@@ -1,6 +1,5 @@
 import { getRandomInteger } from '../utils.js';
-
-const MAX_MOVIE_COMENTS = 10;
+import { MAX_MOVIE_COMENTS } from '../const.js';
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -41,8 +40,6 @@ const generateRandomCommentsId = () => {
       const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
       idNumbers.push(randomId);
     }
-  } else {
-    idNumbers.push(null);
   }
   return idNumbers;
 };

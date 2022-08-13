@@ -3,19 +3,22 @@ import { createElement } from '../../render.js';
 const createPopupContentTemplate = () => '<div class="film-details__inner"> </div>';
 
 export default class PopupContentView {
-  getTemplate() {
+  #element = null;
+
+  get template() {
     return createPopupContentTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
+

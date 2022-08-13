@@ -28,7 +28,7 @@ export const translateMinutesToRuntime = (minutes) => {
 
 export const validateDescription = (desc) => {
 
-  if (typeof desc !== 'string' || desc === null) {
+  if (typeof desc !== 'string') {
     return '';
   }
 

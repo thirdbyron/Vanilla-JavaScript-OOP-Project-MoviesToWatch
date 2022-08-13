@@ -3,19 +3,22 @@ import { createElement } from '../../render.js';
 const createContentTemplate = () => '<section class="films"> </section>';
 
 export default class ContentView {
-  getTemplate() {
+  #element = null;
+
+  get template() {
     return createContentTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
+
