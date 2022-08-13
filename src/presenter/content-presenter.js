@@ -24,26 +24,6 @@ export default class ContentPresenter {
 
   #commentsModel = new CommentsModel;
 
-  #renderMovie(movie) {
-    const movieCard = new MovieCardView(movie);
-
-    render(movieCard, this.#moviesListComponent.element);
-    this.#addPopup(movieCard, movie);
-  }
-
-  #addPopup(movieCard, movieData) {
-    movieCard.element.addEventListener('click', () => {
-      new PopupPresenter().init(this.#mainContainer.parentNode, movieData, [...this.#commentsModel.comments]);
-    });
-  }
-
-  #showEmptyListTitle() {
-    const emptyListTitleElement = this.#moviesListWrapperComponent.element.querySelector('.films-list__title');
-
-    emptyListTitleElement.textContent = EMPTY_MOVIE_LIST_TITLES.allMovies;
-    emptyListTitleElement.classList.remove('visually-hidden');
-  }
-
   init(mainContainer, moviesModel) {
 
     this.#mainContainer = mainContainer;
@@ -66,9 +46,30 @@ export default class ContentPresenter {
       }
 
       if (this.#movies.length > MOVIES_PER_ROW) {
-        new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element);
+        new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element, this.#movies, this.#renderMovie);
       }
 
     }
   }
+
+  #renderMovie = (movie) => {
+    const movieCard = new MovieCardView(movie);
+
+    render(movieCard, this.#moviesListComponent.element);
+    this.#addPopup(movieCard, movie);
+  };
+
+  #addPopup(movieCard, movieData) {
+    movieCard.element.addEventListener('click', () => {
+      new PopupPresenter().init(this.#mainContainer.parentNode, movieData, [...this.#commentsModel.comments]);
+    });
+  }
+
+  #showEmptyListTitle() {
+    const emptyListTitleElement = this.#moviesListWrapperComponent.element.querySelector('.films-list__title');
+
+    emptyListTitleElement.textContent = EMPTY_MOVIE_LIST_TITLES.allMovies;
+    emptyListTitleElement.classList.remove('visually-hidden');
+  }
+
 }

@@ -11,6 +11,18 @@ export default class PopupCommentsPresenter {
   #commentsListComponent = new MovieCommentsListView;
   #addCommentFormComponent = new MovieAddCommentFormView;
 
+  init(mainContainer, commentsIdNumbers, commentsVariety) {
+
+    render(this.#commentsWrapperComponent, mainContainer);
+    render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
+    render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
+
+    this.#renderFilteredComments(commentsIdNumbers, commentsVariety);
+
+    this.#countComments();
+
+  }
+
   #renderFilteredComments(commentsIdNumbers, commentsVariety) {
     if (commentsIdNumbers.length > 0) {
 
@@ -28,15 +40,4 @@ export default class PopupCommentsPresenter {
     this.#commentsWrapperComponent.element.querySelector('.film-details__comments-count').textContent = this.#commentsListComponent.element.children.length;
   }
 
-  init(mainContainer, commentsIdNumbers, commentsVariety) {
-
-    render(this.#commentsWrapperComponent, mainContainer);
-    render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
-    render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
-
-    this.#renderFilteredComments(commentsIdNumbers, commentsVariety);
-
-    this.#countComments();
-
-  }
 }
