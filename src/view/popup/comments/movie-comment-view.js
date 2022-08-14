@@ -1,4 +1,4 @@
-import { createElement } from '../../../render.js';
+import AbstractView from '../../../framework/view/abstract-view.js';
 import { formatRawDateToCommentCreatedDate } from '../../../utils.js';
 
 const createMovieCommentTemplate = (userComment) => {
@@ -21,11 +21,12 @@ const createMovieCommentTemplate = (userComment) => {
   </li>`;
 };
 
-export default class MovieCommentView {
-  #element = null;
+export default class MovieCommentView extends AbstractView{
+
   #comment = null;
 
   constructor(comment) {
+    super();
     this.#comment = comment;
   }
 
@@ -33,15 +34,4 @@ export default class MovieCommentView {
     return createMovieCommentTemplate(this.#comment);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }

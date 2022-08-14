@@ -1,24 +1,11 @@
-import { createElement } from '../../../render.js';
-
+import AbstractView from '../../../framework/view/abstract-view.js';
 const createMovieCommentsListTemplate = () => '<ul class="film-details__comments-list"> </ul>';
 
-export default class MovieCommentsListView {
-  #element = null;
+export default class MovieCommentsListView extends AbstractView {
 
   get template() {
     return createMovieCommentsListTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
 
