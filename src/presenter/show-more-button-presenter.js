@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { remove, render } from '../framework/render.js';
 
 import ShowMoreButtonView from '../view/content/show-more-button-view.js';
 
@@ -14,29 +14,32 @@ export default class ShowMoreButtonPresenter {
 
   #renderedMoviesCounter = MOVIES_PER_ROW;
 
+  #onRenderMovie = null;
+
   init(mainContainer, movies, onRenderMovie) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
+    this.#onRenderMovie = onRenderMovie;
 
     render(this.#showMoreButtonComponent, this.#mainContainer);
 
-    this.#showMoreButtonComponent.element.addEventListener('click', (evt) => {
-      evt.preventDefault();
+    this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreClick);
 
-      this.#movies
-        .slice(this.#renderedMoviesCounter, this.#renderedMoviesCounter + MOVIES_PER_ROW)
-        .forEach((movie) => {
-          onRenderMovie(movie);
-        });
-
-      this.#renderedMoviesCounter += MOVIES_PER_ROW;
-
-      if (this.#renderedMoviesCounter >= this.#movies.length) {
-        this.#showMoreButtonComponent.element.remove();
-        this.#showMoreButtonComponent.removeElement();
-      }
-
-    });
   }
+
+  #handleShowMoreClick = () => {
+    this.#movies
+      .slice(this.#renderedMoviesCounter, this.#renderedMoviesCounter + MOVIES_PER_ROW)
+      .forEach((movie) => {
+        this.#onRenderMovie(movie);
+      });
+
+    this.#renderedMoviesCounter += MOVIES_PER_ROW;
+
+    if (this.#renderedMoviesCounter >= this.#movies.length) {
+      remove(this.#showMoreButtonComponent);
+    }
+  };
+
 }

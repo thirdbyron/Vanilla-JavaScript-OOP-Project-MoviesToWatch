@@ -15,5 +15,15 @@ export default class MoviesDescriptionWrapperView extends AbstractView {
     return this.element.querySelector('.film-details__close-btn');
   }
 
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.closeButtonElement.addEventListener('click', this.#closeClickHandler);
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
+  };
+
 }
 

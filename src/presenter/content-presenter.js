@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 import ContentView from '../view/content/content-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
@@ -56,13 +56,17 @@ export default class ContentPresenter {
     const movieCard = new MovieCardView(movie);
 
     render(movieCard, this.#moviesListComponent.element);
+
     this.#addPopup(movieCard, movie);
+
   };
 
-  #addPopup(movieCard, movieData) {
-    movieCard.element.addEventListener('click', () => {
-      new PopupPresenter().init(this.#mainContainer.parentNode, movieData, [...this.#commentsModel.comments]);
+  #addPopup(movieCard, movie) {
+
+    movieCard.setPopupClickHandler(() => {
+      this.#handlePopupOpenClick(movie);
     });
+
   }
 
   #showEmptyListTitle() {
@@ -71,5 +75,9 @@ export default class ContentPresenter {
     emptyListTitleElement.textContent = EMPTY_MOVIE_LIST_TITLES.allMovies;
     emptyListTitleElement.classList.remove('visually-hidden');
   }
+
+  #handlePopupOpenClick = (movie) => {
+    new PopupPresenter().init(this.#mainContainer.parentNode, movie, [...this.#commentsModel.comments]);
+  };
 
 }
