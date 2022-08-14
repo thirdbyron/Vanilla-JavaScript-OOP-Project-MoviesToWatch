@@ -1,5 +1,5 @@
 import AbstractView from '../../../framework/view/abstract-view.js';
-import { formatRawDateToCommentCreatedDate } from '../../../utils.js';
+import { formatRawDateToCommentCreatedDate } from '../../../utils/movie-data.js';
 
 const createMovieCommentTemplate = (userComment) => {
   const { author, comment, date, emotion } = userComment;

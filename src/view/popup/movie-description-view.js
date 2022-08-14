@@ -1,5 +1,5 @@
 import AbstractView from '../../framework/view/abstract-view.js';
-import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils.js';
+import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils/movie-data.js';
 
 const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 

@@ -1,5 +1,5 @@
 import AbstractView from '../../framework/view/abstract-view.js';
-import { formatRawDateToRealeaseYear, translateMinutesToRuntime, validateDescription, validateCommentsNumber } from '../../utils.js';
+import { formatRawDateToRealeaseYear, translateMinutesToRuntime, validateDescription, validateCommentsNumber } from '../../utils/movie-data.js';
 
 
 const createMovieCardTemplate = (movie) => {
