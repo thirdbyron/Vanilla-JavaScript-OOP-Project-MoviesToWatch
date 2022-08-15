@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';

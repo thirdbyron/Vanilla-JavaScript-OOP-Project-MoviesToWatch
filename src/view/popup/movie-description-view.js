@@ -1,5 +1,5 @@
-import { createElement } from '../../render.js';
-import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils.js';
+import AbstractView from '../../framework/view/abstract-view.js';
+import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils/movie-data.js';
 
 const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 
@@ -80,11 +80,12 @@ const createMovieDescriptionTemplate = (movie) => {
   </div>`;
 };
 
-export default class MovieDescriptionView {
-  #element = null;
+export default class MovieDescriptionView extends AbstractView{
+
   #movie = null;
 
   constructor (movie) {
+    super();
     this.#movie = movie;
   }
 
@@ -92,15 +93,4 @@ export default class MovieDescriptionView {
     return createMovieDescriptionTemplate(this.#movie);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }

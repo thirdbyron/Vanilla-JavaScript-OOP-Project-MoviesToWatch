@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 
 const COMMENT_FISH_DICTIONARY = {
   authors: ['Ilya, Rebenkov', 'Vasily Stay', 'Third Byron', 'Right Big'],

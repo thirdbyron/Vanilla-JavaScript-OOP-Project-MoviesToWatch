@@ -1,4 +1,4 @@
-import { createElement } from '../../../render.js';
+import AbstractView from '../../../framework/view/abstract-view.js';
 
 const createMovieCommentsWrapperTemplate = () => `<div class="film-details__bottom-container">
 <section class="film-details__comments-wrap">
@@ -7,23 +7,11 @@ const createMovieCommentsWrapperTemplate = () => `<div class="film-details__bott
 </section>
 </div>`;
 
-export default class MovieCommentsWrapperView {
-  #element = null;
+export default class MovieCommentsWrapperView extends AbstractView {
 
   get template() {
     return createMovieCommentsWrapperTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
 

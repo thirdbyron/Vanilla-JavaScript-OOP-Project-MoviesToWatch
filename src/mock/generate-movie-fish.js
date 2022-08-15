@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 import { MAX_MOVIE_COMENTS } from '../const.js';
 
 const MOVIE_FISH_DICTIONARY = {

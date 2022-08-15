@@ -1,24 +1,12 @@
-import { createElement } from '../../render.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 const createPopupWrapperTemplate = () => '<section class="film-details"> </section>';
 
-export default class PopupWrapperView {
-  #element = null;
+export default class PopupWrapperView extends AbstractView{
 
   get template() {
     return createPopupWrapperTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
 

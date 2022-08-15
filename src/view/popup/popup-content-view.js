@@ -1,24 +1,12 @@
-import { createElement } from '../../render.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 const createPopupContentTemplate = () => '<div class="film-details__inner"> </div>';
 
-export default class PopupContentView {
-  #element = null;
+export default class PopupContentView extends AbstractView{
 
   get template() {
     return createPopupContentTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
 }
 
