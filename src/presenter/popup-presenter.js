@@ -44,7 +44,12 @@ export default class PopupPresenter {
 
     window.addEventListener('keydown', onEscKeyDown);
 
-    new MovieDescriptionPresenter().init(this.#contentComponent.element, this.#movie, this.#comments, this.#handlePopupCloseClick);
+    new MovieDescriptionPresenter().init(
+      this.#contentComponent.element,
+      this.#movie,
+      this.#comments,
+      this.#handlePopupCloseClick
+    );
   }
 
   #handlePopupCloseClick = () => {

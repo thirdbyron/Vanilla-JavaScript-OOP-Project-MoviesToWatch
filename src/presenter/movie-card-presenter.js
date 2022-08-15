@@ -33,7 +33,11 @@ export default class MovieCardPresenter {
     this.#movieCardComponent.setPopupClickHandler(() => {
       this.#removePreviosPopup();
       this.#hideOverflow();
-      new PopupPresenter().init(this.#bodyNode, this.#movie, [...this.#comments]);
+      new PopupPresenter().init(
+        this.#bodyNode,
+        this.#movie,
+        [...this.#comments]
+      );
     });
   }
 

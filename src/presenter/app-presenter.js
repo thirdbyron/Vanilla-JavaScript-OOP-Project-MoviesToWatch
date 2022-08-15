@@ -17,15 +17,10 @@ export default class AppPresenter {
   #moviesModel = new MoviesModel;
 
   init() {
-
     render(new ProfileThumbnailView, this.#siteHeaderElement);
-
     this.#renderFilters();
-
     render(new SortingBarView, this.#siteMainElement);
-
     new ContentPresenter().init(this.#siteMainElement, this.#moviesModel);
-
   }
 
   #renderFilters() {

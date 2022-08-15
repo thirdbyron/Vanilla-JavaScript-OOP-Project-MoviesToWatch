@@ -29,7 +29,11 @@ export default class MovieDescriptionPresenter {
 
     render(this.#controlsComponent, this.#descriptionWrapperComponent.element);
 
-    new PopupCommentsPresenter().init(this.#descriptionWrapperComponent.element, this.#movie.comments, this.#comments);
+    new PopupCommentsPresenter().init(
+      this.#descriptionWrapperComponent.element,
+      this.#movie.comments,
+      this.#comments
+    );
   }
 
 }

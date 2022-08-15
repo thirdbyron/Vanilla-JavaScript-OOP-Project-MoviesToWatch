@@ -27,7 +27,11 @@ export default class ContentPresenter {
     if (this.#movies.length === 0) {
       this.#moviesListWrapperComponent.showEmptyListTitle();
     } else {
-      new MoviesListPresenter().init(this.#moviesListWrapperComponent, this.#movies, this.#mainContainer.parentNode);
+      new MoviesListPresenter().init(
+        this.#moviesListWrapperComponent,
+        this.#movies,
+        this.#mainContainer.parentNode
+      );
     }
   }
 

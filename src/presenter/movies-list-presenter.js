@@ -11,7 +11,7 @@ import MovieCardPresenter from './movie-card-presenter';
 
 export default class MoviesListPresenter {
 
-  #moviesListWrapperComponent = null;
+  #mainContainer = null;
   #movies = null;
   #bodyNode = null;
 
@@ -19,9 +19,9 @@ export default class MoviesListPresenter {
 
   #commentsModel = new CommentsModel;
 
-  init(moviesListWrapperComponent, movies, bodyNode) {
+  init(mainContainer, movies, bodyNode) {
 
-    this.#moviesListWrapperComponent = moviesListWrapperComponent;
+    this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
 
@@ -32,7 +32,7 @@ export default class MoviesListPresenter {
   }
 
   #renderMoviesList() {
-    render(this.#moviesListComponent, this.#moviesListWrapperComponent.element);
+    render(this.#moviesListComponent, this.#mainContainer.element);
 
     for (let i = 0; i < Math.min(this.#movies.length, MOVIES_PER_ROW); i++) {
       this.#renderMovie(this.#movies[i]);
@@ -40,12 +40,22 @@ export default class MoviesListPresenter {
   }
 
   #renderMovie = (movie) => {
-    new MovieCardPresenter().init(this.#moviesListComponent, movie, this.#commentsModel, this.#bodyNode, this.#removePreviousPopup, this.#hideOverflow);
+    new MovieCardPresenter().init(
+      this.#moviesListComponent,
+      movie,
+      this.#commentsModel,
+      this.#bodyNode,
+      this.#removePreviousPopup,this.#hideOverflow
+    );
   };
 
   #renderShowMoreButton() {
     if (this.#movies.length > MOVIES_PER_ROW) {
-      new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element, this.#movies, this.#renderMovie);
+      new ShowMoreButtonPresenter().init(
+        this.#mainContainer.element,
+        this.#movies,
+        this.#renderMovie
+      );
     }
   }
 
