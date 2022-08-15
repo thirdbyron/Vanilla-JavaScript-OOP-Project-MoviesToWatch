@@ -2,11 +2,19 @@ import { render } from '../framework/render.js';
 
 import PopupWrapperView from '../view/popup/popup-wrapper-view.js';
 import PopupContentView from '../view/popup/popup-content-view.js';
-import MovieDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
-import MovieDescriptionView from '../view/popup/movie-description-view.js';
-import MovieControlsView from '../view/popup/movie-controls-view.js';
 
-import PopupCommentsPresenter from './popup-comments-presenter.js';
+import MovieDescriptionPresenter from './movie-description-presenter.js';
+
+// Временное решение:
+
+const onEscKeyDown = (evt) => {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    window.removeEventListener('keydown', onEscKeyDown);
+    document.querySelector('.film-details').remove();
+    document.querySelector('body').classList.remove('hide-overflow');
+  }
+};
 
 export default class PopupPresenter {
 
@@ -17,15 +25,10 @@ export default class PopupPresenter {
 
   #wrapperComponent = null;
   #contentComponent = null;
-  #descriptionWrapperComponent = null;
-  #controlsComponent = null;
-
-  #commentPresenter = null;
 
   init(mainContainer, movie, comments) {
 
     this.#mainContainer = mainContainer;
-
     this.#movie = movie;
     this.#comments = comments;
 
@@ -33,32 +36,14 @@ export default class PopupPresenter {
 
     this.#hideOverflow();
 
-    this.#wrapperComponent = new PopupWrapperView;
-    this.#contentComponent = new PopupContentView;
-    this.#descriptionWrapperComponent = new MovieDescriptionWrapperView;
-    this.#controlsComponent = new MovieControlsView;
-
-    this.#commentPresenter = new PopupCommentsPresenter;
-
-    render(this.#wrapperComponent, mainContainer);
-    render(this.#contentComponent, this.#wrapperComponent.element);
-    render(this.#descriptionWrapperComponent, this.#contentComponent.element);
-
-    this.#descriptionWrapperComponent.setCloseClickHandler(this.#handlePopupCloseClick);
-
-    window.addEventListener('keydown', this.#onEscKeyDown);
-
-    render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
-
-    render(this.#controlsComponent, this.#descriptionWrapperComponent.element);
-
-    this.#commentPresenter.init(this.#descriptionWrapperComponent.element, this.#movie.comments, this.#comments);
+    this.#renderPopup();
 
   }
 
   #removePreviousPopup() {
     if (this.#mainContainer.querySelector('.film-details')) {
       this.#mainContainer.querySelector('.film-details').remove();
+      window.removeEventListener('keydown', onEscKeyDown);
     }
   }
 
@@ -68,17 +53,22 @@ export default class PopupPresenter {
     }
   }
 
+  #renderPopup() {
+    this.#wrapperComponent = new PopupWrapperView;
+    this.#contentComponent = new PopupContentView;
+
+    render(this.#wrapperComponent, this.#mainContainer);
+    render(this.#contentComponent, this.#wrapperComponent.element);
+
+    window.addEventListener('keydown', onEscKeyDown);
+
+    new MovieDescriptionPresenter().init(this.#contentComponent.element, this.#movie, this.#comments, this.#handlePopupCloseClick);
+  }
+
   #handlePopupCloseClick = () => {
+    window.removeEventListener('keydown', onEscKeyDown);
     this.#mainContainer.querySelector('.film-details').remove();
     this.#mainContainer.classList.remove('hide-overflow');
-    window.removeEventListener('keydown', this.#onEscKeyDown);
-  };
-
-  #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#handlePopupCloseClick();
-    }
   };
 
 }

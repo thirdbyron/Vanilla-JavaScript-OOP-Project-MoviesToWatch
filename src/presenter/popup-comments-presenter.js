@@ -25,13 +25,9 @@ export default class PopupCommentsPresenter {
 
   #renderFilteredComments(commentsIdNumbers, commentsVariety) {
     if (commentsIdNumbers.length > 0) {
-
       for (let i = 0; i < commentsIdNumbers.length; i++) {
-
         const relevantComment = commentsVariety.find((comment) => comment.id === commentsIdNumbers[i]);
-
         render(new MovieCommentView(relevantComment), this.#commentsListComponent.element);
-
       }
     }
   }

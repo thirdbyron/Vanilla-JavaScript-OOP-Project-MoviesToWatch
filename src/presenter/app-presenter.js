@@ -14,20 +14,36 @@ export default class AppPresenter {
   #siteMainElement = document.querySelector('.main');
   #siteHeaderElement = document.querySelector('.header');
 
-  #contentPresenter = new ContentPresenter;
-
   #moviesModel = new MoviesModel;
 
   init() {
 
+    this.#renderProfileThumbnail();
+
+    this.#renderFilters();
+
+    this.#renderSortingBar();
+
+    this.#renderContent();
+
+  }
+
+  #renderContent() {
+    const contentPresenter = new ContentPresenter;
+    contentPresenter.init(this.#siteMainElement, this.#moviesModel);
+  }
+
+  #renderFilters() {
     const filters = generateFiltersFish(this.#moviesModel.movies);
-
-    render(new ProfileThumbnailView, this.#siteHeaderElement);
     render(new FiltersView(filters), this.#siteMainElement);
+  }
+
+  #renderSortingBar() {
     render(new SortingBarView, this.#siteMainElement);
+  }
 
-    this.#contentPresenter.init(this.#siteMainElement, this.#moviesModel);
-
+  #renderProfileThumbnail() {
+    render(new ProfileThumbnailView, this.#siteHeaderElement);
   }
 
 }
