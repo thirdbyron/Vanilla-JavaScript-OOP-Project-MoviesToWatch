@@ -76,10 +76,10 @@ export const generateMovieFish = () => {
       'description': randomDescription
     },
     'user_details': {
-      'watchlist': false,
-      'already_watched': true,
+      'watchlist': getRandomInteger(0, 1) > 0,
+      'already_watched': getRandomInteger(0, 1) > 0,
       'watching_date': '2019-04-12T16:12:32.554Z',
-      'favorite': false
+      'favorite': getRandomInteger(0, 1) > 0
     }
   };
 };

@@ -17,3 +17,9 @@ export const EMPTY_MOVIE_LIST_TITLES = {
   favorites: 'There are no favorite movies now',
 };
 
+export const FILTER_TYPE = {
+  watchlist: 'Watchlist',
+  history: 'History',
+  favorites: 'Favorites',
+};
+
