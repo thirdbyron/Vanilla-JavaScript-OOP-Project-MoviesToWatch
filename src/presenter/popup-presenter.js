@@ -32,25 +32,7 @@ export default class PopupPresenter {
     this.#movie = movie;
     this.#comments = comments;
 
-    this.#removePreviousPopup();
-
-    this.#hideOverflow();
-
     this.#renderPopup();
-
-  }
-
-  #removePreviousPopup() {
-    if (this.#mainContainer.querySelector('.film-details')) {
-      this.#mainContainer.querySelector('.film-details').remove();
-      window.removeEventListener('keydown', onEscKeyDown);
-    }
-  }
-
-  #hideOverflow() {
-    if (!(this.#mainContainer.classList.contains('hide-overflow'))) {
-      this.#mainContainer.classList.add('hide-overflow');
-    }
   }
 
   #renderPopup() {

@@ -40,7 +40,7 @@ export default class MoviesListPresenter {
   }
 
   #renderMovie = (movie) => {
-    new MovieCardPresenter().init(this.#moviesListComponent, movie, this.#commentsModel, this.#bodyNode);
+    new MovieCardPresenter().init(this.#moviesListComponent, movie, this.#commentsModel, this.#bodyNode, this.#removePreviousPopup, this.#hideOverflow);
   };
 
   #renderShowMoreButton() {
@@ -48,5 +48,17 @@ export default class MoviesListPresenter {
       new ShowMoreButtonPresenter().init(this.#moviesListWrapperComponent.element, this.#movies, this.#renderMovie);
     }
   }
+
+  #removePreviousPopup = () => {
+    if (this.#bodyNode.querySelector('.film-details')) {
+      this.#bodyNode.querySelector('.film-details').remove();
+    }
+  };
+
+  #hideOverflow = () => {
+    if (!(this.#bodyNode.classList.contains('hide-overflow'))) {
+      this.#bodyNode.classList.add('hide-overflow');
+    }
+  };
 
 }

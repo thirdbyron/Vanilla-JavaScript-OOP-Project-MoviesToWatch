@@ -7,7 +7,6 @@ import { MOVIES_PER_ROW } from '../const.js';
 export default class ShowMoreButtonPresenter {
 
   #mainContainer = null;
-
   #movies = null;
 
   #showMoreButtonComponent = new ShowMoreButtonView;
@@ -20,6 +19,7 @@ export default class ShowMoreButtonPresenter {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
+
     this.#onRenderMovie = onRenderMovie;
 
     render(this.#showMoreButtonComponent, this.#mainContainer);

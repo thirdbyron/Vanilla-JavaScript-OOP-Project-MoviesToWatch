@@ -21,23 +21,14 @@ export default class ContentPresenter {
 
     this.#movies = [...moviesModel.movies];
 
-    this.#renderContent();
-  }
-
-  #renderContent() {
     render(this.#contentComponent, this.#mainContainer);
     render(this.#moviesListWrapperComponent, this.#contentComponent.element);
 
     if (this.#movies.length === 0) {
       this.#moviesListWrapperComponent.showEmptyListTitle();
     } else {
-      this.#renderMoviesList();
+      new MoviesListPresenter().init(this.#moviesListWrapperComponent, this.#movies, this.#mainContainer.parentNode);
     }
-  }
-
-  #renderMoviesList() {
-    const moviesListPresenter = new MoviesListPresenter;
-    moviesListPresenter.init(this.#moviesListWrapperComponent, this.#movies, this.#mainContainer.parentNode);
   }
 
 }

@@ -11,33 +11,30 @@ export default class MovieCardPresenter {
   #comments = null;
   #bodyNode = null;
 
-  #movieCardComponent = new MovieCardView(this.#movie);
+  #removePreviosPopup = null;
+  #hideOverflow = null;
 
-  init(moviesListComponent, movie, commentsModel, bodyNode) {
+  #movieCardComponent = null;
+
+  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
     this.#comments = commentsModel.comments;
     this.#bodyNode = bodyNode;
 
+    this.#removePreviosPopup = onRemovePreviosPopup;
+    this.#hideOverflow = onHideOverflow;
+
     this.#movieCardComponent = new MovieCardView(this.#movie);
 
-    this.#renderMovie();
-  }
-
-  #renderMovie = () => {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
 
-    this.#addPopup(this.#movieCardComponent);
-  };
-
-  #addPopup () {
     this.#movieCardComponent.setPopupClickHandler(() => {
-      this.#handlePopupOpenClick(this.#movie);
+      this.#removePreviosPopup();
+      this.#hideOverflow();
+      new PopupPresenter().init(this.#bodyNode, this.#movie, [...this.#comments]);
     });
   }
 
-  #handlePopupOpenClick = (movie) => {
-    new PopupPresenter().init(this.#bodyNode, movie, [...this.#comments]);
-  };
 }
