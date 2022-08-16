@@ -55,6 +55,15 @@ export default class MovieCardPresenter {
       this.#hideOverflow();
       this.#presentPopup();
     });
+    this.#movieCardComponent.setFavoriteClickHandler(() => {
+
+    });
+    this.#movieCardComponent.setWatchedClickHandler(() => {
+
+    });
+    this.#movieCardComponent.setWatchlistClickHandler(() => {
+
+    });
   }
 
   #presentPopup() {
