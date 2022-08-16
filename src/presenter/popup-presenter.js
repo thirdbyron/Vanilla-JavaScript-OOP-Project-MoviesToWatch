@@ -8,14 +8,16 @@ export default class PopupPresenter {
   #mainContainer = null;
   #movie = null;
   #comments = null;
+  #onChangeData = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
-  init(mainContainer, movie, comments) {
+  init(mainContainer, movie, comments, onChangeData) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#comments = comments;
+    this.#onChangeData = onChangeData;
 
     this.#renderPopup();
 
@@ -26,7 +28,8 @@ export default class PopupPresenter {
       this.#contentComponent.element,
       this.#movie,
       this.#comments,
-      this.#handlePopupCloseClick
+      this.#handlePopupCloseClick,
+      this.#onChangeData
     );
   }
 

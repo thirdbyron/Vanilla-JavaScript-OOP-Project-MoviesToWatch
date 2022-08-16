@@ -1,8 +1,7 @@
 import { render } from '../framework/render.js';
-
 import PopupPresenter from './popup-presenter.js';
 import MovieCardView from '../view/content/movie-card-view.js';
-
+import { FILTER_FROM_DATA } from '../const.js';
 
 export default class MovieCardPresenter {
 
@@ -12,6 +11,7 @@ export default class MovieCardPresenter {
   #bodyNode = null;
   #removePreviosPopup = null;
   #hideOverflow = null;
+  #onChangeData = null;
   #movieCardComponent = null;
   #popupPresenter = null;
   #isPopupOpen = false;
@@ -27,7 +27,15 @@ export default class MovieCardPresenter {
     this.#isPopupOpen = value;
   }
 
-  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow) {
+  set movie(value) {
+    this.#movie = value;
+  }
+
+  get movie() {
+    return this.#movie;
+  }
+
+  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
@@ -35,6 +43,7 @@ export default class MovieCardPresenter {
     this.#bodyNode = bodyNode;
     this.#removePreviosPopup = onRemovePreviosPopup;
     this.#hideOverflow = onHideOverflow;
+    this.#onChangeData = onChangeData;
     this.#movieCardComponent = new MovieCardView(this.#movie);
     this.#popupPresenter = new PopupPresenter;
 
@@ -56,13 +65,13 @@ export default class MovieCardPresenter {
       this.#presentPopup();
     });
     this.#movieCardComponent.setFavoriteClickHandler(() => {
-      this.#handleFavoriteClick();
+      this.#onChangeData(this.#movie, FILTER_FROM_DATA.favorites);
     });
     this.#movieCardComponent.setWatchedClickHandler(() => {
-      this.#handleWatchlistClick();
+      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watched);
     });
     this.#movieCardComponent.setWatchlistClickHandler(() => {
-      this.#handleWatchedClick();
+      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watchlist);
     });
   }
 
@@ -70,7 +79,8 @@ export default class MovieCardPresenter {
     this.#popupPresenter.init(
       this.#bodyNode,
       this.#movie,
-      [...this.#comments]
+      [...this.#comments],
+      this.#onChangeData
     );
     this.isPopupOpen = true;
   }
@@ -78,17 +88,5 @@ export default class MovieCardPresenter {
   #renderMovieCard() {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
   }
-
-  #handleFavoriteClick = () => {
-
-  };
-
-  #handleWatchlistClick = () => {
-
-  };
-
-  #handleWatchedClick = () => {
-
-  };
 
 }

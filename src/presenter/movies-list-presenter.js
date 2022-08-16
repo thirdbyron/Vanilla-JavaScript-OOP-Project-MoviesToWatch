@@ -10,15 +10,17 @@ export default class MoviesListPresenter {
   #mainContainer = null;
   #movies = null;
   #bodyNode = null;
+  #onUpdateFilters = null;
   #moviesListComponent = null;
   #commentsModel = null;
   #movieCardPresenters = new Map();
 
-  init(mainContainer, movies, bodyNode) {
+  init(mainContainer, movies, bodyNode, onUpdateFilters) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
+    this.#onUpdateFilters = onUpdateFilters;
     this.#moviesListComponent = new MoviesListView;
     this.#commentsModel = new CommentsModel;
 
@@ -43,7 +45,8 @@ export default class MoviesListPresenter {
       this.#commentsModel,
       this.#bodyNode,
       this.#removePreviousPopup,
-      this.#hideOverflow
+      this.#hideOverflow,
+      this.#handleChangeData
     );
 
     this.#movieCardPresenters.set(movie.id, moviePresenter);
@@ -67,9 +70,14 @@ export default class MoviesListPresenter {
   };
 
   #hideOverflow = () => {
-    if (!(this.#bodyNode.classList.contains('hide-overflow'))) {
-      this.#bodyNode.classList.add('hide-overflow');
+    if (!(document.querySelector('body').classList.contains('hide-overflow'))) {
+      document.querySelector('body').classList.add('hide-overflow');
     }
+  };
+
+  #handleChangeData = (movie, type) => {
+    movie.user_details[type] = !(movie.user_details[type]);
+    this.#onUpdateFilters();
   };
 
 }

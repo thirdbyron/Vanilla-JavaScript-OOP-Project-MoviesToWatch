@@ -9,11 +9,13 @@ export default class ContentPresenter {
   #movies = null;
   #contentComponent = null;
   #moviesListWrapperComponent = null;
+  #onUpdateFilters = null;
 
-  init(mainContainer, moviesModel) {
+  init(mainContainer, movies, onUpdateFilters) {
 
     this.#mainContainer = mainContainer;
-    this.#movies = [...moviesModel.movies];
+    this.#movies = [...movies];
+    this.#onUpdateFilters = onUpdateFilters;
 
     this.#renderContent();
   }
@@ -25,7 +27,8 @@ export default class ContentPresenter {
       new MoviesListPresenter().init(
         this.#moviesListWrapperComponent.element,
         this.#movies,
-        this.#mainContainer.parentNode
+        this.#mainContainer.parentNode,
+        this.#onUpdateFilters,
       );
     }
   }

@@ -24,6 +24,10 @@ export default class MovieControlsView extends AbstractView{
     return this.element.querySelector('#watchlist');
   }
 
+  toggleClass(buttonType) {
+    buttonType.classList.toggle('film-details__control-button--active');
+  }
+
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.favoriteButtonElement.addEventListener('click', this.#favoriteClickHandler);

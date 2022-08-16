@@ -27,4 +27,12 @@ export default class FiltersView extends AbstractView {
     return createFiltersTemplate(this.#filters);
   }
 
+  set filters(value) {
+    this.#filters = value;
+  }
+
+  get filters() {
+    return this.#filters;
+  }
+
 }
