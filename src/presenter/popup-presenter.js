@@ -1,18 +1,7 @@
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import PopupWrapperView from '../view/popup/popup-wrapper-view.js';
 import PopupContentView from '../view/popup/popup-content-view.js';
 import MovieDescriptionPresenter from './movie-description-presenter.js';
-
-// Временное решение:
-
-const onEscKeyDown = (evt) => {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    window.removeEventListener('keydown', onEscKeyDown);
-    document.querySelector('.film-details').remove();
-    document.querySelector('body').classList.remove('hide-overflow');
-  }
-};
 
 export default class PopupPresenter {
 
@@ -48,15 +37,26 @@ export default class PopupPresenter {
     render(this.#wrapperComponent, this.#mainContainer);
     render(this.#contentComponent, this.#wrapperComponent.element);
 
-    window.addEventListener('keydown', onEscKeyDown);
+    window.addEventListener('keydown', this.#onEscKeyDown);
 
     this.#presentMovieDescription();
   }
 
+  clear() {
+    remove(this.#wrapperComponent);
+    window.removeEventListener('keydown', this.#onEscKeyDown);
+    document.querySelector('body').classList.remove('hide-overflow');
+  }
+
   #handlePopupCloseClick = () => {
-    window.removeEventListener('keydown', onEscKeyDown);
-    this.#mainContainer.querySelector('.film-details').remove();
-    this.#mainContainer.classList.remove('hide-overflow');
+    this.clear();
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.clear();
+    }
   };
 
 }

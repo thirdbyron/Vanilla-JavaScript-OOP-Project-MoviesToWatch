@@ -13,6 +13,19 @@ export default class MovieCardPresenter {
   #removePreviosPopup = null;
   #hideOverflow = null;
   #movieCardComponent = null;
+  #popupPresenter = null;
+  #isPopupOpen = false;
+
+  get isPopupOpen() {
+    return this.#isPopupOpen;
+  }
+
+  set isPopupOpen(value) {
+    if (typeof value !== 'boolean') {
+      throw new Error('Setter of this class needs a boolean arg');
+    }
+    this.#isPopupOpen = value;
+  }
 
   init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow) {
 
@@ -23,11 +36,17 @@ export default class MovieCardPresenter {
     this.#removePreviosPopup = onRemovePreviosPopup;
     this.#hideOverflow = onHideOverflow;
     this.#movieCardComponent = new MovieCardView(this.#movie);
+    this.#popupPresenter = new PopupPresenter;
 
     this.#renderMovieCard();
 
     this.#setMovieCardHandlers();
 
+  }
+
+  clearPreviousPopup() {
+    this.isPopupOpen = false;
+    this.#popupPresenter.clear();
   }
 
   #setMovieCardHandlers() {
@@ -39,11 +58,12 @@ export default class MovieCardPresenter {
   }
 
   #presentPopup() {
-    new PopupPresenter().init(
+    this.#popupPresenter.init(
       this.#bodyNode,
       this.#movie,
       [...this.#comments]
     );
+    this.isPopupOpen = true;
   }
 
   #renderMovieCard() {

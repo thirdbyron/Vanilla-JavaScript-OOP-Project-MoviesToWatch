@@ -12,6 +12,7 @@ export default class MoviesListPresenter {
   #bodyNode = null;
   #moviesListComponent = null;
   #commentsModel = null;
+  #movieCardPresenters = new Map();
 
   init(mainContainer, movies, bodyNode) {
 
@@ -29,14 +30,14 @@ export default class MoviesListPresenter {
 
   #renderMoviesList() {
     render(this.#moviesListComponent, this.#mainContainer);
-
     for (let i = 0; i < Math.min(this.#movies.length, MOVIES_PER_ROW); i++) {
       this.#presentMovieCard(this.#movies[i]);
     }
   }
 
   #presentMovieCard = (movie) => {
-    new MovieCardPresenter().init(
+    const moviePresenter = new MovieCardPresenter;
+    moviePresenter.init(
       this.#moviesListComponent,
       movie,
       this.#commentsModel,
@@ -44,6 +45,8 @@ export default class MoviesListPresenter {
       this.#removePreviousPopup,
       this.#hideOverflow
     );
+
+    this.#movieCardPresenters.set(movie.id, moviePresenter);
   };
 
   #presentShowMoreButton() {
@@ -57,8 +60,9 @@ export default class MoviesListPresenter {
   }
 
   #removePreviousPopup = () => {
-    if (this.#bodyNode.querySelector('.film-details')) {
-      this.#bodyNode.querySelector('.film-details').remove();
+    const previousPopup = Array.from(this.#movieCardPresenters.values()).find((presenter) => presenter.isPopupOpen);
+    if (previousPopup) {
+      previousPopup.clearPreviousPopup();
     }
   };
 
