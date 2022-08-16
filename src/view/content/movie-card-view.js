@@ -45,15 +45,15 @@ export default class MovieCardView extends AbstractView {
     return createMovieCardTemplate(this.#movie);
   }
 
-  get favoriteButton() {
+  get favoriteButtonElement() {
     return this.element.querySelector('.film-card__controls-item--favorite');
   }
 
-  get watchlistButton() {
+  get watchlistButtonElement() {
     return this.element.querySelector('.film-card__controls-item--add-to-watchlist');
   }
 
-  get watchedButton() {
+  get watchedButtonElement() {
     return this.element.querySelector('.film-card__controls-item--mark-as-watched');
   }
 
@@ -64,17 +64,17 @@ export default class MovieCardView extends AbstractView {
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
-    this.favoriteButton.addEventListener('click', this.#favoriteClickHandler);
+    this.favoriteButtonElement.addEventListener('click', this.#favoriteClickHandler);
   };
 
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
-    this.watchlistButton.addEventListener('click', this.#watchlistClickHandler);
+    this.watchlistButtonElement.addEventListener('click', this.#watchlistClickHandler);
   };
 
   setWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
-    this.watchedButton.addEventListener('click', this.#watchedClickHandler);
+    this.watchedButtonElement.addEventListener('click', this.#watchedClickHandler);
   };
 
   #favoriteClickHandler = (evt) => {
@@ -94,9 +94,9 @@ export default class MovieCardView extends AbstractView {
 
   #popupClickHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target !== this.favoriteButton &&
-      evt.target !== this.watchlistButton &&
-      evt.target !== this.watchedButton) {
+    if (evt.target !== this.favoriteButtonElement &&
+      evt.target !== this.watchlistButtonElement &&
+      evt.target !== this.watchedButtonElement) {
 
       this._callback.openPopupClick();
 

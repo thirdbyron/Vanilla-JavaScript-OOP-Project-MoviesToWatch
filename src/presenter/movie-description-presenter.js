@@ -10,17 +10,20 @@ export default class MovieDescriptionPresenter {
   #movie = null;
   #comments = null;
   #descriptionWrapperComponent = null;
-  #controlsComponent = new MovieControlsView;
+  #closeHandler = null;
+  #controlsComponent = null;
 
-  init(mainContainer, movie, comments, handler) {
+  init(mainContainer, movie, comments, closeHandler) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#comments = comments;
+    this.#closeHandler = closeHandler;
+    this.#controlsComponent = new MovieControlsView;
 
     this.#renderDescription();
 
-    this.#setDescriptionHandlers(handler);
+    this.#setHandlers();
 
     this.#presentPopupComments();
 
@@ -34,8 +37,17 @@ export default class MovieDescriptionPresenter {
     );
   }
 
-  #setDescriptionHandlers(callback) {
-    this.#descriptionWrapperComponent.setCloseClickHandler(callback);
+  #setHandlers() {
+    this.#descriptionWrapperComponent.setCloseClickHandler(this.#closeHandler);
+    this.#controlsComponent.setFavoriteClickHandler(() => {
+
+    });
+    this.#controlsComponent.setWatchedClickHandler(() => {
+
+    });
+    this.#controlsComponent.setWatchlistClickHandler(() => {
+
+    });
   }
 
   #renderDescription() {

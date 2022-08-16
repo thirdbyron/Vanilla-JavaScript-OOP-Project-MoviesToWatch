@@ -12,4 +12,46 @@ export default class MovieControlsView extends AbstractView{
     return createMovieControlsTemplate();
   }
 
+  get favoriteButtonElement() {
+    return this.element.querySelector('#favorite');
+  }
+
+  get watchedButtonElement() {
+    return this.element.querySelector('#watched');
+  }
+
+  get watchlistButtonElement() {
+    return this.element.querySelector('#watchlist');
+  }
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.favoriteButtonElement.addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  setWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this.watchlistButtonElement.addEventListener('click', this.#watchlistClickHandler);
+  };
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.watchedButtonElement.addEventListener('click', this.#watchedClickHandler);
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  };
+
+  #watchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  };
+
 }

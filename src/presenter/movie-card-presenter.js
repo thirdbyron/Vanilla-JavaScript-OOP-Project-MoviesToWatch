@@ -40,7 +40,7 @@ export default class MovieCardPresenter {
 
     this.#renderMovieCard();
 
-    this.#setMovieCardHandlers();
+    this.#setHandlers();
 
   }
 
@@ -49,7 +49,7 @@ export default class MovieCardPresenter {
     this.#popupPresenter.clear();
   }
 
-  #setMovieCardHandlers() {
+  #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
       this.#removePreviosPopup();
       this.#hideOverflow();
