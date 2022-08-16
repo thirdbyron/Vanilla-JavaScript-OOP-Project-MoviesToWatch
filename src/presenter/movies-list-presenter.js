@@ -1,11 +1,7 @@
 import { render } from '../framework/render.js';
-
 import MoviesListView from '../view/content/movies-list-view.js';
-
 import ShowMoreButtonPresenter from './show-more-button-presenter.js';
-
 import CommentsModel from '../model/comments-model.js';
-
 import { MOVIES_PER_ROW } from '../const.js';
 import MovieCardPresenter from './movie-card-presenter';
 
@@ -14,47 +10,48 @@ export default class MoviesListPresenter {
   #mainContainer = null;
   #movies = null;
   #bodyNode = null;
-
-  #moviesListComponent = new MoviesListView;
-
-  #commentsModel = new CommentsModel;
+  #moviesListComponent = null;
+  #commentsModel = null;
 
   init(mainContainer, movies, bodyNode) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
+    this.#moviesListComponent = new MoviesListView;
+    this.#commentsModel = new CommentsModel;
 
     this.#renderMoviesList();
 
-    this.#renderShowMoreButton();
+    this.#presentShowMoreButton();
 
   }
 
   #renderMoviesList() {
-    render(this.#moviesListComponent, this.#mainContainer.element);
+    render(this.#moviesListComponent, this.#mainContainer);
 
     for (let i = 0; i < Math.min(this.#movies.length, MOVIES_PER_ROW); i++) {
-      this.#renderMovie(this.#movies[i]);
+      this.#presentMovieCard(this.#movies[i]);
     }
   }
 
-  #renderMovie = (movie) => {
+  #presentMovieCard = (movie) => {
     new MovieCardPresenter().init(
       this.#moviesListComponent,
       movie,
       this.#commentsModel,
       this.#bodyNode,
-      this.#removePreviousPopup,this.#hideOverflow
+      this.#removePreviousPopup,
+      this.#hideOverflow
     );
   };
 
-  #renderShowMoreButton() {
+  #presentShowMoreButton() {
     if (this.#movies.length > MOVIES_PER_ROW) {
       new ShowMoreButtonPresenter().init(
-        this.#mainContainer.element,
+        this.#mainContainer,
         this.#movies,
-        this.#renderMovie
+        this.#presentMovieCard
       );
     }
   }

@@ -10,10 +10,8 @@ export default class MovieCardPresenter {
   #movie = null;
   #comments = null;
   #bodyNode = null;
-
   #removePreviosPopup = null;
   #hideOverflow = null;
-
   #movieCardComponent = null;
 
   init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow) {
@@ -22,23 +20,34 @@ export default class MovieCardPresenter {
     this.#movie = movie;
     this.#comments = commentsModel.comments;
     this.#bodyNode = bodyNode;
-
     this.#removePreviosPopup = onRemovePreviosPopup;
     this.#hideOverflow = onHideOverflow;
-
     this.#movieCardComponent = new MovieCardView(this.#movie);
 
-    render(this.#movieCardComponent, this.#moviesListComponent.element);
+    this.#renderMovieCard();
 
+    this.#setMovieCardHandlers();
+
+  }
+
+  #setMovieCardHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
       this.#removePreviosPopup();
       this.#hideOverflow();
-      new PopupPresenter().init(
-        this.#bodyNode,
-        this.#movie,
-        [...this.#comments]
-      );
+      this.#presentPopup();
     });
+  }
+
+  #presentPopup() {
+    new PopupPresenter().init(
+      this.#bodyNode,
+      this.#movie,
+      [...this.#comments]
+    );
+  }
+
+  #renderMovieCard() {
+    render(this.#movieCardComponent, this.#moviesListComponent.element);
   }
 
 }

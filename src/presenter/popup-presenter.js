@@ -1,8 +1,6 @@
 import { render } from '../framework/render.js';
-
 import PopupWrapperView from '../view/popup/popup-wrapper-view.js';
 import PopupContentView from '../view/popup/popup-content-view.js';
-
 import MovieDescriptionPresenter from './movie-description-presenter.js';
 
 // Временное решение:
@@ -19,10 +17,8 @@ const onEscKeyDown = (evt) => {
 export default class PopupPresenter {
 
   #mainContainer = null;
-
   #movie = null;
   #comments = null;
-
   #wrapperComponent = null;
   #contentComponent = null;
 
@@ -33,6 +29,16 @@ export default class PopupPresenter {
     this.#comments = comments;
 
     this.#renderPopup();
+
+  }
+
+  #presentMovieDescription() {
+    new MovieDescriptionPresenter().init(
+      this.#contentComponent.element,
+      this.#movie,
+      this.#comments,
+      this.#handlePopupCloseClick
+    );
   }
 
   #renderPopup() {
@@ -44,12 +50,7 @@ export default class PopupPresenter {
 
     window.addEventListener('keydown', onEscKeyDown);
 
-    new MovieDescriptionPresenter().init(
-      this.#contentComponent.element,
-      this.#movie,
-      this.#comments,
-      this.#handlePopupCloseClick
-    );
+    this.#presentMovieDescription();
   }
 
   #handlePopupCloseClick = () => {
