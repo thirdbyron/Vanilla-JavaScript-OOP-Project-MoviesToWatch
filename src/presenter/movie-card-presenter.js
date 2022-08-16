@@ -56,13 +56,13 @@ export default class MovieCardPresenter {
       this.#presentPopup();
     });
     this.#movieCardComponent.setFavoriteClickHandler(() => {
-
+      this.#handleFavoriteClick();
     });
     this.#movieCardComponent.setWatchedClickHandler(() => {
-
+      this.#handleWatchlistClick();
     });
     this.#movieCardComponent.setWatchlistClickHandler(() => {
-
+      this.#handleWatchedClick();
     });
   }
 
@@ -78,5 +78,17 @@ export default class MovieCardPresenter {
   #renderMovieCard() {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
   }
+
+  #handleFavoriteClick = () => {
+
+  };
+
+  #handleWatchlistClick = () => {
+
+  };
+
+  #handleWatchedClick = () => {
+
+  };
 
 }
