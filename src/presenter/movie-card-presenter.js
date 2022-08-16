@@ -1,7 +1,6 @@
 import { render } from '../framework/render.js';
 import PopupPresenter from './popup-presenter.js';
 import MovieCardView from '../view/content/movie-card-view.js';
-import { FILTER_FROM_DATA } from '../const.js';
 
 export default class MovieCardPresenter {
 
@@ -27,13 +26,6 @@ export default class MovieCardPresenter {
     this.#isPopupOpen = value;
   }
 
-  set movie(value) {
-    this.#movie = value;
-  }
-
-  get movie() {
-    return this.#movie;
-  }
 
   init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData) {
 
@@ -65,13 +57,13 @@ export default class MovieCardPresenter {
       this.#presentPopup();
     });
     this.#movieCardComponent.setFavoriteClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.favorites);
+      this.#handleControlButtonClick(this.#movieCardComponent.favoriteButtonElement);
     });
     this.#movieCardComponent.setWatchedClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watched);
+      this.#handleControlButtonClick(this.#movieCardComponent.watchedButtonElement);
     });
     this.#movieCardComponent.setWatchlistClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watchlist);
+      this.#handleControlButtonClick(this.#movieCardComponent.watchlistButtonElement);
     });
   }
 
@@ -87,6 +79,11 @@ export default class MovieCardPresenter {
 
   #renderMovieCard() {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
+  }
+
+  #handleControlButtonClick(buttonElement) {
+    this.#onChangeData(this.#movie, this.#movieCardComponent.getButtonType(buttonElement));
+    this.#movieCardComponent.toggleButtonClass(buttonElement);
   }
 
 }

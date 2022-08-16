@@ -1,9 +1,8 @@
 import { render } from '../framework/render.js';
 import MovieDescriptionView from '../view/popup/movie-description-view.js';
 import MoviesDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
-import MovieControlsView from '../view/popup/movie-controls-view.js';
 import PopupCommentsPresenter from './popup-comments-presenter.js';
-import { FILTER_FROM_DATA } from '../const.js';
+import ControlButtonsPresenter from './control-buttons-presenter.js';
 
 export default class MovieDescriptionPresenter {
 
@@ -13,7 +12,8 @@ export default class MovieDescriptionPresenter {
   #descriptionWrapperComponent = null;
   #closeHandler = null;
   #onChangeData = null;
-  #controlsComponent = null;
+  #controlButtonsPresenter = null;
+  #popupCommentsPresenter = null;
 
   init(mainContainer, movie, comments, closeHandler, onChangeData) {
 
@@ -22,47 +22,40 @@ export default class MovieDescriptionPresenter {
     this.#comments = comments;
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
-    this.#controlsComponent = new MovieControlsView;
+    this.#descriptionWrapperComponent = new MoviesDescriptionWrapperView;
+    this.#controlButtonsPresenter = new ControlButtonsPresenter;
+    this.#popupCommentsPresenter = new PopupCommentsPresenter;
 
     this.#renderDescription();
 
-    this.#setHandlers();
+    this.#presentControlButtons();
 
     this.#presentPopupComments();
 
   }
 
+  #presentControlButtons() {
+    this.#controlButtonsPresenter.init(
+      this.#descriptionWrapperComponent.element,
+      this.#movie,
+      this.#onChangeData
+    );
+  }
+
   #presentPopupComments() {
-    new PopupCommentsPresenter().init(
+    this.#popupCommentsPresenter.init(
       this.#descriptionWrapperComponent.element,
       this.#movie.comments,
       this.#comments
     );
   }
 
-  #setHandlers() {
-    this.#descriptionWrapperComponent.setCloseClickHandler(this.#closeHandler);
-    this.#controlsComponent.setFavoriteClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.favorites);
-      this.#controlsComponent.toggleClass(this.#controlsComponent.favoriteButtonElement);
-    });
-    this.#controlsComponent.setWatchedClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watched);
-      this.#controlsComponent.toggleClass(this.#controlsComponent.watchedButtonElement);
-    });
-    this.#controlsComponent.setWatchlistClickHandler(() => {
-      this.#onChangeData(this.#movie, FILTER_FROM_DATA.watchlist);
-      this.#controlsComponent.toggleClass(this.#controlsComponent.watchlistButtonElement);
-    });
-  }
-
   #renderDescription() {
-    this.#descriptionWrapperComponent = new MoviesDescriptionWrapperView;
-
     render(this.#descriptionWrapperComponent, this.#mainContainer);
-    render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
-    render(this.#controlsComponent, this.#descriptionWrapperComponent.element);
-  }
 
+    render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
+
+    this.#descriptionWrapperComponent.setCloseClickHandler(this.#closeHandler);
+  }
 
 }

@@ -1,5 +1,6 @@
 import AbstractView from '../../framework/view/abstract-view.js';
 import { formatRawDateToRealeaseYear, translateMinutesToRuntime, validateDescription, validateCommentsNumber } from '../../utils/movie-data.js';
+import { FILTER_FROM_DATA } from '../../const.js';
 
 
 const createMovieCardTemplate = (movie) => {
@@ -55,6 +56,15 @@ export default class MovieCardView extends AbstractView {
 
   get watchedButtonElement() {
     return this.element.querySelector('.film-card__controls-item--mark-as-watched');
+  }
+
+  getButtonType(buttonElement) {
+    const buttonType = Object.keys(FILTER_FROM_DATA).find((key) => buttonElement.className.includes(key));
+    return FILTER_FROM_DATA[buttonType];
+  }
+
+  toggleButtonClass(buttonElement) {
+    buttonElement.classList.toggle('film-card__controls-item--active');
   }
 
   setPopupClickHandler = (callback) => {

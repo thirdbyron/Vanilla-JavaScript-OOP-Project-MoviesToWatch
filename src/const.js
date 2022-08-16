@@ -26,6 +26,6 @@ export const FILTER_TYPE = {
 export const FILTER_FROM_DATA = {
   watchlist: 'watchlist',
   watched: 'already_watched',
-  favorites: 'favorite',
+  favorite: 'favorite',
 };
 

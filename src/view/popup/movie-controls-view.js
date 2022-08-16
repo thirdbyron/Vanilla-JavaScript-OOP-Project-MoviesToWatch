@@ -1,4 +1,5 @@
 import AbstractView from '../../framework/view/abstract-view.js';
+import { FILTER_FROM_DATA } from '../../const.js';
 
 const createMovieControlsTemplate = () => `<section class="film-details__controls">
 <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
@@ -22,6 +23,11 @@ export default class MovieControlsView extends AbstractView{
 
   get watchlistButtonElement() {
     return this.element.querySelector('#watchlist');
+  }
+
+  getButtonType(buttonElement) {
+    const buttonType = FILTER_FROM_DATA[buttonElement.id];
+    return buttonType;
   }
 
   toggleClass(buttonType) {
