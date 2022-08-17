@@ -1,20 +1,14 @@
 import { remove, render } from '../framework/render.js';
-
 import ShowMoreButtonView from '../view/content/show-more-button-view.js';
-
 import { MOVIES_PER_ROW } from '../const.js';
 
 export default class ShowMoreButtonPresenter {
 
   #mainContainer = null;
-
   #movies = null;
-
-  #showMoreButtonComponent = new ShowMoreButtonView;
-
-  #renderedMoviesCounter = MOVIES_PER_ROW;
-
   #onRenderMovie = null;
+  #showMoreButtonComponent = null;
+  #renderedMoviesCounter = MOVIES_PER_ROW;
 
   init(mainContainer, movies, onRenderMovie) {
 
@@ -22,10 +16,19 @@ export default class ShowMoreButtonPresenter {
     this.#movies = movies;
     this.#onRenderMovie = onRenderMovie;
 
+    this.#renderShowMoreButton();
+
+    this.#setShowMoreHandlers();
+
+  }
+
+  #renderShowMoreButton() {
+    this.#showMoreButtonComponent = new ShowMoreButtonView;
     render(this.#showMoreButtonComponent, this.#mainContainer);
+  }
 
+  #setShowMoreHandlers() {
     this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreClick);
-
   }
 
   #handleShowMoreClick = () => {

@@ -23,3 +23,9 @@ export const FILTER_TYPE = {
   favorites: 'Favorites',
 };
 
+export const FILTER_FROM_DATA = {
+  watchlist: 'watchlist',
+  watched: 'already_watched',
+  favorite: 'favorite',
+};
+

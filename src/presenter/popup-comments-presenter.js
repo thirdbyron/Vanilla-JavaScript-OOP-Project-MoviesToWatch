@@ -1,5 +1,4 @@
 import { render } from '../framework/render.js';
-
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
@@ -7,31 +6,46 @@ import MovieCommentView from '../view/popup/comments/movie-comment-view.js';
 
 export default class PopupCommentsPresenter {
 
-  #commentsWrapperComponent = new MovieCommentsWrapperView;
-  #commentsListComponent = new MovieCommentsListView;
-  #addCommentFormComponent = new MovieAddCommentFormView;
+  #mainContainer = null;
+  #commentsIdNumbers = null;
+  #commentsVariety = null;
+  #commentsWrapperComponent = null;
+  #commentsListComponent = null;
+  #addCommentFormComponent = null;
 
   init(mainContainer, commentsIdNumbers, commentsVariety) {
 
-    render(this.#commentsWrapperComponent, mainContainer);
-    render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
-    render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
+    this.#mainContainer = mainContainer;
+    this.#commentsIdNumbers = commentsIdNumbers;
+    this.#commentsVariety = commentsVariety;
 
-    this.#renderFilteredComments(commentsIdNumbers, commentsVariety);
+    this.#renderComments();
 
     this.#countComments();
 
   }
 
-  #renderFilteredComments(commentsIdNumbers, commentsVariety) {
-    if (commentsIdNumbers.length > 0) {
+  #renderComments() {
+    this.#commentsWrapperComponent = new MovieCommentsWrapperView;
+    this.#commentsListComponent = new MovieCommentsListView;
+    this.#addCommentFormComponent = new MovieAddCommentFormView;
 
-      for (let i = 0; i < commentsIdNumbers.length; i++) {
+    render(this.#commentsWrapperComponent, this.#mainContainer);
+    render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
+    render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
 
-        const relevantComment = commentsVariety.find((comment) => comment.id === commentsIdNumbers[i]);
+    this.#renderFilteredComments();
+  }
 
-        render(new MovieCommentView(relevantComment), this.#commentsListComponent.element);
+  #renderSingleComment(relevantComment) {
+    render(new MovieCommentView(relevantComment), this.#commentsListComponent.element);
+  }
 
+  #renderFilteredComments() {
+    if (this.#commentsIdNumbers.length > 0) {
+      for (let i = 0; i < this.#commentsIdNumbers.length; i++) {
+        const relevantComment = this.#commentsVariety.find((comment) => comment.id === this.#commentsIdNumbers[i]);
+        this.#renderSingleComment(relevantComment);
       }
     }
   }

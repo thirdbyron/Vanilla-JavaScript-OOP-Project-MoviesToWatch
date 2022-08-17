@@ -44,13 +44,23 @@ const generateRandomCommentsId = () => {
   return idNumbers;
 };
 
+const countIdNumber = () => {
+  let counter = 0;
+  return function () {
+    counter += 1;
+    return counter;
+  };
+};
+
+const getIdNumber = countIdNumber();
+
 export const generateMovieFish = () => {
   const randomTitle = generateRandomMovieTitle(MOVIE_FISH_DICTIONARY.posters);
   const posterLink = MOVIE_FISH_DICTIONARY.posters[randomTitle];
   const randomDescription = generateRandomMovieDescription(MOVIE_FISH_DICTIONARY.descriptions);
 
   return {
-    'id': '0',
+    'id': getIdNumber(),
     'comments': [...new Set(generateRandomCommentsId())],
     'film_info': {
       'title': randomTitle,

@@ -1,83 +1,64 @@
-import { render } from '../framework/render.js';
-
+import { render, remove } from '../framework/render.js';
 import PopupWrapperView from '../view/popup/popup-wrapper-view.js';
 import PopupContentView from '../view/popup/popup-content-view.js';
-import MovieDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
-import MovieDescriptionView from '../view/popup/movie-description-view.js';
-import MovieControlsView from '../view/popup/movie-controls-view.js';
-
-import PopupCommentsPresenter from './popup-comments-presenter.js';
+import MovieDescriptionPresenter from './movie-description-presenter.js';
 
 export default class PopupPresenter {
 
   #mainContainer = null;
-
   #movie = null;
   #comments = null;
-
+  #onChangeData = null;
   #wrapperComponent = null;
   #contentComponent = null;
-  #descriptionWrapperComponent = null;
-  #controlsComponent = null;
 
-  #commentPresenter = null;
-
-  init(mainContainer, movie, comments) {
+  init(mainContainer, movie, comments, onChangeData) {
 
     this.#mainContainer = mainContainer;
-
     this.#movie = movie;
     this.#comments = comments;
+    this.#onChangeData = onChangeData;
 
-    this.#removePreviousPopup();
+    this.#renderPopup();
 
-    this.#hideOverflow();
+  }
 
+  #presentMovieDescription() {
+    new MovieDescriptionPresenter().init(
+      this.#contentComponent.element,
+      this.#movie,
+      this.#comments,
+      this.#handlePopupCloseClick,
+      this.#onChangeData
+    );
+  }
+
+  #renderPopup() {
     this.#wrapperComponent = new PopupWrapperView;
     this.#contentComponent = new PopupContentView;
-    this.#descriptionWrapperComponent = new MovieDescriptionWrapperView;
-    this.#controlsComponent = new MovieControlsView;
 
-    this.#commentPresenter = new PopupCommentsPresenter;
-
-    render(this.#wrapperComponent, mainContainer);
+    render(this.#wrapperComponent, this.#mainContainer);
     render(this.#contentComponent, this.#wrapperComponent.element);
-    render(this.#descriptionWrapperComponent, this.#contentComponent.element);
-
-    this.#descriptionWrapperComponent.setCloseClickHandler(this.#handlePopupCloseClick);
 
     window.addEventListener('keydown', this.#onEscKeyDown);
 
-    render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);
-
-    render(this.#controlsComponent, this.#descriptionWrapperComponent.element);
-
-    this.#commentPresenter.init(this.#descriptionWrapperComponent.element, this.#movie.comments, this.#comments);
-
+    this.#presentMovieDescription();
   }
 
-  #removePreviousPopup() {
-    if (this.#mainContainer.querySelector('.film-details')) {
-      this.#mainContainer.querySelector('.film-details').remove();
-    }
-  }
-
-  #hideOverflow() {
-    if (!(this.#mainContainer.classList.contains('hide-overflow'))) {
-      this.#mainContainer.classList.add('hide-overflow');
-    }
+  clear() {
+    remove(this.#wrapperComponent);
+    window.removeEventListener('keydown', this.#onEscKeyDown);
+    document.querySelector('body').classList.remove('hide-overflow');
   }
 
   #handlePopupCloseClick = () => {
-    this.#mainContainer.querySelector('.film-details').remove();
-    this.#mainContainer.classList.remove('hide-overflow');
-    window.removeEventListener('keydown', this.#onEscKeyDown);
+    this.clear();
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#handlePopupCloseClick();
+      this.clear();
     }
   };
 
