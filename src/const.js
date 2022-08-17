@@ -29,3 +29,10 @@ export const FILTER_FROM_DATA = {
   favorite: 'favorite',
 };
 
+export const SORT_TYPE = {
+  default: 'default',
+  date: 'by_date',
+  rating: 'by_rating'
+};
+
+
