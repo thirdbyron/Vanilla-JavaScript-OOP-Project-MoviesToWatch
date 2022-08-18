@@ -96,7 +96,6 @@ const createMovieDescriptionTemplate = (movie) => {
 
 export default class MovieDescriptionView extends AbstractStatefulView {
 
-
   constructor(movie) {
     super();
     this._state = MovieDescriptionView.parseMovieToState(movie);
