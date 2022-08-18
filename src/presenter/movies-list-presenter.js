@@ -10,22 +10,22 @@ export default class MoviesListPresenter {
 
   #mainContainer = null;
   #movies = null;
-  #sourceMovies = null;
   #bodyNode = null;
   #onUpdateFilters = null;
+  #onGetActualMovies = null;
   #moviesListComponent = null;
   #commentsModel = null;
   #movieCardPresenters = new Map();
   #showMoreButtonPresenter = null;
 
 
-  init(mainContainer, movies, sourceMovies, bodyNode, onUpdateFilters) {
+  init(mainContainer, movies, bodyNode, onUpdateFilters, onGetActualMovies) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
-    this.#sourceMovies = sourceMovies;
     this.#bodyNode = bodyNode;
     this.#onUpdateFilters = onUpdateFilters;
+    this.#onGetActualMovies = onGetActualMovies;
     this.#moviesListComponent = new MoviesListView;
     this.#commentsModel = new CommentsModel;
 
@@ -94,7 +94,7 @@ export default class MoviesListPresenter {
 
   #handleChangeData = (movie) => {
     this.#movies = updateItem(this.#movies, movie);
-    this.#sourceMovies = updateItem(this.#sourceMovies, movie);
+    this.#onGetActualMovies(this.#movies);
     this.#onUpdateFilters();
   };
 

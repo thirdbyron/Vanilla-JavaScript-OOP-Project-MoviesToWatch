@@ -87,7 +87,7 @@ export const generateMovieFish = () => {
       },
       'runtime': getRandomInteger(MIN_MAX_NUMBERS.minBig, MIN_MAX_NUMBERS.maxBig),
       'genre': [
-        'Comedy', 'Drama'
+        'Comedy', 'Drama',
       ],
       'description': randomDescription
     },
