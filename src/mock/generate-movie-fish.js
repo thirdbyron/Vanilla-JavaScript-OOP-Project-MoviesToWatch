@@ -14,6 +14,12 @@ const MOVIE_FISH_DICTIONARY = {
   descriptions: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.', 'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.', 'Cras aliqu varius magna, non portafgsgddgsQWEJKLggula gfdhj feughhiat eget.']
 };
 
+const MIN_MAX_NUMBERS = {
+  min: 1,
+  max: 9,
+  minBig: 30,
+  maxBig: 180
+};
 
 const generateRandomMovieTitle = (postersDictionary) => {
   const titles = Object.keys(postersDictionary);
@@ -65,7 +71,7 @@ export const generateMovieFish = () => {
     'film_info': {
       'title': randomTitle,
       'alternative_title': 'Laziness Who Sold Themselves',
-      'total_rating': 5.3,
+      'total_rating': getRandomInteger(MIN_MAX_NUMBERS.min, MIN_MAX_NUMBERS.max),
       'poster': posterLink,
       'age_rating': 0,
       'director': 'Tom Ford',
@@ -76,10 +82,10 @@ export const generateMovieFish = () => {
         'Morgan Freeman', 'Elvis Cruise', 'Ronaldo DiCaprio'
       ],
       'release': {
-        'date': '2019-05-11T00:00:00.000Z',
+        'date': `201${getRandomInteger(MIN_MAX_NUMBERS.min, MIN_MAX_NUMBERS.max)}-0${getRandomInteger(MIN_MAX_NUMBERS.min, MIN_MAX_NUMBERS.max)}-11T00:00:00.000Z`,
         'release_country': 'Finland'
       },
-      'runtime': 77,
+      'runtime': getRandomInteger(MIN_MAX_NUMBERS.minBig, MIN_MAX_NUMBERS.maxBig),
       'genre': [
         'Comedy', 'Drama'
       ],

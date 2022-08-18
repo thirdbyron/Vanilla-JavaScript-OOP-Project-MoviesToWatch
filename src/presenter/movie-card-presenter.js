@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import PopupPresenter from './popup-presenter.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 
@@ -45,6 +45,10 @@ export default class MovieCardPresenter {
 
   }
 
+  destroy() {
+    remove(this.#movieCardComponent);
+  }
+
   clearPreviousPopup() {
     this.isPopupOpen = false;
     this.#popupPresenter.clear();
@@ -81,8 +85,13 @@ export default class MovieCardPresenter {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
   }
 
+  #changeMovieUserDetail(type) {
+    this.#movie.user_details[type] = !(this.#movie.user_details[type]);
+  }
+
   #handleControlButtonClick(buttonElement) {
-    this.#onChangeData(this.#movie, this.#movieCardComponent.getButtonType(buttonElement));
+    this.#changeMovieUserDetail(this.#movieCardComponent.getButtonType(buttonElement));
+    this.#onChangeData(this.#movie);
     this.#movieCardComponent.toggleButtonClass(buttonElement);
   }
 

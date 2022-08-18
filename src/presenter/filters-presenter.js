@@ -26,4 +26,9 @@ export default class FiltersPresenter {
 
     this.#filtersComponent = this.#updatedFiltersComponent;
   };
+
+  getActualMovies = (actualMovies) => {
+    this.#movies = actualMovies;
+  };
+
 }

@@ -9,6 +9,7 @@ export default class ShowMoreButtonPresenter {
   #onRenderMovie = null;
   #showMoreButtonComponent = null;
   #renderedMoviesCounter = MOVIES_PER_ROW;
+  #isDestroyed = false;
 
   init(mainContainer, movies, onRenderMovie) {
 
@@ -27,6 +28,12 @@ export default class ShowMoreButtonPresenter {
     render(this.#showMoreButtonComponent, this.#mainContainer);
   }
 
+  destroy() {
+    if (!this.#isDestroyed) {
+      remove(this.#showMoreButtonComponent);
+    }
+  }
+
   #setShowMoreHandlers() {
     this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreClick);
   }
@@ -42,6 +49,7 @@ export default class ShowMoreButtonPresenter {
 
     if (this.#renderedMoviesCounter >= this.#movies.length) {
       remove(this.#showMoreButtonComponent);
+      this.#isDestroyed = true;
     }
   };
 

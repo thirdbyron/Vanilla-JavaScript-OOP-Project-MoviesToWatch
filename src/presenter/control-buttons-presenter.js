@@ -31,8 +31,14 @@ export default class ControlButtonsPresenter {
     });
   }
 
+  #changeMovieUserDetail(type) {
+    this.#movie.user_details[type] = !(this.#movie.user_details[type]);
+  }
+
   #handleControlButtonClick(buttonElement) {
-    this.#onChangeData(this.#movie, this.#controlButtonsComponent.getButtonType(buttonElement));
+    this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
+    this.#onChangeData(this.#movie);
     this.#controlButtonsComponent.toggleClass(buttonElement);
   }
+
 }

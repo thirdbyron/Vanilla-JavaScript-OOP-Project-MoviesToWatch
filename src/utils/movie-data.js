@@ -47,3 +47,31 @@ export const formatRawDateToRealeaseDate = (releaseDate) => dayjs(releaseDate).f
 
 export const formatRawDateToCommentCreatedDate = (date) => dayjs(date).format('YYYY/M/D H:mm');
 
+const getWeightForNullDate = (movieA, movieB) => {
+  if (movieA === null && movieB === null) {
+    return 0;
+  }
+
+  if (movieA === null) {
+    return 1;
+  }
+
+  if (movieB === null) {
+    return -1;
+  }
+
+  return null;
+};
+
+export const sortMovieByDate = (movieA, movieB) => {
+  const weight = getWeightForNullDate(movieA.film_info.runtime, movieB.film_info.runtime);
+
+  return weight ?? dayjs(movieB.film_info.release.date).diff(dayjs(movieA.film_info.release.date));
+};
+
+export const sortMovieByRating = (movieA, movieB) => {
+  const weight = getWeightForNullDate(movieA.film_info.total_rating, movieB.film_info.total_rating);
+
+  return weight ?? (movieB.film_info.total_rating - movieA.film_info.total_rating);
+};
+
