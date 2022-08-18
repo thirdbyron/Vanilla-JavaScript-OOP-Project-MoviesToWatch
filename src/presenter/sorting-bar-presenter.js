@@ -1,7 +1,7 @@
 import { render } from '../framework/render.js';
-import SortingBarView from '../view/sorting-bar-view.js';
 import { SORT_TYPE } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
+import SortingBarView from '../view/sorting-bar-view.js';
 
 export default class SortingBarPresenter {
 

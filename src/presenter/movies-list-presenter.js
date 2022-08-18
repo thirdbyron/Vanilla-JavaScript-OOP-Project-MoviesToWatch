@@ -1,10 +1,10 @@
 import { render } from '../framework/render.js';
-import MoviesListView from '../view/content/movies-list-view.js';
-import ShowMoreButtonPresenter from './show-more-button-presenter.js';
-import CommentsModel from '../model/comments-model.js';
 import { MOVIES_PER_ROW } from '../const.js';
-import MovieCardPresenter from './movie-card-presenter';
 import { updateItem } from '../utils/common.js';
+import CommentsModel from '../model/comments-model.js';
+import MoviesListView from '../view/content/movies-list-view.js';
+import MovieCardPresenter from './movie-card-presenter';
+import ShowMoreButtonPresenter from './show-more-button-presenter.js';
 
 export default class MoviesListPresenter {
 

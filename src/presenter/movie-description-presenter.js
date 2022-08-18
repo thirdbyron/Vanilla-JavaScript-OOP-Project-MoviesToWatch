@@ -1,8 +1,8 @@
 import { render } from '../framework/render.js';
+import ControlButtonsPresenter from './control-buttons-presenter.js';
 import MovieDescriptionView from '../view/popup/movie-description-view.js';
 import MoviesDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
 import PopupCommentsPresenter from './popup-comments-presenter.js';
-import ControlButtonsPresenter from './control-buttons-presenter.js';
 
 export default class MovieDescriptionPresenter {
 

@@ -71,7 +71,6 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
       });
       this.#checkForActiveEmoji();
     }
-
   };
 
   #checkForActiveEmoji() {

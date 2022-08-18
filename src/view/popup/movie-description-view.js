@@ -1,5 +1,5 @@
-import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils/movie-data.js';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 
 const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 

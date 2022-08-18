@@ -1,7 +1,7 @@
 import { render, remove } from '../framework/render.js';
+import MovieDescriptionPresenter from './movie-description-presenter.js';
 import PopupWrapperView from '../view/popup/popup-wrapper-view.js';
 import PopupContentView from '../view/popup/popup-content-view.js';
-import MovieDescriptionPresenter from './movie-description-presenter.js';
 
 export default class PopupPresenter {
 

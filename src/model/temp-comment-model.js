@@ -1,4 +1,4 @@
-export default class LocalCommentModel {
+export default class TempCommentModel {
   #comment = {
     comment: '',
     emotion: ''
