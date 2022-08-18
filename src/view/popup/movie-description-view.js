@@ -1,5 +1,5 @@
-import AbstractView from '../../framework/view/abstract-view.js';
 import { formatRawDateToRealeaseDate, translateMinutesToRuntime } from '../../utils/movie-data.js';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 
 const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 
@@ -16,11 +16,25 @@ const createGenresListTemplate = (genres) => {
 
 const createMovieDescriptionTemplate = (movie) => {
 
-  const {title, total_rating: totalRating, poster, age_rating: ageRating, director, writers, actors, release, runtime, genre, description } = movie.film_info;
-
-  const releaseDate = release.date !== null ? formatRawDateToRealeaseDate(release.date) : '';
-
-  const timeDuration = runtime !== null && runtime > 0 ? translateMinutesToRuntime(runtime) : '';
+  const {
+    film_info: {
+      title,
+      total_rating: totalRating,
+      poster,
+      age_rating: ageRating,
+      director,
+      description,
+      release: {
+        release_country: releaseCountry,
+      }
+    },
+    writersList,
+    actorsList,
+    releaseDate,
+    timeDuration,
+    genreSectionName,
+    genreListTemplate
+  } = movie;
 
   return `<div class="film-details__info-wrap">
   <div class="film-details__poster">
@@ -48,11 +62,11 @@ const createMovieDescriptionTemplate = (movie) => {
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Writers</td>
-        <td class="film-details__cell">${writers.join(', ')}</td>
+        <td class="film-details__cell">${writersList}</td>
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Actors</td>
-        <td class="film-details__cell">${actors.join(', ')}</td>
+        <td class="film-details__cell">${actorsList}</td>
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Release Date</td>
@@ -64,12 +78,12 @@ const createMovieDescriptionTemplate = (movie) => {
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Country</td>
-        <td class="film-details__cell">${release.release_country}</td>
+        <td class="film-details__cell">${releaseCountry}</td>
       </tr>
       <tr class="film-details__row">
-        <td class="film-details__term">${getNameOfSectionWithGenres(genre)}</td>
+        <td class="film-details__term">${genreSectionName}</td>
         <td class="film-details__cell">
-          ${createGenresListTemplate(genre)}
+          ${genreListTemplate}
       </tr>
     </table>
   
@@ -80,17 +94,31 @@ const createMovieDescriptionTemplate = (movie) => {
   </div>`;
 };
 
-export default class MovieDescriptionView extends AbstractView{
+export default class MovieDescriptionView extends AbstractStatefulView {
 
-  #movie = null;
 
-  constructor (movie) {
+  constructor(movie) {
     super();
-    this.#movie = movie;
+    this._state = MovieDescriptionView.parseMovieToState(movie);
   }
 
   get template() {
-    return createMovieDescriptionTemplate(this.#movie);
+    return createMovieDescriptionTemplate(this._state);
   }
+
+  static parseMovieToState = (movie) => {
+
+    const { writers, actors, release, runtime, genre } = movie.film_info;
+
+    return {
+      ...movie,
+      releaseDate: release.date !== null ? formatRawDateToRealeaseDate(release.date) : '',
+      timeDuration: runtime !== null && runtime > 0 ? translateMinutesToRuntime(runtime) : '',
+      genreSectionName: getNameOfSectionWithGenres(genre),
+      genreListTemplate: createGenresListTemplate(genre),
+      actorsList: actors.join(', '),
+      writersList: writers.join(', '),
+    };
+  };
 
 }

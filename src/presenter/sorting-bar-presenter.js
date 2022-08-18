@@ -1,12 +1,13 @@
 import { render } from '../framework/render.js';
-import SortingBarView from '../view/sorting-bar-view.js';
 import { SORT_TYPE } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
+import SortingBarView from '../view/sorting-bar-view.js';
 
 export default class SortingBarPresenter {
 
   #mainContainer = null;
   #movies = null;
+  #sourceMovies = null;
   #onResetSortedMovies = null;
   #sortingBarComponent = null;
   #onClearMovies = null;
@@ -17,6 +18,7 @@ export default class SortingBarPresenter {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
+    this.#sourceMovies = [...movies];
     this.#onResetSortedMovies = onResetSortedMovies;
     this.#onClearMovies = onClearMovies;
     this.#onRenderMovies = onRenderMovies;
@@ -40,7 +42,7 @@ export default class SortingBarPresenter {
         this.#movies.sort(sortMovieByRating);
         break;
       case SORT_TYPE.default:
-        this.#onResetSortedMovies();
+        this.#onResetSortedMovies(this.#sourceMovies);
     }
 
     this.#currentSortType = sortType;

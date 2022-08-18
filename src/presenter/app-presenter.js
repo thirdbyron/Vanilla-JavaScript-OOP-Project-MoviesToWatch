@@ -1,9 +1,8 @@
 import { render } from '../framework/render.js';
-import ProfileThumbnailView from '../view/profile-thumbnail-view.js';
 import ContentPresenter from './content-presenter.js';
 import MoviesModel from '../model/movies-model.js';
 import FiltersPresenter from './filters-presenter.js';
-
+import ProfileThumbnailView from '../view/profile-thumbnail-view.js';
 
 export default class AppPresenter {
 

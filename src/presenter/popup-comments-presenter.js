@@ -3,6 +3,7 @@ import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrap
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
 import MovieCommentView from '../view/popup/comments/movie-comment-view.js';
+import TempCommentModel from '../model/temp-comment-model.js';
 
 export default class PopupCommentsPresenter {
 
@@ -12,6 +13,7 @@ export default class PopupCommentsPresenter {
   #commentsWrapperComponent = null;
   #commentsListComponent = null;
   #addCommentFormComponent = null;
+  #tempComment = new TempCommentModel().comment;
 
   init(mainContainer, commentsIdNumbers, commentsVariety) {
 
@@ -28,7 +30,7 @@ export default class PopupCommentsPresenter {
   #renderComments() {
     this.#commentsWrapperComponent = new MovieCommentsWrapperView;
     this.#commentsListComponent = new MovieCommentsListView;
-    this.#addCommentFormComponent = new MovieAddCommentFormView;
+    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
     render(this.#commentsWrapperComponent, this.#mainContainer);
     render(this.#commentsListComponent, this.#commentsWrapperComponent.element);

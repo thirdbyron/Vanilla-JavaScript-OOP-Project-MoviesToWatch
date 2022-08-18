@@ -1,6 +1,6 @@
 import { remove, render } from '../framework/render.js';
-import ShowMoreButtonView from '../view/content/show-more-button-view.js';
 import { MOVIES_PER_ROW } from '../const.js';
+import ShowMoreButtonView from '../view/content/show-more-button-view.js';
 
 export default class ShowMoreButtonPresenter {
 
