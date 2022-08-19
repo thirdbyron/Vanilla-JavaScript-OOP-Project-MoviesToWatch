@@ -10,15 +10,15 @@ export default class ContentPresenter {
   #movies = null;
   #contentComponent = null;
   #moviesListWrapperComponent = null;
-  #filterPresenter = null;
+  #onChangeData = null;
   #moviesListPresenter = null;
   #sortingBarPresenter = null;
 
-  init(mainContainer, movies, filterPresenter) {
+  init(mainContainer, movies, onChangeData) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
-    this.#filterPresenter = filterPresenter;
+    this.#onChangeData = onChangeData;
 
     this.#checkForMovies();
 
@@ -34,7 +34,6 @@ export default class ContentPresenter {
     this.#sortingBarPresenter.init(
       this.#mainContainer,
       this.#movies,
-      this.#handleGetActualMovies,
       this.#handleClearMovies,
       this.#handleRenderMovies
     );
@@ -46,8 +45,7 @@ export default class ContentPresenter {
       this.#moviesListWrapperComponent.element,
       this.#movies,
       this.#mainContainer.parentNode,
-      this.#filterPresenter.updateFilters,
-      this.#handleGetActualMovies
+      this.#onChangeData,
     );
 
   }
@@ -59,13 +57,6 @@ export default class ContentPresenter {
       this.#renderContent();
     }
   }
-
-  #handleGetActualMovies = (movies) => {
-    this.#movies = [...movies];
-    this.#sortingBarPresenter.getActualMovies(this.#movies);
-    this.#filterPresenter.getActualMovies(this.#movies);
-    this.#moviesListPresenter.getActualMovies(this.#movies);
-  };
 
   #handleClearMovies = () => {
     this.#moviesListPresenter.clearMoviesList();

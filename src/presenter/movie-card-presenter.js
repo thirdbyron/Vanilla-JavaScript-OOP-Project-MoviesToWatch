@@ -1,4 +1,5 @@
 import { render, remove } from '../framework/render.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -91,7 +92,7 @@ export default class MovieCardPresenter {
 
   #handleControlButtonClick(buttonElement) {
     this.#changeMovieUserDetail(this.#movieCardComponent.getButtonType(buttonElement));
-    this.#onChangeData(this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
     this.#movieCardComponent.toggleButtonClass(buttonElement);
   }
 

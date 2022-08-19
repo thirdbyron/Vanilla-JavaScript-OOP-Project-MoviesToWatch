@@ -35,4 +35,13 @@ export const SORT_TYPE = {
   rating: 'by_rating'
 };
 
+export const USER_ACTION = {
+  updateMovie: 'update_movie',
+};
+
+export const UPDATE_TYPE = {
+  patch: 'PATCH',
+  minor: 'MINOR',
+  major: 'MAJOR',
+};
 

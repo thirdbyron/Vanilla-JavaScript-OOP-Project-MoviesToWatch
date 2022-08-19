@@ -1,6 +1,5 @@
 import { render } from '../framework/render.js';
 import { MOVIES_PER_ROW } from '../const.js';
-import { updateItem } from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
 import MoviesListView from '../view/content/movies-list-view.js';
 import MovieCardPresenter from './movie-card-presenter';
@@ -11,21 +10,19 @@ export default class MoviesListPresenter {
   #mainContainer = null;
   #movies = null;
   #bodyNode = null;
-  #onUpdateFilters = null;
-  #onGetActualMovies = null;
+  #onChangeData = null;
   #moviesListComponent = null;
   #commentsModel = null;
   #movieCardPresenters = new Map();
   #showMoreButtonPresenter = null;
 
 
-  init(mainContainer, movies, bodyNode, onUpdateFilters, onGetActualMovies) {
+  init(mainContainer, movies, bodyNode, onChangeData) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
-    this.#onUpdateFilters = onUpdateFilters;
-    this.#onGetActualMovies = onGetActualMovies;
+    this.#onChangeData = onChangeData;
     this.#moviesListComponent = new MoviesListView;
     this.#commentsModel = new CommentsModel;
 
@@ -61,7 +58,7 @@ export default class MoviesListPresenter {
       this.#bodyNode,
       this.#removePreviousPopup,
       this.#hideOverflow,
-      this.#handleChangeData
+      this.#onChangeData
     );
 
     this.#movieCardPresenters.set(movie.id, moviePresenter);
@@ -90,12 +87,6 @@ export default class MoviesListPresenter {
     if (!(document.querySelector('body').classList.contains('hide-overflow'))) {
       document.querySelector('body').classList.add('hide-overflow');
     }
-  };
-
-  #handleChangeData = (movie) => {
-    this.#movies = updateItem(this.#movies, movie);
-    this.#onGetActualMovies(this.#movies);
-    this.#onUpdateFilters();
   };
 
 }
