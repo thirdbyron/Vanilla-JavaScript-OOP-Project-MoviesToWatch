@@ -18,6 +18,7 @@ export const EMPTY_MOVIE_LIST_TITLES = {
 };
 
 export const FILTER_TYPE = {
+  all: 'All movies',
   watchlist: 'Watchlist',
   history: 'History',
   favorites: 'Favorites',

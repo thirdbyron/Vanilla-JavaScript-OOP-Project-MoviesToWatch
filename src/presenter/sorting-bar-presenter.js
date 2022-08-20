@@ -1,6 +1,5 @@
 import { render } from '../framework/render.js';
 import { SORT_TYPE } from '../const.js';
-import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import SortingBarView from '../view/sorting-bar-view.js';
 
 export default class SortingBarPresenter {
@@ -47,10 +46,6 @@ export default class SortingBarPresenter {
 
     this.#currentSortType = sortType;
   };
-
-  getActualMovies(actualMovies) {
-    this.#movies = actualMovies;
-  }
 
   #handleMoviesChange = (sortType) => {
     if (this.#currentSortType !== sortType) {
