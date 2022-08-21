@@ -29,4 +29,8 @@ export default class MoviesModel extends Observable {
     this._notify(updateType, update);
   };
 
+  sortMovies = (updateType, update) => {
+    this._notify(updateType, update);
+  };
+
 }

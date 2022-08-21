@@ -1,16 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { FILTER_TYPE } from '../const.js';
 
+const createFilterCounterTemplate = (name, quantity) => FILTER_TYPE.all !== name ? `<span class="main-navigation__item-count">${quantity.length}</span>` : '';
+
 const createFilterItemTemplate = (filter, currentType) => {
   const { name, quantity, type } = filter;
-  return `<a href="#${type}" class="main-navigation__item ${currentType === type ? 'main-navigation__item--active' : ''}" data-filter-type="${type}"> ${name} <span class="main-navigation__item-count">${quantity.length}</span></a>`;
+  return `<a href="#${type}" class="main-navigation__item ${currentType === type ? 'main-navigation__item--active' : ''}" data-filter-type="${type}"> ${name} ${createFilterCounterTemplate(name, quantity)}</a>`;
 };
 
 const createFiltersTemplate = (filters, currentType) => {
   const filtersWithMovieQuantityTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentType)).join('');
 
   return `<nav class="main-navigation">
-  <a href="#all" class="main-navigation__item main-navigation__item--active" data-filter-type="all">All movies</a>
   ${filtersWithMovieQuantityTemplate}
   </nav>`;
 };

@@ -1,6 +1,7 @@
-import { render } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION, SORT_TYPE } from '../const.js';
+import { remove, render } from '../framework/render.js';
+import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
+import { moviesPerFilter } from '../utils/filters.js';
 import ContentView from '../view/content/content-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListPresenter from './movies-list-presenter.js';
@@ -13,19 +14,23 @@ export default class ContentPresenter {
   #filtersModel = null;
   #contentComponent = null;
   #moviesListWrapperComponent = null;
-  #onChangeData = null;
   #moviesListPresenter = null;
   #sortingBarPresenter = null;
   #currentSortType = null;
 
   get movies() {
+
+    const filterType = this.#filtersModel.filter;
+    const movies = this.#moviesModel.movies;
+    const filteredMovies = moviesPerFilter[FILTER_TYPE[filterType]](movies);
+
     switch (this.#currentSortType) {
       case SORT_TYPE.date:
-        return [...this.#moviesModel.movies.sort(sortMovieByDate)];
+        return filteredMovies.sort(sortMovieByDate);
       case SORT_TYPE.rating:
-        return [...this.#moviesModel.movies.sort(sortMovieByRating)];
+        return filteredMovies.sort(sortMovieByRating);
     }
-    return this.#moviesModel.movies;
+    return filteredMovies;
   }
 
   init(mainContainer, moviesModel, filtersModel) {
@@ -42,66 +47,78 @@ export default class ContentPresenter {
 
   }
 
-  #renderContent() {
-
-    this.#sortingBarPresenter = new SortingBarPresenter;
-    this.#moviesListPresenter = new MoviesListPresenter;
-    this.#contentComponent = new ContentView;
-    this.#moviesListWrapperComponent = new MoviesListWrapperView;
-
-    this.#sortingBarPresenter.init(
-      this.#mainContainer,
-      this.movies,
-      this.#handleClearMovies,
-      this.#handleRenderMovies
-    );
-
+  #renderContentTemplate() {
     render(this.#contentComponent, this.#mainContainer);
     render(this.#moviesListWrapperComponent, this.#contentComponent.element);
+  }
 
+  #renderContent() {
+    this.#renderContentTemplate();
+
+    this.#moviesListPresenter = new MoviesListPresenter;
     this.#moviesListPresenter.init(
       this.#moviesListWrapperComponent.element,
       this.movies,
       this.#mainContainer.parentNode,
-      this.#onChangeData,
+      this.#handleViewAction,
+      this.#filtersModel.filter
     );
-
   }
 
   #checkForMovies() {
+    this.#contentComponent = new ContentView;
+    this.#moviesListWrapperComponent = new MoviesListWrapperView(this.#filtersModel.filter);
+
+    this.#sortingBarPresenter = new SortingBarPresenter;
+    this.#sortingBarPresenter.init(
+      this.#mainContainer,
+      this.#currentSortType,
+      this.#handleViewAction
+    );
+
     if (this.movies.length === 0) {
+      this.#sortingBarPresenter.destroy();
+      this.#renderContentTemplate();
       this.#moviesListWrapperComponent.showEmptyListTitle();
     } else {
       this.#renderContent();
     }
   }
 
-  #handleClearMovies = () => {
-    this.#moviesListPresenter.clearMoviesList();
-  };
+  #clearContent(needSortTypeReset = false) {
+    if (needSortTypeReset) {
+      this.#currentSortType = SORT_TYPE.default;
+    }
+    remove(this.#contentComponent);
+    this.#sortingBarPresenter.destroy();
+  }
 
-  #handleRenderMovies = () => {
-    this.#moviesListPresenter.renderMoviesList(this.movies);
-  };
-
-  #handleViewAction = (actionType, updateType, updatedMovie) => {
+  #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case USER_ACTION.updateMovie:
-        this.#moviesModel.updateMovie(updateType, updatedMovie);
+        this.#moviesModel.updateMovie(updateType, update);
+        break;
+      case USER_ACTION.sortMovies:
+        this.#moviesModel.sortMovies(updateType, update);
         break;
     }
   };
 
-  #handleModelEvent = (updateType, updatedMovie) => {
+  #handleModelEvent = (updateType, update) => {
     switch (updateType) {
       case UPDATE_TYPE.patch:
 
         break;
       case UPDATE_TYPE.minor:
-        // - обновить список (например, когда задача ушла в архив)
+        if (Object.values(SORT_TYPE).some((value) => update === value)) {
+          this.#currentSortType = update;
+        }
+        this.#clearContent();
+        this.#checkForMovies();
         break;
       case UPDATE_TYPE.major:
-        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearContent(true);
+        this.#checkForMovies();
         break;
     }
   };

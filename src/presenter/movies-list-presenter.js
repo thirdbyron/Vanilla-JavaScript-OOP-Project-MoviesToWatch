@@ -11,18 +11,20 @@ export default class MoviesListPresenter {
   #movies = null;
   #bodyNode = null;
   #onChangeData = null;
+  #currentFilter = null;
   #moviesListComponent = null;
   #commentsModel = null;
   #movieCardPresenters = new Map();
   #showMoreButtonPresenter = null;
 
 
-  init(mainContainer, movies, bodyNode, onChangeData) {
+  init(mainContainer, movies, bodyNode, onChangeData, currentFilter) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
     this.#onChangeData = onChangeData;
+    this.#currentFilter = currentFilter;
     this.#moviesListComponent = new MoviesListView;
     this.#commentsModel = new CommentsModel;
 
@@ -32,9 +34,11 @@ export default class MoviesListPresenter {
 
   renderMoviesList() {
     render(this.#moviesListComponent, this.#mainContainer);
+
     for (let i = 0; i < Math.min(this.#movies.length, MOVIES_PER_ROW); i++) {
       this.#presentMovieCard(this.#movies[i]);
     }
+
     this.#presentShowMoreButton();
   }
 
@@ -45,8 +49,8 @@ export default class MoviesListPresenter {
     this.#showMoreButtonPresenter = null;
   }
 
-  getActualMovies(actualMovies) {
-    this.#movies = actualMovies;
+  removeMovieCard(movie) {
+    this.#movieCardPresenters.get(movie.id).destroy();
   }
 
   #presentMovieCard = (movie) => {
@@ -58,7 +62,8 @@ export default class MoviesListPresenter {
       this.#bodyNode,
       this.#removePreviousPopup,
       this.#hideOverflow,
-      this.#onChangeData
+      this.#onChangeData,
+      this.#currentFilter
     );
 
     this.#movieCardPresenters.set(movie.id, moviePresenter);

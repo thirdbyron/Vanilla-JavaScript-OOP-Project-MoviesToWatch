@@ -1,5 +1,5 @@
 import { render, remove } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION, FILTER_FROM_DATA_TO_TYPE } from '../const.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -12,6 +12,7 @@ export default class MovieCardPresenter {
   #removePreviosPopup = null;
   #hideOverflow = null;
   #onChangeData = null;
+  #currentFilter = null;
   #movieCardComponent = null;
   #popupPresenter = null;
   #isPopupOpen = false;
@@ -28,15 +29,16 @@ export default class MovieCardPresenter {
   }
 
 
-  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData) {
+  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData, currentFilter) {
 
     this.#moviesListComponent = moviesListComponent;
-    this.#movie = movie;
+    this.#movie = {...movie};
     this.#comments = commentsModel.comments;
     this.#bodyNode = bodyNode;
     this.#removePreviosPopup = onRemovePreviosPopup;
     this.#hideOverflow = onHideOverflow;
     this.#onChangeData = onChangeData;
+    this.#currentFilter = currentFilter;
     this.#movieCardComponent = new MovieCardView(this.#movie);
     this.#popupPresenter = new PopupPresenter;
 
@@ -91,8 +93,13 @@ export default class MovieCardPresenter {
   }
 
   #handleControlButtonClick(buttonElement) {
-    this.#changeMovieUserDetail(this.#movieCardComponent.getButtonType(buttonElement));
-    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
+    const filterType = this.#movieCardComponent.getButtonType(buttonElement);
+    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
+
+    this.#changeMovieUserDetail(filterType);
+
+    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
+
     this.#movieCardComponent.toggleButtonClass(buttonElement);
   }
 
