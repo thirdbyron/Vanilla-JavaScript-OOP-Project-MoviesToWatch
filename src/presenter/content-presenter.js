@@ -3,6 +3,7 @@ import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import { moviesPerFilter } from '../utils/filters.js';
 import ContentView from '../view/content/content-view.js';
+import CommentsModel from '../model/comments-model.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListPresenter from './movies-list-presenter.js';
 import SortingBarPresenter from './sorting-bar-presenter.js';
@@ -12,6 +13,7 @@ export default class ContentPresenter {
   #mainContainer = null;
   #moviesModel = null;
   #filtersModel = null;
+  #commentsModel = null;
   #contentComponent = null;
   #moviesListWrapperComponent = null;
   #moviesListPresenter = null;
@@ -38,6 +40,7 @@ export default class ContentPresenter {
     this.#mainContainer = mainContainer;
     this.#moviesModel = moviesModel;
     this.#filtersModel = filtersModel;
+    this.#commentsModel = new CommentsModel;
     this.#currentSortType = SORT_TYPE.default;
 
     this.#moviesModel.addObserver(this.#handleModelEvent);
@@ -61,7 +64,9 @@ export default class ContentPresenter {
       this.movies,
       this.#mainContainer.parentNode,
       this.#handleViewAction,
-      this.#filtersModel.filter
+      this.#filtersModel.filter,
+      this.#commentsModel,
+      this.#moviesModel
     );
   }
 
@@ -110,7 +115,7 @@ export default class ContentPresenter {
 
         break;
       case UPDATE_TYPE.minor:
-        if (Object.values(SORT_TYPE).some((value) => update === value)) {
+        if (update !== null && Object.values(SORT_TYPE).some((value) => update === value)) {
           this.#currentSortType = update;
         }
         this.#clearContent();

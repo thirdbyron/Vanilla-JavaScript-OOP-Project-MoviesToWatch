@@ -1,6 +1,5 @@
 import { render } from '../framework/render.js';
 import { MOVIES_PER_ROW } from '../const.js';
-import CommentsModel from '../model/comments-model.js';
 import MoviesListView from '../view/content/movies-list-view.js';
 import MovieCardPresenter from './movie-card-presenter';
 import ShowMoreButtonPresenter from './show-more-button-presenter.js';
@@ -14,19 +13,21 @@ export default class MoviesListPresenter {
   #currentFilter = null;
   #moviesListComponent = null;
   #commentsModel = null;
+  #moviesModel = null;
   #movieCardPresenters = new Map();
   #showMoreButtonPresenter = null;
 
 
-  init(mainContainer, movies, bodyNode, onChangeData, currentFilter) {
+  init(mainContainer, movies, bodyNode, onChangeData, currentFilter, commentsModel, moviesModel) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
+    this.#commentsModel = commentsModel;
+    this.#moviesModel = moviesModel;
     this.#moviesListComponent = new MoviesListView;
-    this.#commentsModel = new CommentsModel;
 
     this.renderMoviesList();
 
@@ -63,7 +64,8 @@ export default class MoviesListPresenter {
       this.#removePreviousPopup,
       this.#hideOverflow,
       this.#onChangeData,
-      this.#currentFilter
+      this.#currentFilter,
+      this.#moviesModel
     );
 
     this.#movieCardPresenters.set(movie.id, moviePresenter);

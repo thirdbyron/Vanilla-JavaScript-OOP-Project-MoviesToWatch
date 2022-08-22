@@ -1,4 +1,5 @@
 import { render } from '../framework/render.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieControlsView from '../view/popup/movie-controls-view.js';
 
 export default class ControlButtonsPresenter {
@@ -12,7 +13,7 @@ export default class ControlButtonsPresenter {
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#onChangeData = onChangeData;
-    this.#controlButtonsComponent = new MovieControlsView;
+    this.#controlButtonsComponent = new MovieControlsView(this.#movie);
 
     render(this.#controlButtonsComponent, this.#mainContainer);
 
@@ -37,7 +38,7 @@ export default class ControlButtonsPresenter {
 
   #handleControlButtonClick(buttonElement) {
     this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
-    this.#onChangeData(this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.minor, this.#movie);
     this.#controlButtonsComponent.toggleClass(buttonElement);
   }
 

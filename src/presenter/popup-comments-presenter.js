@@ -1,4 +1,5 @@
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
+import { UPDATE_TYPE } from '../const.js';
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
@@ -8,18 +9,23 @@ import TempCommentModel from '../model/temp-comment-model.js';
 export default class PopupCommentsPresenter {
 
   #mainContainer = null;
-  #commentsIdNumbers = null;
-  #commentsVariety = null;
+  #moviesModel = null;
+  #commentsModel = null;
+  #movie = null;
   #commentsWrapperComponent = null;
   #commentsListComponent = null;
+  #commentComponent = null;
   #addCommentFormComponent = null;
-  #tempComment = new TempCommentModel().comment;
+  #tempComment = null;
 
-  init(mainContainer, commentsIdNumbers, commentsVariety) {
+  init(mainContainer, moviesModel, commentsModel, movie) {
 
     this.#mainContainer = mainContainer;
-    this.#commentsIdNumbers = commentsIdNumbers;
-    this.#commentsVariety = commentsVariety;
+    this.#moviesModel = moviesModel;
+    this.#commentsModel = commentsModel;
+    this.#movie = movie;
+
+    this.#commentsModel.addObserver(this.#handleModelEvent);
 
     this.#renderComments();
 
@@ -28,6 +34,8 @@ export default class PopupCommentsPresenter {
   }
 
   #renderComments() {
+    this.#tempComment = new TempCommentModel().comment;
+
     this.#commentsWrapperComponent = new MovieCommentsWrapperView;
     this.#commentsListComponent = new MovieCommentsListView;
     this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
@@ -40,20 +48,43 @@ export default class PopupCommentsPresenter {
   }
 
   #renderSingleComment(relevantComment) {
-    render(new MovieCommentView(relevantComment), this.#commentsListComponent.element);
+    this.#commentComponent = new MovieCommentView(relevantComment);
+    render(this.#commentComponent, this.#commentsListComponent.element);
+    this.#commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
   }
 
   #renderFilteredComments() {
-    if (this.#commentsIdNumbers.length > 0) {
-      for (let i = 0; i < this.#commentsIdNumbers.length; i++) {
-        const relevantComment = this.#commentsVariety.find((comment) => comment.id === this.#commentsIdNumbers[i]);
+    const commentsVariety = this.#commentsModel.comments;
+    const commentIdNumbersPerMovie = this.#movie.comments;
+
+    if (commentIdNumbersPerMovie.length > 0) {
+      for (let i = 0; i < commentIdNumbersPerMovie.length; i++) {
+        const relevantComment = commentsVariety.find((comment) => comment.id === commentIdNumbersPerMovie[i]);
         this.#renderSingleComment(relevantComment);
       }
     }
+
+
   }
 
   #countComments() {
     this.#commentsWrapperComponent.element.querySelector('.film-details__comments-count').textContent = this.#commentsListComponent.element.children.length;
   }
+
+  #handleDeleteClick = (commentToDelete) => {
+    this.#movie = {
+      ...this.#movie, comments: this.#movie.comments.filter((commentId) =>
+        commentId !== commentToDelete.id
+      )
+    };
+    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
+    this.#commentsModel.deleteComment(commentToDelete);
+  };
+
+  #handleModelEvent = () => {
+    remove(this.#commentsWrapperComponent);
+    this.#renderComments();
+  };
+
 
 }

@@ -30,7 +30,9 @@ export default class SortingBarPresenter {
   }
 
   #handleCurrentSortType = (choosenSortType) => {
-    this.#onChangeData(USER_ACTION.sortMovies, UPDATE_TYPE.minor, choosenSortType);
+    if (choosenSortType !== this.#currentSortType) {
+      this.#onChangeData(USER_ACTION.sortMovies, UPDATE_TYPE.minor, choosenSortType);
+    }
   };
 
 }

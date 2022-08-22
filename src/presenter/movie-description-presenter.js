@@ -8,22 +8,24 @@ export default class MovieDescriptionPresenter {
 
   #mainContainer = null;
   #movie = null;
-  #comments = null;
+  #commentsModel = null;
   #descriptionWrapperComponent = null;
   #closeHandler = null;
   #onChangeData = null;
+  #moviesModel = null;
   #controlButtonsPresenter = null;
   #popupCommentsPresenter = null;
 
-  init(mainContainer, movie, comments, closeHandler, onChangeData) {
+  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
-    this.#comments = comments;
+    this.#commentsModel = commentsModel;
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
+    this.#moviesModel = moviesModel;
     this.#descriptionWrapperComponent = new MoviesDescriptionWrapperView;
-    this.#controlButtonsPresenter = new ControlButtonsPresenter;
+    this.#controlButtonsPresenter = new ControlButtonsPresenter(this.#movie);
     this.#popupCommentsPresenter = new PopupCommentsPresenter;
 
     this.#renderDescription();
@@ -45,8 +47,9 @@ export default class MovieDescriptionPresenter {
   #presentPopupComments() {
     this.#popupCommentsPresenter.init(
       this.#descriptionWrapperComponent.element,
-      this.#movie.comments,
-      this.#comments
+      this.#moviesModel,
+      this.#commentsModel,
+      this.#movie
     );
   }
 

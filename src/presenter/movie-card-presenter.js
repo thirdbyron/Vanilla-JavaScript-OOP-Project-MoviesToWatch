@@ -7,12 +7,13 @@ export default class MovieCardPresenter {
 
   #moviesListComponent = null;
   #movie = null;
-  #comments = null;
+  #commentsModel = null;
   #bodyNode = null;
   #removePreviosPopup = null;
   #hideOverflow = null;
   #onChangeData = null;
   #currentFilter = null;
+  #moviesModel = null;
   #movieCardComponent = null;
   #popupPresenter = null;
   #isPopupOpen = false;
@@ -29,16 +30,17 @@ export default class MovieCardPresenter {
   }
 
 
-  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData, currentFilter) {
+  init(moviesListComponent, movie, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
 
     this.#moviesListComponent = moviesListComponent;
-    this.#movie = {...movie};
-    this.#comments = commentsModel.comments;
+    this.#movie = movie;
+    this.#commentsModel = commentsModel;
     this.#bodyNode = bodyNode;
     this.#removePreviosPopup = onRemovePreviosPopup;
     this.#hideOverflow = onHideOverflow;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
+    this.#moviesModel = moviesModel;
     this.#movieCardComponent = new MovieCardView(this.#movie);
     this.#popupPresenter = new PopupPresenter;
 
@@ -78,8 +80,9 @@ export default class MovieCardPresenter {
     this.#popupPresenter.init(
       this.#bodyNode,
       this.#movie,
-      [...this.#comments],
-      this.#onChangeData
+      this.#commentsModel,
+      this.#onChangeData,
+      this.#moviesModel
     );
     this.isPopupOpen = true;
   }
@@ -101,6 +104,7 @@ export default class MovieCardPresenter {
     this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
 
     this.#movieCardComponent.toggleButtonClass(buttonElement);
+
   }
 
 }
