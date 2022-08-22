@@ -25,20 +25,19 @@ export default class PopupCommentsPresenter {
     this.#commentsModel = commentsModel;
     this.#movie = movie;
 
+    this.#tempComment = new TempCommentModel().comment;
+    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
+
     this.#commentsModel.addObserver(this.#handleModelEvent);
 
     this.#renderComments();
 
-    this.#countComments();
-
   }
 
   #renderComments() {
-    this.#tempComment = new TempCommentModel().comment;
 
-    this.#commentsWrapperComponent = new MovieCommentsWrapperView;
+    this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#movie);
     this.#commentsListComponent = new MovieCommentsListView;
-    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
     render(this.#commentsWrapperComponent, this.#mainContainer);
     render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
@@ -46,6 +45,7 @@ export default class PopupCommentsPresenter {
 
     this.#renderFilteredComments();
   }
+
 
   #renderSingleComment(relevantComment) {
     this.#commentComponent = new MovieCommentView(relevantComment);
@@ -55,6 +55,7 @@ export default class PopupCommentsPresenter {
 
   #renderFilteredComments() {
     const commentsVariety = this.#commentsModel.comments;
+
     const commentIdNumbersPerMovie = this.#movie.comments;
 
     if (commentIdNumbersPerMovie.length > 0) {
@@ -67,16 +68,11 @@ export default class PopupCommentsPresenter {
 
   }
 
-  #countComments() {
-    this.#commentsWrapperComponent.element.querySelector('.film-details__comments-count').textContent = this.#commentsListComponent.element.children.length;
-  }
-
   #handleDeleteClick = (commentToDelete) => {
-    this.#movie = {
-      ...this.#movie, comments: this.#movie.comments.filter((commentId) =>
-        commentId !== commentToDelete.id
-      )
-    };
+    this.#movie.comments = this.#movie.comments.filter((commentId) =>
+      commentId !== commentToDelete.id
+    );
+
     this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
     this.#commentsModel.deleteComment(commentToDelete);
   };

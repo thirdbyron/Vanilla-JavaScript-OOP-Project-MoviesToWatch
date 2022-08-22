@@ -4,7 +4,7 @@ const createMovieAddCommentFormtTemplate = (state) => `<form class="film-details
 <div class="film-details__add-emoji-label">${state.emojiImgTemplate}</div>
 
 <label class="film-details__comment-label">
-  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+  <textarea class="film-details__comment-input" placeholder="${state.comment !== '' ? state.comment : 'Select reaction below and write comment here'}" name="comment"></textarea>
 </label>
 
 <div class="film-details__emoji-list">
@@ -61,11 +61,13 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     evt.preventDefault();
     if (evt.target.value === this._state.emotion) {
       this.updateElement({
+        comment: this._state.comment,
         emotion: '',
         emojiImgTemplate: '',
       });
     } else {
       this.updateElement({
+        comment: this._state.comment,
         emotion: `${evt.target.value}`,
         emojiImgTemplate: `<img src="./images/emoji/${evt.target.value}.png" width="100%" height="100%" alt="emoji"></img>`
       });

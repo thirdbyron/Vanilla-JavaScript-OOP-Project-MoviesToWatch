@@ -1,4 +1,4 @@
-export const MAX_MOVIE_COMENTS = 10;
+export const MAX_MOVIE_COMENTS = 15;
 
 export const MAX_MOVIES = 3;
 

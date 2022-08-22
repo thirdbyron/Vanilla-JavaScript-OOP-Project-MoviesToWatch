@@ -1,5 +1,4 @@
 import { getRandomInteger } from '../utils/common.js';
-import { MAX_MOVIE_COMENTS } from '../const.js';
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -21,6 +20,8 @@ const MIN_MAX_NUMBERS = {
   maxBig: 180
 };
 
+const MAX_COMMENT_INCREASER = 5;
+
 const generateRandomMovieTitle = (postersDictionary) => {
   const titles = Object.keys(postersDictionary);
 
@@ -38,18 +39,6 @@ const generateRandomMovieDescription = (descriptions) => {
   return randomDescription;
 };
 
-const generateRandomCommentsId = () => {
-  const idNumbers = [];
-  const randomMaximumOfComments = getRandomInteger(0, MAX_MOVIE_COMENTS);
-  if (randomMaximumOfComments > 0) {
-    for (let i = 0; i < randomMaximumOfComments; i++) {
-      const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
-      idNumbers.push(randomId);
-    }
-  }
-  return idNumbers;
-};
-
 const countIdNumber = () => {
   let counter = 0;
   return function () {
@@ -60,6 +49,20 @@ const countIdNumber = () => {
 
 const getIdNumber = countIdNumber();
 
+const generateRandomCommentsId = () => {
+  const commentIdNumbers = [];
+  return function () {
+    const initialLength = commentIdNumbers.length;
+    for (let i = initialLength + 1; i <= initialLength + getRandomInteger(0, MAX_COMMENT_INCREASER); i++) {
+      commentIdNumbers.push(i);
+    }
+    const newIdNumbers = commentIdNumbers.slice(initialLength);
+    return newIdNumbers;
+  };
+};
+
+const getNoRepeatingSetOfIdNumbers = generateRandomCommentsId();
+
 export const generateMovieFish = () => {
   const randomTitle = generateRandomMovieTitle(MOVIE_FISH_DICTIONARY.posters);
   const posterLink = MOVIE_FISH_DICTIONARY.posters[randomTitle];
@@ -67,7 +70,7 @@ export const generateMovieFish = () => {
 
   return {
     'id': getIdNumber(),
-    'comments': [...new Set(generateRandomCommentsId())],
+    'comments': getNoRepeatingSetOfIdNumbers(),
     'film_info': {
       'title': randomTitle,
       'alternative_title': 'Laziness Who Sold Themselves',
