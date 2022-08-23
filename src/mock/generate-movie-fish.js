@@ -1,4 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
+import { MAX_MOVIE_COMENTS } from '../const.js';
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -49,12 +50,16 @@ const countIdNumber = () => {
 
 const getIdNumber = countIdNumber();
 
+// Сложная функция нужна только для рыбных данных. Временное решение!
+
 const generateRandomCommentsId = () => {
   const commentIdNumbers = [];
   return function () {
     const initialLength = commentIdNumbers.length;
     for (let i = initialLength + 1; i <= initialLength + getRandomInteger(0, MAX_COMMENT_INCREASER); i++) {
-      commentIdNumbers.push(i);
+      if (commentIdNumbers.length < MAX_MOVIE_COMENTS) {
+        commentIdNumbers.push(i);
+      }
     }
     const newIdNumbers = commentIdNumbers.slice(initialLength);
     return newIdNumbers;

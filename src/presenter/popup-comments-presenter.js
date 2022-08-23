@@ -64,8 +64,6 @@ export default class PopupCommentsPresenter {
         this.#renderSingleComment(relevantComment);
       }
     }
-
-
   }
 
   #handleDeleteClick = (commentToDelete) => {

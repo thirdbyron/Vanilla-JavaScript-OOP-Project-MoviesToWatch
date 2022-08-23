@@ -1,6 +1,6 @@
-export const MAX_MOVIE_COMENTS = 15;
+export const MAX_MOVIE_COMENTS = 45;
 
-export const MAX_MOVIES = 3;
+export const MAX_MOVIES = 30;
 
 export const MOVIES_PER_ROW = 5;
 
