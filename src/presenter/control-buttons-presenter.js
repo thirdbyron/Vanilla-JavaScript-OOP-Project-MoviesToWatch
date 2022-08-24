@@ -48,7 +48,7 @@ export default class ControlButtonsPresenter {
 
   #handleControlButtonClick(buttonElement) {
     this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
-    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.minor, this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
     this.#controlButtonsComponent.toggleClass(buttonElement);
   }
 

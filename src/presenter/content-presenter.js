@@ -95,13 +95,16 @@ export default class ContentPresenter {
   }
 
   #clearContent(needSortTypeReset = false) {
-    if (this.#moviesListPresenter) {
-      this.#moviesListPresenter.clearMoviesList();
-    } else if (needSortTypeReset) {
+    if (needSortTypeReset) {
       this.#currentSortType = SORT_TYPE.default;
     }
-    remove(this.#contentComponent);
+
     this.#sortingBarPresenter.destroy();
+
+    if (this.#moviesListPresenter) {
+      this.#moviesListPresenter.clearMoviesList();
+    }
+    remove(this.#contentComponent);
   }
 
   #handleViewAction = (actionType, updateType, update) => {
