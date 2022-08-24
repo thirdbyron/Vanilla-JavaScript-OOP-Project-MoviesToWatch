@@ -73,14 +73,14 @@ export default class PopupCommentsPresenter {
       commentId !== commentToDelete.id
     );
     this.#commentsModel.deleteComment(commentToDelete, this.#movie);
-    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
+    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
   };
 
   #handleAddComment = (newComment) => {
     const commentNewId = nanoid(3);
     this.#movie.comments.push(commentNewId);
     this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment}, this.#movie);
-    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
+    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
   };
 
   removeAddCommentHandler() {

@@ -101,7 +101,6 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
 
   #addCommentHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === 13 || evt.keyCode === 10)) {
-      console.log(this._state)
       this._callback.addComment(MovieAddCommentFormView.parseStateToComment(this._state));
       this.updateElement({
         comment: '',

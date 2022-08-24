@@ -46,8 +46,6 @@ export default class MovieCardPresenter {
 
     this.#renderMovieCard();
 
-    this.#setHandlers();
-
   }
 
   destroy() {
@@ -94,6 +92,8 @@ export default class MovieCardPresenter {
 
   #renderMovieCard() {
     render(this.#movieCardComponent, this.#moviesListComponent.element);
+
+    this.#setHandlers();
   }
 
   #changeMovieUserDetail(type) {
