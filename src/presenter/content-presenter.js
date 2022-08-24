@@ -48,7 +48,7 @@ export default class ContentPresenter {
 
     this.#filtersModel.addObserver(this.#handleModelEvent);
 
-    console.log(this.movies)
+    this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
 
     this.#checkForMovies();
 
@@ -100,6 +100,7 @@ export default class ContentPresenter {
     }
     remove(this.#contentComponent);
     this.#sortingBarPresenter.destroy();
+    this.#moviesListPresenter.clearMoviesList();
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -130,6 +131,10 @@ export default class ContentPresenter {
         this.#checkForMovies();
         break;
     }
+  };
+
+  #handleCommentsModelEvent = (movie) => {
+    this.#moviesListPresenter.getMovieCardPresenters().get(movie.id).getPopupPresenter().getMovieDescriptionPresenter().rerenderComments();
   };
 
 }

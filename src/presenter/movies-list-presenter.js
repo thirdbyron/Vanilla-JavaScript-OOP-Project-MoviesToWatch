@@ -29,6 +29,7 @@ export default class MoviesListPresenter {
     this.#moviesModel = moviesModel;
     this.#moviesListComponent = new MoviesListView;
 
+
     this.renderMoviesList();
 
   }
@@ -48,8 +49,10 @@ export default class MoviesListPresenter {
   clearMoviesList() {
     this.#movieCardPresenters.forEach((presenter) => presenter.destroy());
     this.#movieCardPresenters.clear();
-    this.#showMoreButtonPresenter.destroy();
-    this.#showMoreButtonPresenter = null;
+    if (this.#showMoreButtonPresenter) {
+      this.#showMoreButtonPresenter.destroy();
+      this.#showMoreButtonPresenter = null;
+    }
   }
 
   removeMovieCard(movie) {
@@ -72,6 +75,8 @@ export default class MoviesListPresenter {
 
     this.#movieCardPresenters.set(movie.id, moviePresenter);
   };
+
+  getMovieCardPresenters = () => this.#movieCardPresenters;
 
   #presentShowMoreButton() {
     if (this.#movies.length > MOVIES_PER_ROW) {
@@ -97,5 +102,6 @@ export default class MoviesListPresenter {
       document.querySelector('body').classList.add('hide-overflow');
     }
   };
+
 
 }

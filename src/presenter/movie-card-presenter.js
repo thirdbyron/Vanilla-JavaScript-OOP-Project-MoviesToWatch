@@ -52,12 +52,17 @@ export default class MovieCardPresenter {
 
   destroy() {
     remove(this.#movieCardComponent);
+    if (this.isPopupOpen) {
+      this.clearPreviousPopup();
+    }
   }
 
   clearPreviousPopup() {
     this.isPopupOpen = false;
     this.#popupPresenter.clear();
   }
+
+  getPopupPresenter = () => this.#popupPresenter;
 
   #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {

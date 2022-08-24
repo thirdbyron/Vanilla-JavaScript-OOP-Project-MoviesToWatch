@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { remove, render } from '../framework/render.js';
 import ControlButtonsPresenter from './control-buttons-presenter.js';
 import MovieDescriptionView from '../view/popup/movie-description-view.js';
 import MoviesDescriptionWrapperView from '../view/popup/movie-description-wrapper-view.js';
@@ -24,9 +24,7 @@ export default class MovieDescriptionPresenter {
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
-    this.#descriptionWrapperComponent = new MoviesDescriptionWrapperView;
     this.#controlButtonsPresenter = new ControlButtonsPresenter(this.#movie);
-    this.#popupCommentsPresenter = new PopupCommentsPresenter;
 
     this.#renderDescription();
 
@@ -36,6 +34,14 @@ export default class MovieDescriptionPresenter {
 
   }
 
+  rerenderComments = () => {
+    this.#popupCommentsPresenter.rerenderComments();
+  };
+
+  removeAddCommentHandler = () => {
+    this.#popupCommentsPresenter.removeAddCommentHandler();
+  };
+
   #presentControlButtons() {
     this.#controlButtonsPresenter.init(
       this.#descriptionWrapperComponent.element,
@@ -44,7 +50,12 @@ export default class MovieDescriptionPresenter {
     );
   }
 
+  destroy() {
+    remove(this.#descriptionWrapperComponent);
+  }
+
   #presentPopupComments() {
+    this.#popupCommentsPresenter = new PopupCommentsPresenter;
     this.#popupCommentsPresenter.init(
       this.#descriptionWrapperComponent.element,
       this.#moviesModel,
@@ -54,6 +65,8 @@ export default class MovieDescriptionPresenter {
   }
 
   #renderDescription() {
+    this.#descriptionWrapperComponent = new MoviesDescriptionWrapperView;
+
     render(this.#descriptionWrapperComponent, this.#mainContainer);
 
     render(new MovieDescriptionView(this.#movie), this.#descriptionWrapperComponent.element);

@@ -10,7 +10,7 @@ export default class PopupPresenter {
   #commentsModel = null;
   #onChangeData = null;
   #moviesModel = null;
-  #movieDescriptionComponent = null;
+  #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
@@ -27,8 +27,8 @@ export default class PopupPresenter {
   }
 
   #presentMovieDescription() {
-    this.#movieDescriptionComponent = new MovieDescriptionPresenter;
-    this.#movieDescriptionComponent.init(
+    this.#movieDescriptionPresenter = new MovieDescriptionPresenter;
+    this.#movieDescriptionPresenter.init(
       this.#contentComponent.element,
       this.#movie,
       this.#commentsModel,
@@ -37,6 +37,8 @@ export default class PopupPresenter {
       this.#moviesModel
     );
   }
+
+  getMovieDescriptionPresenter = () => this.#movieDescriptionPresenter;
 
   #renderPopup() {
     this.#wrapperComponent = new PopupWrapperView;
@@ -51,6 +53,7 @@ export default class PopupPresenter {
   }
 
   clear() {
+    this.#movieDescriptionPresenter.removeAddCommentHandler();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);
     document.querySelector('body').classList.remove('hide-overflow');

@@ -26,12 +26,10 @@ export default class PopupCommentsPresenter {
     this.#commentsModel = commentsModel;
     this.#movie = movie;
 
-    this.#commentsModel.addObserver(this.#handleModelEvent);
-
     this.#tempComment = new TempCommentModel().comment;
     this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
-    this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddNewComment);
+    this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
 
     this.#renderComments();
 
@@ -47,6 +45,7 @@ export default class PopupCommentsPresenter {
     render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
 
     this.#renderFilteredComments();
+
   }
 
 
@@ -73,19 +72,23 @@ export default class PopupCommentsPresenter {
     this.#movie.comments = this.#movie.comments.filter((commentId) =>
       commentId !== commentToDelete.id
     );
-    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
-    this.#commentsModel.deleteComment(commentToDelete);
+    this.#commentsModel.deleteComment(commentToDelete, this.#movie);
+    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
   };
 
-  #handleAddNewComment = (newComment) => {
+  #handleAddComment = (newComment) => {
     const commentNewId = nanoid(3);
     this.#movie.comments.push(commentNewId);
-    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment});
-    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
+    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment}, this.#movie);
+    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
   };
 
+  removeAddCommentHandler() {
+    this.#addCommentFormComponent.removeAddCommentHandler();
+  }
 
-  #handleModelEvent = () => {
+
+  rerenderComments = () => {
     remove(this.#commentsWrapperComponent);
     this.#renderComments();
   };
