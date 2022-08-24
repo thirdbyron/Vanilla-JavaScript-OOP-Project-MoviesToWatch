@@ -118,7 +118,7 @@ export default class ContentPresenter {
   #handleModelEvent = (updateType, update) => {
     switch (updateType) {
       case UPDATE_TYPE.patch:
-
+        this.#moviesListPresenter.getMovieCardPresenters().get(update.id).rerenderMovieCard(update);
         break;
       case UPDATE_TYPE.minor:
         if (update !== null && Object.values(SORT_TYPE).some((value) => update === value)) {

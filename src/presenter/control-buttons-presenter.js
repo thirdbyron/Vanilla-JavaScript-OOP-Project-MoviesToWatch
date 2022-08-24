@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieControlsView from '../view/popup/movie-controls-view.js';
 
@@ -16,6 +16,16 @@ export default class ControlButtonsPresenter {
     this.#controlButtonsComponent = new MovieControlsView(this.#movie);
 
     render(this.#controlButtonsComponent, this.#mainContainer);
+
+    this.#setHandlers();
+  }
+
+  rerender(movie) {
+    const newControlButtonsComponent = new MovieControlsView(movie);
+
+    replace(newControlButtonsComponent, this.#controlButtonsComponent);
+
+    this.#controlButtonsComponent = newControlButtonsComponent;
 
     this.#setHandlers();
   }

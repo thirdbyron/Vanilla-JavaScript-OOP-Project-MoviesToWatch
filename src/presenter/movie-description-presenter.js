@@ -42,6 +42,10 @@ export default class MovieDescriptionPresenter {
     this.#popupCommentsPresenter.removeAddCommentHandler();
   };
 
+  rerenderControllButtons(movie) {
+    this.#controlButtonsPresenter.rerender(movie);
+  }
+
   #presentControlButtons() {
     this.#controlButtonsPresenter.init(
       this.#descriptionWrapperComponent.element,

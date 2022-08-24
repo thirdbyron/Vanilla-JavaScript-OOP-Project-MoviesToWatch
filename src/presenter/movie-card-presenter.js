@@ -1,4 +1,4 @@
-import { render, remove } from '../framework/render.js';
+import { render, remove, replace } from '../framework/render.js';
 import { UPDATE_TYPE, USER_ACTION, FILTER_FROM_DATA_TO_TYPE } from '../const.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
@@ -41,10 +41,9 @@ export default class MovieCardPresenter {
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
     this.#moviesModel = moviesModel;
-    this.#movieCardComponent = new MovieCardView(this.#movie);
     this.#popupPresenter = new PopupPresenter;
 
-    this.#renderMovieCard();
+    this.#renderMovieCard(this.#movie);
 
   }
 
@@ -58,6 +57,20 @@ export default class MovieCardPresenter {
   clearPreviousPopup() {
     this.isPopupOpen = false;
     this.#popupPresenter.clear();
+  }
+
+  rerenderMovieCard(movie) {
+    const newMovieCardComponent = new MovieCardView(movie);
+
+    replace(newMovieCardComponent, this.#movieCardComponent);
+
+    this.#movieCardComponent = newMovieCardComponent;
+
+    this.#setHandlers();
+
+    if (this.isPopupOpen) {
+      this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
+    }
   }
 
   getPopupPresenter = () => this.#popupPresenter;
@@ -90,7 +103,9 @@ export default class MovieCardPresenter {
     this.isPopupOpen = true;
   }
 
-  #renderMovieCard() {
+  #renderMovieCard(movie) {
+    this.#movieCardComponent = new MovieCardView(movie);
+
     render(this.#movieCardComponent, this.#moviesListComponent.element);
 
     this.#setHandlers();
@@ -107,8 +122,6 @@ export default class MovieCardPresenter {
     this.#changeMovieUserDetail(filterType);
 
     this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
-
-    this.#movieCardComponent.toggleButtonClass(buttonElement);
 
   }
 
