@@ -13,10 +13,11 @@ export default class MovieDescriptionPresenter {
   #closeHandler = null;
   #onChangeData = null;
   #moviesModel = null;
+  #currentFilter = null;
   #controlButtonsPresenter = null;
   #popupCommentsPresenter = null;
 
-  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel) {
+  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel, currentFilter) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
@@ -24,6 +25,7 @@ export default class MovieDescriptionPresenter {
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
+    this.#currentFilter = currentFilter;
     this.#controlButtonsPresenter = new ControlButtonsPresenter(this.#movie);
 
     this.#renderDescription();
@@ -50,7 +52,8 @@ export default class MovieDescriptionPresenter {
     this.#controlButtonsPresenter.init(
       this.#descriptionWrapperComponent.element,
       this.#movie,
-      this.#onChangeData
+      this.#onChangeData,
+      this.#currentFilter
     );
   }
 

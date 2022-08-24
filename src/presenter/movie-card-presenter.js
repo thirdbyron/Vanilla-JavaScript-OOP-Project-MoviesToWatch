@@ -99,7 +99,8 @@ export default class MovieCardPresenter {
       this.#movie,
       this.#commentsModel,
       this.#onChangeData,
-      this.#moviesModel
+      this.#moviesModel,
+      this.#currentFilter
     );
     this.isPopupOpen = true;
   }

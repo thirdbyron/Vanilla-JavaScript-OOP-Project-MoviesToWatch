@@ -10,17 +10,19 @@ export default class PopupPresenter {
   #commentsModel = null;
   #onChangeData = null;
   #moviesModel = null;
+  #currentFilter = null;
   #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
-  init(mainContainer, movie, commentsModel, onChangeData, moviesModel) {
+  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#commentsModel = commentsModel;
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
+    this.#currentFilter = currentFilter;
 
     this.#renderPopup();
 
@@ -34,7 +36,8 @@ export default class PopupPresenter {
       this.#commentsModel,
       this.#handlePopupCloseClick,
       this.#onChangeData,
-      this.#moviesModel
+      this.#moviesModel,
+      this.#currentFilter
     );
   }
 
