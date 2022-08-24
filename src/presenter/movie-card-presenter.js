@@ -48,6 +48,7 @@ export default class MovieCardPresenter {
   }
 
   destroy() {
+    this.#movieCardComponent.removeHandlers();
     remove(this.#movieCardComponent);
     if (this.isPopupOpen) {
       this.clearPreviousPopup();

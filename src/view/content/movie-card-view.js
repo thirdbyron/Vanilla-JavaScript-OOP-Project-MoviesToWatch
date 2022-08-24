@@ -88,6 +88,13 @@ export default class MovieCardView extends AbstractView {
     this.watchedButtonElement.addEventListener('click', this.#watchedClickHandler);
   };
 
+  removeHandlers() {
+    this.element.removeEventListener('click', this.#popupClickHandler);
+    this.watchedButtonElement.removeEventListener('click', this.#watchedClickHandler);
+    this.watchlistButtonElement.removeEventListener('click', this.#watchlistClickHandler);
+    this.favoriteButtonElement.removeEventListener('click', this.#favoriteClickHandler);
+  }
+
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
