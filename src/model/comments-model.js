@@ -13,7 +13,11 @@ export default class CommentsModel extends Observable {
     this.#comments = value;
   }
 
-  addComment = () => {
+  addComment = (comment) => {
+    this.#comments = [
+      ...this.#comments,
+      generateCommentFish(comment)
+    ];
     this._notify();
   };
 

@@ -90,8 +90,24 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     this.#setHandlers();
   };
 
+  setAddCommentHandler(callback) {
+    this._callback.addComment = callback;
+    document.addEventListener('keyup', this.#addCommentHandler);
+  }
+
+  #addCommentHandler = (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === 13 || evt.keyCode === 10)) {
+      this._callback.addComment(MovieAddCommentFormView.parseStateToComment(this._state));
+      this.updateElement({
+        comment: '',
+        emotion: '',
+        emojiImgTemplate: '',
+      });
+    }
+  };
+
   static parseStateToComment = (state) => {
-    const comment = {...state};
+    const comment = { ...state };
 
     delete comment.emojiImgTemplate;
 

@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
-import { MAX_MOVIE_COMENTS } from '../const.js';
+import { nanoid } from 'nanoid';
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -21,8 +21,6 @@ const MIN_MAX_NUMBERS = {
   maxBig: 180
 };
 
-const MAX_COMMENT_INCREASER = 5;
-
 const generateRandomMovieTitle = (postersDictionary) => {
   const titles = Object.keys(postersDictionary);
 
@@ -40,33 +38,13 @@ const generateRandomMovieDescription = (descriptions) => {
   return randomDescription;
 };
 
-const countIdNumber = () => {
-  let counter = 0;
-  return function () {
-    counter += 1;
-    return counter;
-  };
+export const movieIdNumbers = [];
+
+const generateMovieIdNumbers = () => {
+  const idNumber = nanoid();
+  movieIdNumbers.push(idNumber);
+  return idNumber;
 };
-
-const getIdNumber = countIdNumber();
-
-// Сложная функция нужна только для рыбных данных. Временное решение!
-
-const generateRandomCommentsId = () => {
-  const commentIdNumbers = [];
-  return function () {
-    const initialLength = commentIdNumbers.length;
-    for (let i = initialLength + 1; i <= initialLength + getRandomInteger(0, MAX_COMMENT_INCREASER); i++) {
-      if (commentIdNumbers.length < MAX_MOVIE_COMENTS) {
-        commentIdNumbers.push(i);
-      }
-    }
-    const newIdNumbers = commentIdNumbers.slice(initialLength);
-    return newIdNumbers;
-  };
-};
-
-const getNoRepeatingSetOfIdNumbers = generateRandomCommentsId();
 
 export const generateMovieFish = () => {
   const randomTitle = generateRandomMovieTitle(MOVIE_FISH_DICTIONARY.posters);
@@ -74,8 +52,7 @@ export const generateMovieFish = () => {
   const randomDescription = generateRandomMovieDescription(MOVIE_FISH_DICTIONARY.descriptions);
 
   return {
-    'id': getIdNumber(),
-    'comments': getNoRepeatingSetOfIdNumbers(),
+    'id': generateMovieIdNumbers(),
     'film_info': {
       'title': randomTitle,
       'alternative_title': 'Laziness Who Sold Themselves',

@@ -1,4 +1,6 @@
 import { getRandomInteger } from '../utils/common.js';
+import { nanoid } from 'nanoid';
+import { movieIdNumbers } from './generate-movie-fish.js';
 
 const COMMENT_FISH_DICTIONARY = {
   authors: ['Ilya, Rebenkov', 'Vasily Stay', 'Third Byron', 'Right Big'],
@@ -6,17 +8,7 @@ const COMMENT_FISH_DICTIONARY = {
   emotions: ['smile', 'sleeping', 'puke', 'angry']
 };
 
-const countIdNumber = () => {
-  let counter = 0;
-  return function () {
-    counter += 1;
-    return counter;
-  };
-};
-
-const getIdNumber = countIdNumber();
-
-export const generateCommentFish = () => {
+export const generateCommentFish = (newComment = null) => {
 
   const randomAuthor = COMMENT_FISH_DICTIONARY.authors[getRandomInteger(0, COMMENT_FISH_DICTIONARY.authors.length - 1)];
 
@@ -25,11 +17,12 @@ export const generateCommentFish = () => {
   const randomEmotion = COMMENT_FISH_DICTIONARY.emotions[getRandomInteger(0, COMMENT_FISH_DICTIONARY.emotions.length - 1)];
 
   return {
-    'id': getIdNumber(),
+    'id': newComment ? newComment.id : nanoid(3),
+    'movieId': newComment ? newComment.movieId : movieIdNumbers[getRandomInteger(0, movieIdNumbers.length - 1)],
     'author': randomAuthor,
-    'comment': randomCommentText,
+    'comment': newComment ? newComment.comment : randomCommentText,
     'date': '2019-05-11T16:12:32.554Z',
-    'emotion': randomEmotion,
+    'emotion': newComment ? newComment.emotion : randomEmotion,
   };
 
 };

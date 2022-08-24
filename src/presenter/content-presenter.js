@@ -44,7 +44,11 @@ export default class ContentPresenter {
     this.#currentSortType = SORT_TYPE.default;
 
     this.#moviesModel.addObserver(this.#handleModelEvent);
+    this.#moviesModel.setComments(this.#commentsModel.comments);
+
     this.#filtersModel.addObserver(this.#handleModelEvent);
+
+    console.log(this.movies)
 
     this.#checkForMovies();
 

@@ -3,7 +3,7 @@ import { MAX_MOVIES } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class MoviesModel extends Observable {
-  #movies = Array.from({length: MAX_MOVIES}, generateMovieFish);
+  #movies = Array.from({ length: MAX_MOVIES }, generateMovieFish);
 
   get movies() {
     return this.#movies;
@@ -11,6 +11,15 @@ export default class MoviesModel extends Observable {
 
   set movies(value) {
     this.#movies = value;
+  }
+
+  setComments(comments) {
+    for (let i = 0; i < this.#movies.length; i++) {
+      this.#movies[i].comments = [];
+      comments.filter((comment) => comment.movieId === this.#movies[i].id).forEach((comment) => {
+        this.#movies[i].comments.push(comment.id);
+      });
+    }
   }
 
   updateMovie = (updateType, update) => {

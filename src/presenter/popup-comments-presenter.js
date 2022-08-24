@@ -1,5 +1,6 @@
 import { render, remove } from '../framework/render.js';
 import { UPDATE_TYPE } from '../const.js';
+import { nanoid } from 'nanoid';
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
@@ -25,10 +26,12 @@ export default class PopupCommentsPresenter {
     this.#commentsModel = commentsModel;
     this.#movie = movie;
 
+    this.#commentsModel.addObserver(this.#handleModelEvent);
+
     this.#tempComment = new TempCommentModel().comment;
     this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
-    this.#commentsModel.addObserver(this.#handleModelEvent);
+    this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddNewComment);
 
     this.#renderComments();
 
@@ -48,9 +51,9 @@ export default class PopupCommentsPresenter {
 
 
   #renderSingleComment(relevantComment) {
-    this.#commentComponent = new MovieCommentView(relevantComment);
-    render(this.#commentComponent, this.#commentsListComponent.element);
-    this.#commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
+    const commentComponent = new MovieCommentView(relevantComment);
+    render(commentComponent, this.#commentsListComponent.element);
+    commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
   }
 
   #renderFilteredComments() {
@@ -70,10 +73,17 @@ export default class PopupCommentsPresenter {
     this.#movie.comments = this.#movie.comments.filter((commentId) =>
       commentId !== commentToDelete.id
     );
-
     this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
     this.#commentsModel.deleteComment(commentToDelete);
   };
+
+  #handleAddNewComment = (newComment) => {
+    const commentNewId = nanoid(3);
+    this.#movie.comments.push(commentNewId);
+    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment});
+    this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
+  };
+
 
   #handleModelEvent = () => {
     remove(this.#commentsWrapperComponent);
