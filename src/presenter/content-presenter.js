@@ -144,13 +144,16 @@ export default class ContentPresenter {
   };
 
   #handleModelEvent = (updateType, update) => {
+
+    const isforSorting = Object.values(SORT_TYPE).some((value) => update === value);
+
     switch (updateType) {
       case UPDATE_TYPE.minor:
-        if (update !== null && Object.values(SORT_TYPE).some((value) => update === value)) {
+        if (isforSorting) {
           this.#currentSortType = update;
         }
         this.#checkForPopupOpen();
-        this.#clearContent({ needRemainRenderedMovie: true });
+        this.#clearContent({ needRemainRenderedMovie: !isforSorting });
         this.#checkForMovies();
         break;
       case UPDATE_TYPE.major:
