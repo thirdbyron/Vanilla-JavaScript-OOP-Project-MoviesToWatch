@@ -55,3 +55,7 @@ export const UPDATE_TYPE = {
   major: 'MAJOR',
 };
 
+export const KEYS_CODE = {
+  enter: 13
+};
+

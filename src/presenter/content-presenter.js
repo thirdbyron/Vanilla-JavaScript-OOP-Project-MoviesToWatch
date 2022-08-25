@@ -143,11 +143,34 @@ export default class ContentPresenter {
     }
   };
 
+  #handlePatchUpdate(updatedMovie) {
+
+    const movieForPopupPresenter = this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID);
+
+    const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
+
+    if (movieForPopupPresenter && updatedMoviePresenter) {
+      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
+      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
+      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
+    } else if (movieForPopupPresenter && updatedMoviePresenter === undefined) {
+      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
+      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
+    } else {
+      updatedMoviePresenter.rerenderCommentsList(updatedMovie);
+      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
+    }
+
+  }
+
   #handleModelEvent = (updateType, update) => {
 
     const isforSorting = Object.values(SORT_TYPE).some((value) => update === value);
 
     switch (updateType) {
+      case UPDATE_TYPE.patch:
+        this.#handlePatchUpdate(update);
+        break;
       case UPDATE_TYPE.minor:
         if (isforSorting) {
           this.#currentSortType = update;

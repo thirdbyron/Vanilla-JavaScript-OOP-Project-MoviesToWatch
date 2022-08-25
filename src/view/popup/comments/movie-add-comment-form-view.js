@@ -1,4 +1,5 @@
 import he from 'he';
+import { KEYS_CODE } from '../../../const.js';
 import AbstractStatefulView from '../../../framework/view/abstract-stateful-view.js';
 
 const createMovieAddCommentFormtTemplate = (state) => `<form class="film-details__new-comment" action="" method="get">
@@ -104,7 +105,7 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
   }
 
   #addCommentHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === 13 || evt.keyCode === 10)) {
+    if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === KEYS_CODE.enter)) {
       if (this._state.comment === '' || this._state.emotion === '') {
         this.updateElement({
           comment: this._state.comment,

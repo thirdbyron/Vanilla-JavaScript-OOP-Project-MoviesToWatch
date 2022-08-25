@@ -21,5 +21,9 @@ export default class MovieCommentsWrapperView extends AbstractView {
     return createMovieCommentsWrapperTemplate(this.#movie);
   }
 
+  changeCommentsCounter(movie) {
+    this.element.querySelector('.film-details__comments-count').innerHTML = movie.comments.length;
+  }
+
 }
 

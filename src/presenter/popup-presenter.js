@@ -43,6 +43,8 @@ export default class PopupPresenter {
     );
   }
 
+  getMovieDescriptionPresenter = () => this.#movieDescriptionPresenter;
+
   #renderPopup() {
     this.#wrapperComponent = new PopupWrapperView;
     this.#contentComponent = new PopupContentView;

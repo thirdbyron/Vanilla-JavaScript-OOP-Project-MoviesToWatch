@@ -1,5 +1,5 @@
-import { render, remove } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { render, remove, replace } from '../framework/render.js';
+import { FILTER_FROM_DATA_TO_TYPE, UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -70,19 +70,19 @@ export default class MovieCardPresenter {
     this.#popupPresenter.clear();
   }
 
-  // rerenderMovieCard(movie) {
-  //   const newMovieCardComponent = new MovieCardView(movie);
+  rerenderMovieCard(movie) {
+    const newMovieCardComponent = new MovieCardView(movie);
 
-  //   replace(newMovieCardComponent, this.#movieCardComponent);
+    replace(newMovieCardComponent, this.#movieCardComponent);
 
-  //   this.#movieCardComponent = newMovieCardComponent;
+    this.#movieCardComponent = newMovieCardComponent;
 
-  //   this.#setHandlers();
+    this.#setHandlers();
 
-  //   if (this.isPopupOpen) {
-  //     this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
-  //   }
-  // }
+    if (this.isPopupOpen) {
+      this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
+    }
+  }
 
   #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
@@ -114,6 +114,14 @@ export default class MovieCardPresenter {
     );
   }
 
+  rerenderPopupControllButtons(movie) {
+    this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
+  }
+
+  rerenderCommentsList(movie) {
+    this.#popupPresenter.getMovieDescriptionPresenter().rerenderCommentsList(movie);
+  }
+
   #renderMovieCard(movie) {
     this.#movieCardComponent = new MovieCardView(movie);
 
@@ -133,9 +141,11 @@ export default class MovieCardPresenter {
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#movieCardComponent.getButtonType(buttonElement);
 
+    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
+
     this.#changeMovieUserDetail(filterType);
 
-    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.minor, this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
 
   }
 
