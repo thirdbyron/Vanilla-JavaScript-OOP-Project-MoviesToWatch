@@ -18,6 +18,7 @@ export default class SortingBarPresenter {
     this.#renderSortBar(this.#currentSortType);
 
     this.#sortingBarComponent.setSortTypeChangeHandler(this.#handleCurrentSortType);
+
   }
 
   destroy() {

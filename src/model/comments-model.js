@@ -1,8 +1,7 @@
 import { generateCommentFish } from '../mock/generate-comment-fish.js';
 import { MAX_MOVIE_COMENTS } from '../const.js';
-import Observable from '../framework/observable.js';
 
-export default class CommentsModel extends Observable {
+export default class CommentsModel {
   #comments = Array.from({length: MAX_MOVIE_COMENTS}, generateCommentFish);
 
   get comments() {
@@ -13,15 +12,15 @@ export default class CommentsModel extends Observable {
     this.#comments = value;
   }
 
-  addComment = (comment, movie) => {
+  addComment = (comment) => {
     this.#comments = [
       ...this.#comments,
       generateCommentFish(comment)
     ];
-    this._notify(movie);
+
   };
 
-  deleteComment = (commentToDelete, movie) => {
+  deleteComment = (commentToDelete) => {
     const index = this.comments.findIndex((comment) => comment.id === commentToDelete.id);
 
     if (index === -1) {
@@ -32,7 +31,7 @@ export default class CommentsModel extends Observable {
       ...this.comments.slice(0, index),
       ...this.comments.slice(index + 1),
     ];
-    this._notify(movie);
+
   };
 
 }

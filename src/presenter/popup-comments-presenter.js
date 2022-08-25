@@ -1,4 +1,4 @@
-import { render, remove } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import { UPDATE_TYPE } from '../const.js';
 import { nanoid } from 'nanoid';
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
@@ -48,7 +48,6 @@ export default class PopupCommentsPresenter {
 
   }
 
-
   #renderSingleComment(relevantComment) {
     const commentComponent = new MovieCommentView(relevantComment);
     render(commentComponent, this.#commentsListComponent.element);
@@ -72,26 +71,19 @@ export default class PopupCommentsPresenter {
     this.#movie.comments = this.#movie.comments.filter((commentId) =>
       commentId !== commentToDelete.id
     );
-    this.#commentsModel.deleteComment(commentToDelete, this.#movie);
+    this.#commentsModel.deleteComment(commentToDelete);
     this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
   };
 
   #handleAddComment = (newComment) => {
     const commentNewId = nanoid(3);
     this.#movie.comments.push(commentNewId);
-    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment}, this.#movie);
+    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment});
     this.#moviesModel.updateMovie(UPDATE_TYPE.minor, this.#movie);
   };
 
   removeAddCommentHandler() {
     this.#addCommentFormComponent.removeAddCommentHandler();
   }
-
-
-  rerenderComments = () => {
-    remove(this.#commentsWrapperComponent);
-    this.#renderComments();
-  };
-
 
 }

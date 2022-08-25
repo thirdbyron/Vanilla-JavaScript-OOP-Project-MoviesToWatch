@@ -5,6 +5,7 @@ const createMovieAddCommentFormtTemplate = (state) => `<form class="film-details
 
 <label class="film-details__comment-label">
   <textarea class="film-details__comment-input" placeholder="${state.comment !== '' ? state.comment : 'Select reaction below and write comment here'}" name="comment"></textarea>
+  ${state.error}
 </label>
 
 <div class="film-details__emoji-list">
@@ -54,7 +55,7 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
 
   #setHandlers() {
     this.emojiInputElements.forEach((item) => item.addEventListener('click', this.#choosingEmojiHandler));
-    this.commentInputElement.addEventListener('change', this.#commentInputChangeHandler);
+    this.commentInputElement.addEventListener('input', this.#commentInputChangeHandler);
   }
 
   #choosingEmojiHandler = (evt) => {
@@ -64,12 +65,14 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
         comment: this._state.comment,
         emotion: '',
         emojiImgTemplate: '',
+        error: ''
       });
     } else {
       this.updateElement({
         comment: this._state.comment,
         emotion: `${evt.target.value}`,
-        emojiImgTemplate: `<img src="./images/emoji/${evt.target.value}.png" width="100%" height="100%" alt="emoji"></img>`
+        emojiImgTemplate: `<img src="./images/emoji/${evt.target.value}.png" width="100%" height="100%" alt="emoji"></img>`,
+        error: ''
       });
       this.#checkForActiveEmoji();
     }
@@ -101,12 +104,23 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
 
   #addCommentHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === 13 || evt.keyCode === 10)) {
-      this._callback.addComment(MovieAddCommentFormView.parseStateToComment(this._state));
-      this.updateElement({
-        comment: '',
-        emotion: '',
-        emojiImgTemplate: '',
-      });
+      if (this._state.comment === '' || this._state.emotion === '') {
+        this.updateElement({
+          comment: this._state.comment,
+          emotion: '',
+          emojiImgTemplate: '',
+          error: '<p> Чтобы отправить комментарий, выберите эмоцию и введите текст </p>'
+        });
+      } else {
+        this._callback.addComment(MovieAddCommentFormView.parseStateToComment(this._state));
+        this.updateElement({
+          comment: '',
+          emotion: '',
+          emojiImgTemplate: '',
+          error: ''
+        });
+      }
+
     }
   };
 
@@ -114,6 +128,7 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     const comment = { ...state };
 
     delete comment.emojiImgTemplate;
+    delete comment.error;
 
     return comment;
   };
@@ -121,6 +136,7 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
   static parseCommentToState = (comment) => ({
     ...comment,
     emojiImgTemplate: '',
+    error: ''
   });
 
 }

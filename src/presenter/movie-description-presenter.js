@@ -26,6 +26,7 @@ export default class MovieDescriptionPresenter {
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
+
     this.#controlButtonsPresenter = new ControlButtonsPresenter(this.#movie);
 
     this.#renderDescription();
@@ -36,17 +37,9 @@ export default class MovieDescriptionPresenter {
 
   }
 
-  rerenderComments = () => {
-    this.#popupCommentsPresenter.rerenderComments();
-  };
-
   removeAddCommentHandler = () => {
     this.#popupCommentsPresenter.removeAddCommentHandler();
   };
-
-  rerenderControllButtons(movie) {
-    this.#controlButtonsPresenter.rerender(movie);
-  }
 
   #presentControlButtons() {
     this.#controlButtonsPresenter.init(

@@ -1,5 +1,5 @@
 import { render, replace } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION, FILTER_FROM_DATA_TO_TYPE } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieControlsView from '../view/popup/movie-controls-view.js';
 
 export default class ControlButtonsPresenter {
@@ -50,9 +50,9 @@ export default class ControlButtonsPresenter {
 
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#controlButtonsComponent.getButtonType(buttonElement);
-    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
 
-    this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
+    this.#changeMovieUserDetail(filterType);
+
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.minor, this.#movie);
   }
 

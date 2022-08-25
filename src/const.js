@@ -1,6 +1,6 @@
-export const MAX_MOVIE_COMENTS = 7;
+export const MAX_MOVIE_COMENTS = 9;
 
-export const MAX_MOVIES = 4;
+export const MAX_MOVIES = 8;
 
 export const MOVIES_PER_ROW = 5;
 
@@ -9,6 +9,8 @@ export const MINUTES_IN_ONE_HOUR = 60;
 export const MAX_SYMBOLS_IN_MOVIE_CARD = 140;
 
 export const CONTINOUS_SYMBOL = '...';
+
+export const MOVIE_ONLY_FOR_POPUP_ID = 'movie_for_popup';
 
 export const EMPTY_MOVIE_LIST_TITLES = {
   all: 'There are no movies in our database',

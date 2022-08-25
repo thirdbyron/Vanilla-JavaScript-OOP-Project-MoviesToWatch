@@ -1,5 +1,5 @@
-import { render, remove, replace } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION, FILTER_FROM_DATA_TO_TYPE } from '../const.js';
+import { render, remove } from '../framework/render.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -34,6 +34,10 @@ export default class MovieCardPresenter {
     return this.#movie;
   }
 
+  get isPopupOnly() {
+    return this.#isPopupOnly;
+  }
+
 
   init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
 
@@ -47,14 +51,11 @@ export default class MovieCardPresenter {
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
     this.#moviesModel = moviesModel;
+
     this.#popupPresenter = new PopupPresenter;
 
     this.#renderMovieCard(this.#movie);
 
-  }
-
-  presentMovieCardForPopup() {
-    this.#presentPopup();
   }
 
   destroy() {
@@ -69,21 +70,19 @@ export default class MovieCardPresenter {
     this.#popupPresenter.clear();
   }
 
-  rerenderMovieCard(movie) {
-    const newMovieCardComponent = new MovieCardView(movie);
+  // rerenderMovieCard(movie) {
+  //   const newMovieCardComponent = new MovieCardView(movie);
 
-    replace(newMovieCardComponent, this.#movieCardComponent);
+  //   replace(newMovieCardComponent, this.#movieCardComponent);
 
-    this.#movieCardComponent = newMovieCardComponent;
+  //   this.#movieCardComponent = newMovieCardComponent;
 
-    this.#setHandlers();
+  //   this.#setHandlers();
 
-    if (this.isPopupOpen) {
-      this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
-    }
-  }
-
-  getPopupPresenter = () => this.#popupPresenter;
+  //   if (this.isPopupOpen) {
+  //     this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
+  //   }
+  // }
 
   #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
@@ -103,6 +102,7 @@ export default class MovieCardPresenter {
   }
 
   #presentPopup() {
+    this.isPopupOpen = true;
     this.#popupPresenter.init(
       this.#bodyNode,
       this.#movie,
@@ -112,7 +112,6 @@ export default class MovieCardPresenter {
       this.#currentFilter,
       this.#handlePopupClose
     );
-    this.isPopupOpen = true;
   }
 
   #renderMovieCard(movie) {

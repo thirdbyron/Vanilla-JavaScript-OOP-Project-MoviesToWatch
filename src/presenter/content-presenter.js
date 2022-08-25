@@ -1,5 +1,5 @@
 import { remove, render } from '../framework/render.js';
-import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE, MOVIE_ONLY_FOR_POPUP_ID, MOVIES_PER_ROW } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import { moviesPerFilter } from '../utils/filters.js';
 import ContentView from '../view/content/content-view.js';
@@ -19,6 +19,7 @@ export default class ContentPresenter {
   #moviesListPresenter = null;
   #sortingBarPresenter = null;
   #currentSortType = null;
+  #quantityOfRenderedMovies = MOVIES_PER_ROW;
 
   get movies() {
 
@@ -48,13 +49,16 @@ export default class ContentPresenter {
 
     this.#filtersModel.addObserver(this.#handleModelEvent);
 
-    this.#commentsModel.addObserver(this.#handleModelEvent);
+    this.#moviesListPresenter = new MoviesListPresenter;
 
     this.#checkForMovies();
 
   }
 
   #renderContentTemplate() {
+    this.#contentComponent = new ContentView;
+    this.#moviesListWrapperComponent = new MoviesListWrapperView(this.#filtersModel.filter);
+
     render(this.#contentComponent, this.#mainContainer);
     render(this.#moviesListWrapperComponent, this.#contentComponent.element);
   }
@@ -62,7 +66,6 @@ export default class ContentPresenter {
   #renderContent() {
     this.#renderContentTemplate();
 
-    this.#moviesListPresenter = new MoviesListPresenter;
     this.#moviesListPresenter.init(
       this.#moviesListWrapperComponent.element,
       this.movies,
@@ -70,14 +73,12 @@ export default class ContentPresenter {
       this.#handleViewAction,
       this.#filtersModel.filter,
       this.#commentsModel,
-      this.#moviesModel
+      this.#moviesModel,
+      this.#quantityOfRenderedMovies
     );
   }
 
   #checkForMovies() {
-    this.#contentComponent = new ContentView;
-    this.#moviesListWrapperComponent = new MoviesListWrapperView(this.#filtersModel.filter);
-
     this.#sortingBarPresenter = new SortingBarPresenter;
     this.#sortingBarPresenter.init(
       this.#mainContainer,
@@ -94,25 +95,41 @@ export default class ContentPresenter {
     }
   }
 
-  #clearContent(needSortTypeReset = false) {
+  #clearContent({ needSortTypeReset = false, needRemainRenderedMovie = false } = {}) {
+
+    if (needRemainRenderedMovie) {
+      this.#quantityOfRenderedMovies = this.#moviesListPresenter.getShowMoreButtonPresenter().quantityOfRenderedMovies;
+    } else {
+      this.#quantityOfRenderedMovies = MOVIES_PER_ROW;
+    }
+
     if (needSortTypeReset) {
       this.#currentSortType = SORT_TYPE.default;
     }
 
     this.#sortingBarPresenter.destroy();
 
-    if (this.#moviesListPresenter) {
-      this.#moviesListPresenter.clearMoviesList();
-    }
+    this.#moviesListPresenter.clearMoviesList();
+
     remove(this.#contentComponent);
+    remove(this.#moviesListWrapperComponent);
+
   }
 
   #checkForPopupOpen = () => {
+
     const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
+
     if (movieForPopupPresenter) {
+      if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
+        this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
+        this.#moviesListPresenter.getMovieCardPresenters().delete(MOVIE_ONLY_FOR_POPUP_ID);
+      }
+
       const isPopupOnly = true;
       this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly);
     }
+
   };
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -127,30 +144,21 @@ export default class ContentPresenter {
   };
 
   #handleModelEvent = (updateType, update) => {
-
     switch (updateType) {
-      case UPDATE_TYPE.patch:
-        this.#moviesListPresenter.getMovieCardPresenters().get(update.id).rerenderMovieCard(update);
-        break;
       case UPDATE_TYPE.minor:
         if (update !== null && Object.values(SORT_TYPE).some((value) => update === value)) {
           this.#currentSortType = update;
         }
         this.#checkForPopupOpen();
-        this.#clearContent();
+        this.#clearContent({ needRemainRenderedMovie: true });
         this.#checkForMovies();
         break;
       case UPDATE_TYPE.major:
         this.#checkForPopupOpen();
-        this.#clearContent(true);
+        this.#clearContent({ needSortTypeReset: true });
         this.#checkForMovies();
         break;
     }
-
-  };
-
-  #handleCommentsModelEvent = (movie) => {
-    this.#moviesListPresenter.getMovieCardPresenters().get(movie.id).getPopupPresenter().getMovieDescriptionPresenter().rerenderComments();
   };
 
 }
