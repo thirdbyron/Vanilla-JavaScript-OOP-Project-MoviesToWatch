@@ -157,7 +157,9 @@ export default class ContentPresenter {
       movieForPopupPresenter.rerenderCommentsList(updatedMovie);
       movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
     } else {
-      updatedMoviePresenter.rerenderCommentsList(updatedMovie);
+      if (updatedMoviePresenter.isPopupOpen) {
+        updatedMoviePresenter.rerenderCommentsList(updatedMovie);
+      }
       updatedMoviePresenter.rerenderMovieCard(updatedMovie);
     }
 
