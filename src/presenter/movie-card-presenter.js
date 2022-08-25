@@ -10,7 +10,7 @@ export default class MovieCardPresenter {
   #isPopupOnly = null;
   #commentsModel = null;
   #bodyNode = null;
-  #removePreviosPopup = null;
+  #removePreviousPopup = null;
   #hideOverflow = null;
   #onChangeData = null;
   #currentFilter = null;
@@ -39,14 +39,14 @@ export default class MovieCardPresenter {
   }
 
 
-  init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviosPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
+  init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviousPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
     this.#isPopupOnly = isPopupOnly;
     this.#commentsModel = commentsModel;
     this.#bodyNode = bodyNode;
-    this.#removePreviosPopup = onRemovePreviosPopup;
+    this.#removePreviousPopup = onRemovePreviousPopup;
     this.#hideOverflow = onHideOverflow;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
@@ -86,7 +86,7 @@ export default class MovieCardPresenter {
 
   #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
-      this.#removePreviosPopup();
+      this.#removePreviousPopup();
       this.#hideOverflow();
       this.#presentPopup();
     });

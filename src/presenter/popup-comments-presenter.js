@@ -15,7 +15,6 @@ export default class PopupCommentsPresenter {
   #movie = null;
   #commentsWrapperComponent = null;
   #commentsListComponent = null;
-  #commentComponent = null;
   #addCommentFormComponent = null;
   #tempComment = null;
 
