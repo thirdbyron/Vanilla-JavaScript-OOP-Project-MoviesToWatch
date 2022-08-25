@@ -11,11 +11,12 @@ export default class PopupPresenter {
   #onChangeData = null;
   #moviesModel = null;
   #currentFilter = null;
+  #turnPopupClose = null;
   #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
-  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter) {
+  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, turnPopupClose) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
@@ -23,6 +24,7 @@ export default class PopupPresenter {
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
+    this.#turnPopupClose = turnPopupClose;
 
     this.#renderPopup();
 
@@ -56,6 +58,7 @@ export default class PopupPresenter {
   }
 
   clear() {
+    this.#turnPopupClose();
     this.#movieDescriptionPresenter.removeAddCommentHandler();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);

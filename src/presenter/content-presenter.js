@@ -48,7 +48,7 @@ export default class ContentPresenter {
 
     this.#filtersModel.addObserver(this.#handleModelEvent);
 
-    this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
+    this.#commentsModel.addObserver(this.#handleModelEvent);
 
     this.#checkForMovies();
 
@@ -107,6 +107,14 @@ export default class ContentPresenter {
     remove(this.#contentComponent);
   }
 
+  #checkForPopupOpen = () => {
+    const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
+    if (movieForPopupPresenter) {
+      const isPopupOnly = true;
+      this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly);
+    }
+  };
+
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case USER_ACTION.updateMovie:
@@ -119,6 +127,7 @@ export default class ContentPresenter {
   };
 
   #handleModelEvent = (updateType, update) => {
+
     switch (updateType) {
       case UPDATE_TYPE.patch:
         this.#moviesListPresenter.getMovieCardPresenters().get(update.id).rerenderMovieCard(update);
@@ -127,14 +136,17 @@ export default class ContentPresenter {
         if (update !== null && Object.values(SORT_TYPE).some((value) => update === value)) {
           this.#currentSortType = update;
         }
+        this.#checkForPopupOpen();
         this.#clearContent();
         this.#checkForMovies();
         break;
       case UPDATE_TYPE.major:
+        this.#checkForPopupOpen();
         this.#clearContent(true);
         this.#checkForMovies();
         break;
     }
+
   };
 
   #handleCommentsModelEvent = (movie) => {

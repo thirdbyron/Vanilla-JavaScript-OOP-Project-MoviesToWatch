@@ -53,7 +53,7 @@ export default class ControlButtonsPresenter {
     const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
 
     this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
-    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.minor, this.#movie);
   }
 
 }
