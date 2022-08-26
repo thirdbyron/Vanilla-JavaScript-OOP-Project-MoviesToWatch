@@ -11,12 +11,18 @@ export default class PopupPresenter {
   #onChangeData = null;
   #moviesModel = null;
   #currentFilter = null;
+  #scrollPosition = null;
   #turnPopupClose = null;
   #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
-  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, turnPopupClose) {
+  get popupScrollPosition() {
+    return this.#wrapperComponent.scrollPosition;
+  }
+
+
+  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, scrollPosition, turnPopupClose) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
@@ -24,6 +30,7 @@ export default class PopupPresenter {
     this.#onChangeData = onChangeData;
     this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
+    this.#scrollPosition = scrollPosition;
     this.#turnPopupClose = turnPopupClose;
 
     this.#renderPopup();
@@ -46,7 +53,7 @@ export default class PopupPresenter {
   getMovieDescriptionPresenter = () => this.#movieDescriptionPresenter;
 
   #renderPopup() {
-    this.#wrapperComponent = new PopupWrapperView;
+    this.#wrapperComponent = new PopupWrapperView(this.#scrollPosition);
     this.#contentComponent = new PopupContentView;
 
     render(this.#wrapperComponent, this.#mainContainer);
@@ -55,6 +62,8 @@ export default class PopupPresenter {
     window.addEventListener('keydown', this.#onEscKeyDown);
 
     this.#presentMovieDescription();
+
+    this.#wrapperComponent.setScrollPosition();
   }
 
   clear() {

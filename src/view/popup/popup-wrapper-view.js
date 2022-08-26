@@ -4,8 +4,24 @@ const createPopupWrapperTemplate = () => '<section class="film-details"> </secti
 
 export default class PopupWrapperView extends AbstractView{
 
+  #scrollPosition = null;
+
+  constructor(scrollPosition) {
+    super();
+
+    this.#scrollPosition = scrollPosition;
+  }
+
   get template() {
     return createPopupWrapperTemplate();
+  }
+
+  get scrollPosition() {
+    return this.element.scrollTop;
+  }
+
+  setScrollPosition() {
+    this.element.scrollTop += this.#scrollPosition;
   }
 
 }

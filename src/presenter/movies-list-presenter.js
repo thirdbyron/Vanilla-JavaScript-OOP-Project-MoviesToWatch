@@ -64,7 +64,7 @@ export default class MoviesListPresenter {
     this.#showMoreButtonPresenter.destroy();
   }
 
-  presentMovieCard = (movie, isPopupOnly = false) => {
+  presentMovieCard = (movie, isPopupOnly = false, scrollPosition = 0) => {
 
     const moviePresenter = new MovieCardPresenter;
 
@@ -72,6 +72,7 @@ export default class MoviesListPresenter {
       this.#moviesListComponent,
       movie,
       isPopupOnly,
+      scrollPosition,
       this.#commentsModel,
       this.#bodyNode,
       this.#removePreviousPopup,

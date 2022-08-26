@@ -122,13 +122,15 @@ export default class ContentPresenter {
 
     if (movieForPopupPresenter) {
 
+      const isPopupOnly = true;
+      const scrollPosition = movieForPopupPresenter.popupScrollPoistion;
+
       if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
         this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
         this.#moviesListPresenter.getMovieCardPresenters().delete(MOVIE_ONLY_FOR_POPUP_ID);
       }
 
-      const isPopupOnly = true;
-      this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly);
+      this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly, scrollPosition);
     }
 
   };
