@@ -1,63 +1,41 @@
-import { render } from '../framework/render.js';
-import { SORT_TYPE } from '../const.js';
-import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
+import { render, remove } from '../framework/render.js';
+import { USER_ACTION, UPDATE_TYPE } from '../const.js';
 import SortingBarView from '../view/sorting-bar-view.js';
 
 export default class SortingBarPresenter {
 
   #mainContainer = null;
-  #movies = null;
-  #sourceMovies = null;
-  #onResetSortedMovies = null;
+  #currentSortType = null;
   #sortingBarComponent = null;
-  #onClearMovies = null;
-  #onRenderMovies = null;
-  #currentSortType = SORT_TYPE.default;
+  #onChangeData = null;
 
-  init(mainContainer, movies, onResetSortedMovies, onClearMovies, onRenderMovies) {
+  init(mainContainer, currentSortType, onChangeData) {
 
     this.#mainContainer = mainContainer;
-    this.#movies = movies;
-    this.#sourceMovies = [...movies];
-    this.#onResetSortedMovies = onResetSortedMovies;
-    this.#onClearMovies = onClearMovies;
-    this.#onRenderMovies = onRenderMovies;
-    this.#sortingBarComponent = new SortingBarView;
+    this.#currentSortType = currentSortType;
+    this.#onChangeData = onChangeData;
 
-    this.#renderSortBar();
+    this.#renderSortBar(this.#currentSortType);
+
+    this.#sortingBarComponent.setSortTypeChangeHandler(this.#handleCurrentSortType);
+
   }
 
-  #renderSortBar() {
+  destroy() {
+    remove(this.#sortingBarComponent);
+  }
+
+  #renderSortBar(sortType) {
+    this.#sortingBarComponent = new SortingBarView(sortType);
     render(this.#sortingBarComponent, this.#mainContainer);
-
-    this.#sortingBarComponent.setSortTypeChangeHandler(this.#handleMoviesChange);
   }
 
-  #sortMovies = (sortType) => {
-    switch (sortType) {
-      case SORT_TYPE.date:
-        this.#movies.sort(sortMovieByDate);
-        break;
-      case SORT_TYPE.rating:
-        this.#movies.sort(sortMovieByRating);
-        break;
-      case SORT_TYPE.default:
-        this.#onResetSortedMovies(this.#sourceMovies);
-    }
-
-    this.#currentSortType = sortType;
-  };
-
-  getActualMovies(actualMovies) {
-    this.#movies = actualMovies;
-  }
-
-  #handleMoviesChange = (sortType) => {
-    if (this.#currentSortType !== sortType) {
-      this.#sortMovies(sortType);
-      this.#onClearMovies();
-      this.#onRenderMovies();
+  #handleCurrentSortType = (choosenSortType) => {
+    if (choosenSortType !== this.#currentSortType) {
+      this.#onChangeData(USER_ACTION.sortMovies, UPDATE_TYPE.minor, choosenSortType);
     }
   };
 
 }
+
+

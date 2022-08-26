@@ -1,7 +1,5 @@
-import { render } from '../framework/render.js';
-import { MOVIES_PER_ROW } from '../const.js';
-import { updateItem } from '../utils/common.js';
-import CommentsModel from '../model/comments-model.js';
+import { remove, render } from '../framework/render.js';
+import { MOVIE_ONLY_FOR_POPUP_ID } from '../const.js';
 import MoviesListView from '../view/content/movies-list-view.js';
 import MovieCardPresenter from './movie-card-presenter';
 import ShowMoreButtonPresenter from './show-more-button-presenter.js';
@@ -11,23 +9,28 @@ export default class MoviesListPresenter {
   #mainContainer = null;
   #movies = null;
   #bodyNode = null;
-  #onUpdateFilters = null;
-  #onGetActualMovies = null;
-  #moviesListComponent = null;
+  #onChangeData = null;
+  #currentFilter = null;
   #commentsModel = null;
+  #moviesModel = null;
+  #quantityOfRenderedMovies = null;
+  #moviesListComponent = null;
   #movieCardPresenters = new Map();
-  #showMoreButtonPresenter = null;
+  #showMoreButtonPresenter = new ShowMoreButtonPresenter;
 
 
-  init(mainContainer, movies, bodyNode, onUpdateFilters, onGetActualMovies) {
+  init(mainContainer, movies, bodyNode, onChangeData, currentFilter, commentsModel, moviesModel, quantityOfRenderedMovies) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#bodyNode = bodyNode;
-    this.#onUpdateFilters = onUpdateFilters;
-    this.#onGetActualMovies = onGetActualMovies;
+    this.#onChangeData = onChangeData;
+    this.#currentFilter = currentFilter;
+    this.#commentsModel = commentsModel;
+    this.#moviesModel = moviesModel;
+    this.#quantityOfRenderedMovies = quantityOfRenderedMovies;
+
     this.#moviesListComponent = new MoviesListView;
-    this.#commentsModel = new CommentsModel;
 
     this.renderMoviesList();
 
@@ -35,49 +38,72 @@ export default class MoviesListPresenter {
 
   renderMoviesList() {
     render(this.#moviesListComponent, this.#mainContainer);
-    for (let i = 0; i < Math.min(this.#movies.length, MOVIES_PER_ROW); i++) {
-      this.#presentMovieCard(this.#movies[i]);
+
+    for (let i = 0; i < Math.min(this.#movies.length, this.#quantityOfRenderedMovies); i++) {
+
+      this.presentMovieCard(this.#movies[i]);
+
     }
+
     this.#presentShowMoreButton();
   }
 
   clearMoviesList() {
-    this.#movieCardPresenters.forEach((presenter) => presenter.destroy());
-    this.#movieCardPresenters.clear();
+    remove(this.#moviesListComponent);
+    if (this.#movieCardPresenters.has(MOVIE_ONLY_FOR_POPUP_ID)) {
+      this.#movieCardPresenters.forEach((presenter) => {
+        if (!presenter.isPopupOnly) {
+          presenter.destroy();
+          this.#movieCardPresenters.delete(presenter.movie.id);
+        }
+      });
+    } else {
+      this.#movieCardPresenters.forEach((presenter) => presenter.destroy());
+      this.#movieCardPresenters.clear();
+    }
     this.#showMoreButtonPresenter.destroy();
-    this.#showMoreButtonPresenter = null;
   }
 
-  getActualMovies(actualMovies) {
-    this.#movies = actualMovies;
-  }
+  presentMovieCard = (movie, isPopupOnly = false) => {
 
-  #presentMovieCard = (movie) => {
     const moviePresenter = new MovieCardPresenter;
+
     moviePresenter.init(
       this.#moviesListComponent,
       movie,
+      isPopupOnly,
       this.#commentsModel,
       this.#bodyNode,
       this.#removePreviousPopup,
       this.#hideOverflow,
-      this.#handleChangeData
+      this.#onChangeData,
+      this.#currentFilter,
+      this.#moviesModel,
     );
 
-    this.#movieCardPresenters.set(movie.id, moviePresenter);
+    if (isPopupOnly) {
+      this.#movieCardPresenters.set(MOVIE_ONLY_FOR_POPUP_ID, moviePresenter);
+    } else {
+      this.#movieCardPresenters.set(movie.id, moviePresenter);
+    }
+
   };
 
+  getMovieCardPresenters = () => this.#movieCardPresenters;
+
   #presentShowMoreButton() {
-    if (this.#movies.length > MOVIES_PER_ROW) {
-      this.#showMoreButtonPresenter = new ShowMoreButtonPresenter;
+    if (this.#movies.length > this.#quantityOfRenderedMovies) {
 
       this.#showMoreButtonPresenter.init(
         this.#mainContainer,
         this.#movies,
-        this.#presentMovieCard
+        this.presentMovieCard,
+        this.#quantityOfRenderedMovies
       );
     }
   }
+
+  getShowMoreButtonPresenter = () => this.#showMoreButtonPresenter;
 
   #removePreviousPopup = () => {
     const previousPopup = Array.from(this.#movieCardPresenters.values()).find((presenter) => presenter.isPopupOpen);
@@ -92,10 +118,5 @@ export default class MoviesListPresenter {
     }
   };
 
-  #handleChangeData = (movie) => {
-    this.#movies = updateItem(this.#movies, movie);
-    this.#onGetActualMovies(this.#movies);
-    this.#onUpdateFilters();
-  };
 
 }

@@ -34,4 +34,14 @@ export default class MovieCommentView extends AbstractView{
     return createMovieCommentTemplate(this.#comment);
   }
 
+  setDeleteCommentClickHandler(callback) {
+    this._callback.deleteComment = callback;
+    this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#deleteCommentClickHandler);
+  }
+
+  #deleteCommentClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteComment(this.#comment);
+  };
+
 }

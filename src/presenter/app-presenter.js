@@ -2,6 +2,7 @@ import { render } from '../framework/render.js';
 import ContentPresenter from './content-presenter.js';
 import MoviesModel from '../model/movies-model.js';
 import FiltersPresenter from './filters-presenter.js';
+import FiltersModel from '../model/filters-model.js';
 import ProfileThumbnailView from '../view/profile-thumbnail-view.js';
 
 export default class AppPresenter {
@@ -9,7 +10,7 @@ export default class AppPresenter {
   #siteMainElement = null;
   #siteHeaderElement = null;
   #moviesModel = null;
-  #movies = null;
+  #filtersModel = null;
   #filtersPresenter = null;
   #contentPresenter = null;
 
@@ -18,7 +19,7 @@ export default class AppPresenter {
     this.#siteMainElement = document.querySelector('.main');
     this.#siteHeaderElement = document.querySelector('.header');
     this.#moviesModel = new MoviesModel;
-    this.#movies = [...this.#moviesModel.movies];
+    this.#filtersModel = new FiltersModel;
     this.#filtersPresenter = new FiltersPresenter;
     this.#contentPresenter = new ContentPresenter;
 
@@ -36,14 +37,16 @@ export default class AppPresenter {
 
     this.#filtersPresenter.init(
       this.#siteMainElement,
-      this.#movies
+      this.#moviesModel,
+      this.#filtersModel
     );
 
     this.#contentPresenter.init(
       this.#siteMainElement,
-      this.#movies,
-      this.#filtersPresenter
+      this.#moviesModel,
+      this.#filtersModel,
     );
+
   }
 
 }

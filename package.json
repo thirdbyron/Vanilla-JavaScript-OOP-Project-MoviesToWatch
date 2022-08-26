@@ -32,6 +32,8 @@
     "node": "16"
   },
   "dependencies": {
-    "dayjs": "1.11.3"
+    "he": "1.2.0",
+    "dayjs": "1.11.3",
+    "nanoid": "4.0.0"
   }
 }

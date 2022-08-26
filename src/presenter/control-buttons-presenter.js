@@ -1,4 +1,5 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
+import { UPDATE_TYPE, USER_ACTION, FILTER_FROM_DATA_TO_TYPE } from '../const.js';
 import MovieControlsView from '../view/popup/movie-controls-view.js';
 
 export default class ControlButtonsPresenter {
@@ -7,14 +8,26 @@ export default class ControlButtonsPresenter {
   #movie = null;
   #controlButtonsComponent = null;
   #onChangeData = null;
+  #currentFilter = null;
 
-  init(mainContainer, movie, onChangeData) {
+  init(mainContainer, movie, onChangeData, currentFilter) {
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#onChangeData = onChangeData;
-    this.#controlButtonsComponent = new MovieControlsView;
+    this.#currentFilter = currentFilter;
+    this.#controlButtonsComponent = new MovieControlsView(this.#movie);
 
     render(this.#controlButtonsComponent, this.#mainContainer);
+
+    this.#setHandlers();
+  }
+
+  rerenderControllButtons(movie) {
+    const newControlButtonsComponent = new MovieControlsView(movie);
+
+    replace(newControlButtonsComponent, this.#controlButtonsComponent);
+
+    this.#controlButtonsComponent = newControlButtonsComponent;
 
     this.#setHandlers();
   }
@@ -36,9 +49,13 @@ export default class ControlButtonsPresenter {
   }
 
   #handleControlButtonClick(buttonElement) {
-    this.#changeMovieUserDetail(this.#controlButtonsComponent.getButtonType(buttonElement));
-    this.#onChangeData(this.#movie);
-    this.#controlButtonsComponent.toggleClass(buttonElement);
+    const filterType = this.#controlButtonsComponent.getButtonType(buttonElement);
+
+    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
+
+    this.#changeMovieUserDetail(filterType);
+
+    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
   }
 
 }

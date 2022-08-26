@@ -8,14 +8,19 @@ export default class ShowMoreButtonPresenter {
   #movies = null;
   #onRenderMovie = null;
   #showMoreButtonComponent = null;
-  #renderedMoviesCounter = MOVIES_PER_ROW;
+  #quantityOfRenderedMovies = MOVIES_PER_ROW;
   #isDestroyed = false;
 
-  init(mainContainer, movies, onRenderMovie) {
+  get quantityOfRenderedMovies() {
+    return this.#quantityOfRenderedMovies;
+  }
+
+  init(mainContainer, movies, onRenderMovie, quantityOfRenderedMovies) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
     this.#onRenderMovie = onRenderMovie;
+    this.#quantityOfRenderedMovies = quantityOfRenderedMovies;
 
     this.#renderShowMoreButton();
 
@@ -39,15 +44,15 @@ export default class ShowMoreButtonPresenter {
   }
 
   #handleShowMoreClick = () => {
-    this.#movies
-      .slice(this.#renderedMoviesCounter, this.#renderedMoviesCounter + MOVIES_PER_ROW)
-      .forEach((movie) => {
-        this.#onRenderMovie(movie);
-      });
+    const slicedMovies = this.#movies.slice(this.#quantityOfRenderedMovies, this.#quantityOfRenderedMovies + MOVIES_PER_ROW);
 
-    this.#renderedMoviesCounter += MOVIES_PER_ROW;
+    slicedMovies.forEach((movie) => {
+      this.#onRenderMovie(movie);
+    });
 
-    if (this.#renderedMoviesCounter >= this.#movies.length) {
+    this.#quantityOfRenderedMovies += slicedMovies.length;
+
+    if (this.#quantityOfRenderedMovies >= this.#movies.length) {
       remove(this.#showMoreButtonComponent);
       this.#isDestroyed = true;
     }

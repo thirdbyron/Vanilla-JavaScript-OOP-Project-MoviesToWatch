@@ -6,6 +6,8 @@ const createMovieCardTemplate = (movie) => {
 
   const {title, total_rating: totalRating, poster, release, runtime, genre, description } = movie.film_info;
 
+  const {watchlist, already_watched: watched, favorite} = movie.user_details;
+
   const rawDate = release.date;
   const releaseYear = rawDate !== null ? formatRawDateToRealeaseYear(rawDate) : '';
 
@@ -25,9 +27,9 @@ const createMovieCardTemplate = (movie) => {
     <span class="film-card__comments">${validateCommentsNumber(movie.comments)}</span>
   </a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-    <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
-    <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${watchlist ? 'film-card__controls-item--active' : ''}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${watched ? 'film-card__controls-item--active' : ''}" type="button">Mark as watched</button>
+    <button class="film-card__controls-item film-card__controls-item--favorite ${favorite ? 'film-card__controls-item--active' : ''}" type="button">Mark as favorite</button>
   </div>
   </article>`;
 };
@@ -85,6 +87,13 @@ export default class MovieCardView extends AbstractView {
     this._callback.watchedClick = callback;
     this.watchedButtonElement.addEventListener('click', this.#watchedClickHandler);
   };
+
+  removeHandlers() {
+    this.element.removeEventListener('click', this.#popupClickHandler);
+    this.watchedButtonElement.removeEventListener('click', this.#watchedClickHandler);
+    this.watchlistButtonElement.removeEventListener('click', this.#watchlistClickHandler);
+    this.favoriteButtonElement.removeEventListener('click', this.#favoriteClickHandler);
+  }
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();

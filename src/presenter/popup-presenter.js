@@ -7,31 +7,43 @@ export default class PopupPresenter {
 
   #mainContainer = null;
   #movie = null;
-  #comments = null;
+  #commentsModel = null;
   #onChangeData = null;
+  #moviesModel = null;
+  #currentFilter = null;
+  #turnPopupClose = null;
+  #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
 
-  init(mainContainer, movie, comments, onChangeData) {
+  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, turnPopupClose) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
-    this.#comments = comments;
+    this.#commentsModel = commentsModel;
     this.#onChangeData = onChangeData;
+    this.#moviesModel = moviesModel;
+    this.#currentFilter = currentFilter;
+    this.#turnPopupClose = turnPopupClose;
 
     this.#renderPopup();
 
   }
 
   #presentMovieDescription() {
-    new MovieDescriptionPresenter().init(
+    this.#movieDescriptionPresenter = new MovieDescriptionPresenter;
+    this.#movieDescriptionPresenter.init(
       this.#contentComponent.element,
       this.#movie,
-      this.#comments,
+      this.#commentsModel,
       this.#handlePopupCloseClick,
-      this.#onChangeData
+      this.#onChangeData,
+      this.#moviesModel,
+      this.#currentFilter
     );
   }
+
+  getMovieDescriptionPresenter = () => this.#movieDescriptionPresenter;
 
   #renderPopup() {
     this.#wrapperComponent = new PopupWrapperView;
@@ -46,6 +58,8 @@ export default class PopupPresenter {
   }
 
   clear() {
+    this.#turnPopupClose();
+    this.#movieDescriptionPresenter.removeAddCommentHandler();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);
     document.querySelector('body').classList.remove('hide-overflow');

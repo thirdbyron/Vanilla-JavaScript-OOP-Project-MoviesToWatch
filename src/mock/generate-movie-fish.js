@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
-import { MAX_MOVIE_COMENTS } from '../const.js';
+import { nanoid } from 'nanoid';
 
 const MOVIE_FISH_DICTIONARY = {
   posters: {
@@ -38,27 +38,13 @@ const generateRandomMovieDescription = (descriptions) => {
   return randomDescription;
 };
 
-const generateRandomCommentsId = () => {
-  const idNumbers = [];
-  const randomMaximumOfComments = getRandomInteger(0, MAX_MOVIE_COMENTS);
-  if (randomMaximumOfComments > 0) {
-    for (let i = 0; i < randomMaximumOfComments; i++) {
-      const randomId = getRandomInteger(1, MAX_MOVIE_COMENTS);
-      idNumbers.push(randomId);
-    }
-  }
-  return idNumbers;
-};
+export const movieIdNumbers = [];
 
-const countIdNumber = () => {
-  let counter = 0;
-  return function () {
-    counter += 1;
-    return counter;
-  };
+const generateMovieIdNumbers = () => {
+  const idNumber = nanoid();
+  movieIdNumbers.push(idNumber);
+  return idNumber;
 };
-
-const getIdNumber = countIdNumber();
 
 export const generateMovieFish = () => {
   const randomTitle = generateRandomMovieTitle(MOVIE_FISH_DICTIONARY.posters);
@@ -66,8 +52,7 @@ export const generateMovieFish = () => {
   const randomDescription = generateRandomMovieDescription(MOVIE_FISH_DICTIONARY.descriptions);
 
   return {
-    'id': getIdNumber(),
-    'comments': [...new Set(generateRandomCommentsId())],
+    'id': generateMovieIdNumbers(),
     'film_info': {
       'title': randomTitle,
       'alternative_title': 'Laziness Who Sold Themselves',
