@@ -149,19 +149,15 @@ export default class ContentPresenter {
 
     const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
 
-    if (movieForPopupPresenter && updatedMoviePresenter) {
-      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
-      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
-      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
-    } else if (movieForPopupPresenter && updatedMoviePresenter === undefined) {
-      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
-      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
-    } else {
-      if (updatedMoviePresenter.isPopupOpen) {
-        updatedMoviePresenter.rerenderCommentsList(updatedMovie);
-      }
-      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
+    updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
+
+    if (updatedMoviePresenter?.isPopupOpen) {
+      updatedMoviePresenter.rerenderCommentsList(updatedMovie);
+      updatedMoviePresenter.rerenderPopupControllButtons(updatedMovie);
     }
+
+    movieForPopupPresenter?.rerenderPopupControllButtons(updatedMovie);
+    movieForPopupPresenter?.rerenderCommentsList(updatedMovie);
 
   }
 

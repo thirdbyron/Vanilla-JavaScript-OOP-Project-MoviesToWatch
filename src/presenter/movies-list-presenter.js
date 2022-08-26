@@ -108,6 +108,10 @@ export default class MoviesListPresenter {
   #removePreviousPopup = () => {
     const previousPopup = Array.from(this.#movieCardPresenters.values()).find((presenter) => presenter.isPopupOpen);
     if (previousPopup) {
+      const movieForPopupPresenter = this.#movieCardPresenters.get(MOVIE_ONLY_FOR_POPUP_ID);
+      if (movieForPopupPresenter) {
+        this.#movieCardPresenters.delete(MOVIE_ONLY_FOR_POPUP_ID);
+      }
       previousPopup.clearPreviousPopup();
     }
   };

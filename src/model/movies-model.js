@@ -3,7 +3,17 @@ import { MAX_MOVIES } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class MoviesModel extends Observable {
+
+  #moviesApiService = null;
   #movies = Array.from({ length: MAX_MOVIES }, generateMovieFish);
+
+  constructor(moviesApiService) {
+    super();
+
+    this.#moviesApiService = moviesApiService;
+
+    console.log(this.#moviesApiService.movies)
+  }
 
   get movies() {
     return this.#movies;
