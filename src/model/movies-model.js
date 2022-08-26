@@ -12,7 +12,6 @@ export default class MoviesModel extends Observable {
 
     this.#moviesApiService = moviesApiService;
 
-    console.log(this.#moviesApiService.movies)
   }
 
   get movies() {

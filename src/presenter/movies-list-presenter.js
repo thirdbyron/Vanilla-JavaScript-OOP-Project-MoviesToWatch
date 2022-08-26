@@ -75,7 +75,6 @@ export default class MoviesListPresenter {
       this.#commentsModel,
       this.#bodyNode,
       this.#removePreviousPopup,
-      this.#hideOverflow,
       this.#onChangeData,
       this.#currentFilter,
       this.#moviesModel,
@@ -115,12 +114,5 @@ export default class MoviesListPresenter {
       previousPopup.clearPreviousPopup();
     }
   };
-
-  #hideOverflow = () => {
-    if (!(document.querySelector('body').classList.contains('hide-overflow'))) {
-      document.querySelector('body').classList.add('hide-overflow');
-    }
-  };
-
 
 }

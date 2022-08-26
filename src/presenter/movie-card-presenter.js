@@ -11,7 +11,6 @@ export default class MovieCardPresenter {
   #commentsModel = null;
   #bodyNode = null;
   #removePreviousPopup = null;
-  #hideOverflow = null;
   #onChangeData = null;
   #currentFilter = null;
   #moviesModel = null;
@@ -39,7 +38,7 @@ export default class MovieCardPresenter {
   }
 
 
-  init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviousPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
+  init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter, moviesModel) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
@@ -47,7 +46,6 @@ export default class MovieCardPresenter {
     this.#commentsModel = commentsModel;
     this.#bodyNode = bodyNode;
     this.#removePreviousPopup = onRemovePreviousPopup;
-    this.#hideOverflow = onHideOverflow;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
     this.#moviesModel = moviesModel;
@@ -125,7 +123,7 @@ export default class MovieCardPresenter {
   #renderMovieCard(movie) {
     this.#movieCardComponent = new MovieCardView(movie);
 
-    if (this.#isPopupOnly) {
+    if (this.isPopupOnly) {
       this.#presentPopup();
     }
 
@@ -133,6 +131,10 @@ export default class MovieCardPresenter {
 
     this.#setHandlers();
   }
+
+  #hideOverflow = () => {
+    document.querySelector('body').classList.toggle('hide-overflow');
+  };
 
   #changeMovieUserDetail(type) {
     this.#movie.user_details[type] = !(this.#movie.user_details[type]);
@@ -152,6 +154,5 @@ export default class MovieCardPresenter {
   #handlePopupClose = () => {
     this.isPopupOpen = false;
   };
-
 
 }

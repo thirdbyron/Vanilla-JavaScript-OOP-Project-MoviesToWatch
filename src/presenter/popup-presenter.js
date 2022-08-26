@@ -62,16 +62,17 @@ export default class PopupPresenter {
     this.#movieDescriptionPresenter.removeAddCommentHandler();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);
-    document.querySelector('body').classList.remove('hide-overflow');
   }
 
   #handlePopupCloseClick = () => {
+    document.querySelector('body').classList.remove('hide-overflow');
     this.clear();
   };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      document.querySelector('body').classList.remove('hide-overflow');
       this.clear();
     }
   };

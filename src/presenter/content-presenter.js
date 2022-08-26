@@ -121,6 +121,7 @@ export default class ContentPresenter {
     const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
 
     if (movieForPopupPresenter) {
+
       if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
         this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
         this.#moviesListPresenter.getMovieCardPresenters().delete(MOVIE_ONLY_FOR_POPUP_ID);
