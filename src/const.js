@@ -59,3 +59,11 @@ export const KEYS_CODE = {
   enter: 13
 };
 
+export const METHOD = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+export const AUTHORIZATION = 'Basic 5562qwfffghtr';
+
+export const END_POINT = 'https://18.ecmascript.pages.academy/cinemaddict';
