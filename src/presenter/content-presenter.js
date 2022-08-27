@@ -2,8 +2,10 @@ import { remove, render } from '../framework/render.js';
 import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE, MOVIE_ONLY_FOR_POPUP_ID, MOVIES_PER_ROW } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import { moviesPerFilter } from '../utils/filters.js';
+import { END_POINT, AUTHORIZATION } from '../const.js';
 import ContentView from '../view/content/content-view.js';
 import CommentsModel from '../model/comments-model.js';
+import CommentsApiService from '../comments-api-service.js';
 import LoadingView from '../view/content/loading-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListPresenter from './movies-list-presenter.js';
@@ -45,7 +47,7 @@ export default class ContentPresenter {
     this.#mainContainer = mainContainer;
     this.#moviesModel = moviesModel;
     this.#filtersModel = filtersModel;
-    this.#commentsModel = new CommentsModel;
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     this.#currentSortType = SORT_TYPE.default;
 
     this.#moviesModel.addObserver(this.#handleModelEvent);

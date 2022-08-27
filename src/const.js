@@ -51,6 +51,7 @@ export const KEYS_CODE = {
 export const METHOD = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST'
 };
 
 export const AUTHORIZATION = 'Basic 5562qwfffghtr';

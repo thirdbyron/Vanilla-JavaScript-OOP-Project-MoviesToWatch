@@ -1,6 +1,5 @@
 import { render, replace } from '../framework/render.js';
 import { UPDATE_TYPE } from '../const.js';
-import { nanoid } from 'nanoid';
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
@@ -25,16 +24,18 @@ export default class PopupCommentsPresenter {
     this.#commentsModel = commentsModel;
     this.#movie = movie;
 
+    this.#commentsModel.addObserver(this.#renderComments);
+
+    this.#commentsModel.init(this.#movie.id);
+
     this.#tempComment = new TempCommentModel().comment;
     this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
     this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
 
-    this.#renderComments();
-
   }
 
-  #renderComments() {
+  #renderComments = () => {
 
     this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#movie);
     this.#commentsListComponent = new MovieCommentsListView;
@@ -43,9 +44,9 @@ export default class PopupCommentsPresenter {
     render(this.#commentsListComponent, this.#commentsWrapperComponent.element);
     render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
 
-    this.#renderFilteredComments();
-
-  }
+    this.#renderCommentsList();
+    
+  };
 
   rerenderCommentsList(movie) {
 
@@ -57,26 +58,15 @@ export default class PopupCommentsPresenter {
     replace(newCommentsListComponent, this.#commentsListComponent);
     this.#commentsListComponent = newCommentsListComponent;
 
-    this.#renderFilteredComments();
+    this.#renderCommentsList();
 
   }
 
-  #renderSingleComment(relevantComment) {
-    const commentComponent = new MovieCommentView(relevantComment);
-    render(commentComponent, this.#commentsListComponent.element);
-    commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
-  }
-
-  #renderFilteredComments() {
-    const commentsVariety = this.#commentsModel.comments;
-
-    const commentIdNumbersPerMovie = this.#movie.comments;
-
-    if (commentIdNumbersPerMovie.length > 0) {
-      for (let i = 0; i < commentIdNumbersPerMovie.length; i++) {
-        const relevantComment = commentsVariety.find((comment) => comment.id === commentIdNumbersPerMovie[i]);
-        this.#renderSingleComment(relevantComment);
-      }
+  #renderCommentsList() {
+    for (let i = 0; i < this.#commentsModel.comments.length; i++) {
+      const commentComponent = new MovieCommentView(this.#commentsModel.comments[i]);
+      render(commentComponent, this.#commentsListComponent.element);
+      commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
     }
   }
 
@@ -91,7 +81,7 @@ export default class PopupCommentsPresenter {
   #handleAddComment = (newComment) => {
     const commentNewId = nanoid(3);
     this.#movie.comments.push(commentNewId);
-    this.#commentsModel.addComment({id: commentNewId, movieId: this.#movie.id, ...newComment});
+    this.#commentsModel.addComment({ id: commentNewId, movieId: this.#movie.id, ...newComment });
     this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
   };
 

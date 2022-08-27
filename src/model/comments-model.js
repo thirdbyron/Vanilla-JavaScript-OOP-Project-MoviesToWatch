@@ -1,5 +1,15 @@
-export default class CommentsModel {
+import Observable from '../framework/observable.js';
+
+export default class CommentsModel extends Observable {
+
   #comments = [];
+  #commentsApiService = null;
+
+  constructor(commentsApiService) {
+    super();
+
+    this.#commentsApiService = commentsApiService;
+  }
 
   get comments() {
     return this.#comments;
@@ -9,7 +19,18 @@ export default class CommentsModel {
     this.#comments = value;
   }
 
-  addComment = (comment) => {
+  init = async (movieId) => {
+    try {
+      const commentsData = await this.#commentsApiService.getComments(movieId);
+      this.#comments = commentsData;
+    } catch (err) {
+      this.#comments = [];
+    }
+
+    this._notify();
+  };
+
+  addComment = () => {
     this.#comments = [
       ...this.#comments,
     ];
