@@ -1,5 +1,4 @@
 import { render, replace } from '../framework/render.js';
-import { generateFiltersFish } from '../mock/generate-filters-fish.js';
 import { UPDATE_TYPE } from '../const.js';
 import FiltersView from '../view/filters-view.js';
 
@@ -25,7 +24,7 @@ export default class FiltersPresenter {
   }
 
   #renderFilters() {
-    this.#filtersComponent = new FiltersView(generateFiltersFish(this.#moviesModel.movies), this.#filtersModel.filter);
+    this.#filtersComponent = new FiltersView(this.#moviesModel.movies, this.#filtersModel.filter);
 
     render(this.#filtersComponent, this.#mainContainer);
 
@@ -33,7 +32,7 @@ export default class FiltersPresenter {
   }
 
   #handleUpdateFiltersView = () => {
-    this.#updatedFiltersComponent = new FiltersView(generateFiltersFish(this.#moviesModel.movies), this.#filtersModel.filter);
+    this.#updatedFiltersComponent = new FiltersView(this.#moviesModel.movies, this.#filtersModel.filter);
 
     replace(this.#updatedFiltersComponent, this.#filtersComponent);
 

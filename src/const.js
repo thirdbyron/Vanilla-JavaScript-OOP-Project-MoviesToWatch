@@ -46,7 +46,8 @@ export const SORT_TYPE = {
 
 export const USER_ACTION = {
   updateMovie: 'update_movie',
-  sortMovies: 'sort_movies'
+  sortMovies: 'sort_movies',
+  init: 'init',
 };
 
 export const UPDATE_TYPE = {

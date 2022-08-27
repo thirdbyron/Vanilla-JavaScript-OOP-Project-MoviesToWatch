@@ -20,7 +20,11 @@ export default class AppPresenter {
 
     this.#siteMainElement = document.querySelector('.main');
     this.#siteHeaderElement = document.querySelector('.header');
+
     this.#moviesModel = new MoviesModel(new MoviesApiService(END_POINT, AUTHORIZATION));
+
+    this.#moviesModel.init();
+
     this.#filtersModel = new FiltersModel;
     this.#filtersPresenter = new FiltersPresenter;
     this.#contentPresenter = new ContentPresenter;

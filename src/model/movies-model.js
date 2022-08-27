@@ -1,21 +1,15 @@
-import { generateMovieFish } from '../mock/generate-movie-fish.js';
-import { MAX_MOVIES } from '../const.js';
+import { UPDATE_TYPE } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class MoviesModel extends Observable {
 
   #moviesApiService = null;
-  #movies = Array.from({ length: MAX_MOVIES }, generateMovieFish);
+  #movies = [];
 
   constructor(moviesApiService) {
     super();
 
     this.#moviesApiService = moviesApiService;
-
-    this.#moviesApiService.movies.then((movies) => {
-      console.log(movies)
-      console.log(movies.map(this.#adaptToClient))
-    });
 
   }
 
@@ -27,14 +21,16 @@ export default class MoviesModel extends Observable {
     this.#movies = value;
   }
 
-  setComments(comments) {
-    for (let i = 0; i < this.#movies.length; i++) {
-      this.#movies[i].comments = [];
-      comments.filter((comment) => comment.movieId === this.#movies[i].id).forEach((comment) => {
-        this.#movies[i].comments.push(comment.id);
-      });
+  init = async () => {
+    try {
+      const movies = await this.#moviesApiService.movies;
+      this.#movies = movies.map(this.#adaptToClient);
+    } catch(err) {
+      this.#movies = [];
     }
-  }
+
+    this._notify(UPDATE_TYPE.init);
+  };
 
   updateMovie = (updateType, update) => {
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
@@ -73,6 +69,7 @@ export default class MoviesModel extends Observable {
         ...movie.user_details,
         watched: movie.user_details.already_watched,
         watchingDate: movie.user_details.watching_date,
+        all: true,
       }
     };
 

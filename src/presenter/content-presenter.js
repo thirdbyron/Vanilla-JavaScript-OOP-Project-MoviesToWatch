@@ -4,6 +4,7 @@ import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import { moviesPerFilter } from '../utils/filters.js';
 import ContentView from '../view/content/content-view.js';
 import CommentsModel from '../model/comments-model.js';
+import LoadingView from '../view/content/loading-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListPresenter from './movies-list-presenter.js';
 import SortingBarPresenter from './sorting-bar-presenter.js';
@@ -15,16 +16,19 @@ export default class ContentPresenter {
   #filtersModel = null;
   #commentsModel = null;
   #contentComponent = null;
+  #loadingComponent = null;
   #moviesListWrapperComponent = null;
   #moviesListPresenter = null;
   #sortingBarPresenter = null;
   #currentSortType = null;
   #quantityOfRenderedMovies = MOVIES_PER_ROW;
+  #isLoading = true;
 
   get movies() {
 
     const filterType = this.#filtersModel.filter;
     const movies = this.#moviesModel.movies;
+
     const filteredMovies = moviesPerFilter[FILTER_TYPE[filterType]](movies);
 
     switch (this.#currentSortType) {
@@ -45,13 +49,16 @@ export default class ContentPresenter {
     this.#currentSortType = SORT_TYPE.default;
 
     this.#moviesModel.addObserver(this.#handleModelEvent);
-    this.#moviesModel.setComments(this.#commentsModel.comments);
 
     this.#filtersModel.addObserver(this.#handleModelEvent);
 
     this.#moviesListPresenter = new MoviesListPresenter;
 
-    this.#checkForMovies();
+    if (this.#isLoading) {
+      this.#renderContentTemplate();
+      this.#loadingComponent = new LoadingView;
+      render(this.#loadingComponent, this.#moviesListWrapperComponent.element);
+    }
 
   }
 
@@ -61,6 +68,7 @@ export default class ContentPresenter {
 
     render(this.#contentComponent, this.#mainContainer);
     render(this.#moviesListWrapperComponent, this.#contentComponent.element);
+
   }
 
   #renderContent() {
@@ -169,6 +177,11 @@ export default class ContentPresenter {
     const isforSorting = Object.values(SORT_TYPE).some((value) => update === value);
 
     switch (updateType) {
+      case UPDATE_TYPE.init:
+        this.#isLoading = false;
+        remove(this.#contentComponent);
+        this.#checkForMovies();
+        break;
       case UPDATE_TYPE.patch:
         this.#handlePatchUpdate(update);
         break;
