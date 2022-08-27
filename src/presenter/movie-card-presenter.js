@@ -1,5 +1,6 @@
 import { render, remove, replace } from '../framework/render.js';
-import { FILTER_FROM_DATA_TO_TYPE, UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { checkForMinorUpdate } from '../utils/filters.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -146,13 +147,13 @@ export default class MovieCardPresenter {
   };
 
   #changeMovieUserDetail(type) {
-    this.#movie.user_details[type] = !(this.#movie.user_details[type]);
+    this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
   }
 
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#movieCardComponent.getButtonType(buttonElement);
 
-    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
+    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter);
 
     this.#changeMovieUserDetail(filterType);
 

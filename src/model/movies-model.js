@@ -58,11 +58,13 @@ export default class MoviesModel extends Observable {
       ...movie,
       filmInfo: {
         ...movie.film_info,
+        rawRuntime: movie.film_info.runtime,
         runtime: movie.film_info.runtime !== null && movie.film_info.runtime > 0 ? translateMinutesToRuntime(movie.film_info.runtime) : '',
         ageRating: movie.film_info.age_rating,
         alternativeTitle: movie.film_info.alternative_title,
         totalRating: movie.film_info.total_rating,
         release: {
+          rawDate: movie.film_info.release.date,
           fullDate: movie.film_info.release.date !== null ? formatRawDateToRealeaseDate(movie.film_info.release.date) : '',
           year: movie.film_info.release.date !== null ? formatRawDateToRealeaseYear(movie.film_info.release.date) : '',
           country: movie.film_info.release.release_country
@@ -76,7 +78,6 @@ export default class MoviesModel extends Observable {
         ...movie.user_details,
         watched: movie.user_details.already_watched,
         watchingDate: movie.user_details.watching_date,
-        all: true,
       }
     };
 

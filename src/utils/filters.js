@@ -3,8 +3,8 @@ import { FILTER_TYPE } from '../const.js';
 export const moviesPerFilter = {
   [FILTER_TYPE.all]: (movies) => [...movies],
   [FILTER_TYPE.watchlist]: (movies) => movies.filter((movie) => movie.userDetails.watchlist === true),
-  [FILTER_TYPE.history]: (movies) => movies.filter((movie) => movie.userDetails.watched === true),
-  [FILTER_TYPE.favorites]: (movies) => movies.filter((movie) => movie.userDetails.favorite === true),
+  [FILTER_TYPE.watched]: (movies) => movies.filter((movie) => movie.userDetails.watched === true),
+  [FILTER_TYPE.favorite]: (movies) => movies.filter((movie) => movie.userDetails.favorite === true),
 };
 
 export const generateFilters = (movies) => Object.entries(moviesPerFilter).map(([filterName, moviesCounter]) => ({
@@ -12,3 +12,7 @@ export const generateFilters = (movies) => Object.entries(moviesPerFilter).map((
   filteredMovies: moviesCounter(movies),
   type: Object.keys(FILTER_TYPE).find((key) => filterName === FILTER_TYPE[key])
 }));
+
+export const checkForMinorUpdate = (currentFilter) => {
+  Object.keys(FILTER_TYPE).some((key) => key === currentFilter && key !== 'all');
+};

@@ -1,5 +1,5 @@
 import { FILTER_TYPE } from '../const.js';
-import { moviesPerFilter, generateFilters } from '../utils/filters.js';
+import { generateFilters } from '../utils/filters.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 
@@ -34,8 +34,6 @@ export default class FiltersView extends AbstractView {
 
     this.#movies = movies;
     this.#currentType = currentType;
-
-    console.log(this.#movies)
 
     this.#checkForAllMoviesElementClass();
   }

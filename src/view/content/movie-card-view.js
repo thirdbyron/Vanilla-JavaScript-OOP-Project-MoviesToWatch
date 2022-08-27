@@ -1,5 +1,5 @@
 import { validateDescription, validateCommentsNumber } from '../../utils/movie-data.js';
-import { FILTER_FROM_DATA } from '../../const.js';
+import { FILTER_TYPE } from '../../const.js';
 import AbstractView from '../../framework/view/abstract-view.js';
 
 const createMovieCardTemplate = (movie) => {
@@ -55,12 +55,8 @@ export default class MovieCardView extends AbstractView {
   }
 
   getButtonType(buttonElement) {
-    const buttonType = Object.keys(FILTER_FROM_DATA).find((key) => buttonElement.className.includes(key));
-    return FILTER_FROM_DATA[buttonType];
-  }
-
-  toggleButtonClass(buttonElement) {
-    buttonElement.classList.toggle('film-card__controls-item--active');
+    const buttonType = Object.keys(FILTER_TYPE).find((key) => buttonElement.className.includes(key));
+    return buttonType;
   }
 
   setPopupClickHandler = (callback) => {
