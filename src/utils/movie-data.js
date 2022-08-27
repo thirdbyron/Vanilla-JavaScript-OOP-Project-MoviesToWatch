@@ -75,3 +75,16 @@ export const sortMovieByRating = (movieA, movieB) => {
   return weight ?? (movieB.film_info.total_rating - movieA.film_info.total_rating);
 };
 
+export const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
+
+export const createGenresListTemplate = (genres) => {
+  if (genres.length > 0) {
+    let genresListTemplate = '';
+    for (let i = 0; i < genres.length; i++) {
+      genresListTemplate += `<span class="film-details__genre">${genres[i]}</span>`;
+    }
+    return genresListTemplate;
+  }
+  return '';
+};
+

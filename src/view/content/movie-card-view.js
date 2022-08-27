@@ -1,25 +1,20 @@
-import { formatRawDateToRealeaseYear, translateMinutesToRuntime, validateDescription, validateCommentsNumber } from '../../utils/movie-data.js';
+import { validateDescription, validateCommentsNumber } from '../../utils/movie-data.js';
 import { FILTER_FROM_DATA } from '../../const.js';
 import AbstractView from '../../framework/view/abstract-view.js';
 
 const createMovieCardTemplate = (movie) => {
 
-  const {title, total_rating: totalRating, poster, release, runtime, genre, description } = movie.film_info;
+  const {title, totalRating, poster, release, runtime, genre, description } = movie.filmInfo;
 
-  const {watchlist, already_watched: watched, favorite} = movie.user_details;
-
-  const rawDate = release.date;
-  const releaseYear = rawDate !== null ? formatRawDateToRealeaseYear(rawDate) : '';
-
-  const timeDuration = runtime !== null && runtime > 0 ? translateMinutesToRuntime(runtime) : '';
+  const {watchlist, watched, favorite} = movie.userDetails;
 
   return `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${totalRating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${releaseYear}</span>
-      <span class="film-card__duration">${timeDuration}</span>
+      <span class="film-card__year">${release.year}</span>
+      <span class="film-card__duration">${runtime}</span>
       <span class="film-card__genre">${genre[0]}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">

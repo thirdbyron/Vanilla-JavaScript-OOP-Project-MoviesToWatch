@@ -1,4 +1,5 @@
 import { UPDATE_TYPE } from '../const.js';
+import { translateMinutesToRuntime, formatRawDateToRealeaseYear, formatRawDateToRealeaseDate, getNameOfSectionWithGenres, createGenresListTemplate } from '../utils/movie-data.js';
 import Observable from '../framework/observable.js';
 
 export default class MoviesModel extends Observable {
@@ -57,13 +58,19 @@ export default class MoviesModel extends Observable {
       ...movie,
       filmInfo: {
         ...movie.film_info,
+        runtime: movie.film_info.runtime !== null && movie.film_info.runtime > 0 ? translateMinutesToRuntime(movie.film_info.runtime) : '',
         ageRating: movie.film_info.age_rating,
         alternativeTitle: movie.film_info.alternative_title,
         totalRating: movie.film_info.total_rating,
         release: {
-          ...movie.film_info.release,
-          releaseCountry: movie.film_info.release.release_country
-        }
+          fullDate: movie.film_info.release.date !== null ? formatRawDateToRealeaseDate(movie.film_info.release.date) : '',
+          year: movie.film_info.release.date !== null ? formatRawDateToRealeaseYear(movie.film_info.release.date) : '',
+          country: movie.film_info.release.release_country
+        },
+        genreSectionName: getNameOfSectionWithGenres(movie.film_info.genre),
+        genreListTemplate: createGenresListTemplate(movie.film_info.genre),
+        actorsList: movie.film_info.actors.join(', '),
+        writersList: movie.film_info.writers.join(', '),
       },
       userDetails: {
         ...movie.user_details,
@@ -78,6 +85,8 @@ export default class MoviesModel extends Observable {
     delete adaptedMovie.filmInfo.age_rating;
     delete adaptedMovie.filmInfo.alternative_title;
     delete adaptedMovie.filmInfo.total_rating;
+    delete adaptedMovie.filmInfo.actors;
+    delete adaptedMovie.filmInfo.writers;
     delete adaptedMovie.filmInfo.release.release_country;
     delete adaptedMovie.userDetails.already_watched;
     delete adaptedMovie.userDetails.watching_date;
