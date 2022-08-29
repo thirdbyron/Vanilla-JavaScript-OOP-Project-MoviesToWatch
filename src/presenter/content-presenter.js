@@ -165,7 +165,7 @@ export default class ContentPresenter {
     updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
 
     if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
-      movieForPopupPresenter?.rerenderPopupControllButtons(updatedMovie);
+      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
     }
 
   }
