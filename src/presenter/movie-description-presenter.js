@@ -68,6 +68,7 @@ export default class MovieDescriptionPresenter {
       this.#descriptionWrapperComponent.element,
       this.#moviesModel,
       this.#commentsModel,
+      this.#onChangeData,
       this.#movie
     );
   }

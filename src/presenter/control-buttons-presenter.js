@@ -52,7 +52,7 @@ export default class ControlButtonsPresenter {
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#controlButtonsComponent.getButtonType(buttonElement);
 
-    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter);
+    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
 
     this.#changeMovieUserDetail(filterType);
 

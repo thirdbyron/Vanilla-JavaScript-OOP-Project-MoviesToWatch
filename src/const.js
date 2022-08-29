@@ -35,13 +35,15 @@ export const SORT_TYPE = {
 export const USER_ACTION = {
   updateMovie: 'update_movie',
   sortMovies: 'sort_movies',
-  init: 'init',
+  deleteComment: 'delete_comment',
+  addComment: 'add_comment'
 };
 
 export const UPDATE_TYPE = {
   patch: 'PATCH',
   minor: 'MINOR',
   major: 'MAJOR',
+  init: 'INIT'
 };
 
 export const KEYS_CODE = {
@@ -51,9 +53,10 @@ export const KEYS_CODE = {
 export const METHOD = {
   GET: 'GET',
   PUT: 'PUT',
-  POST: 'POST'
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
-export const AUTHORIZATION = 'Basic 5562qwfffghtr';
+export const AUTHORIZATION = 'Basic jjk5562qqlkwfffgghtr';
 
 export const END_POINT = 'https://18.ecmascript.pages.academy/cinemaddict';

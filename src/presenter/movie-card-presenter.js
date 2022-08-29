@@ -153,12 +153,11 @@ export default class MovieCardPresenter {
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#movieCardComponent.getButtonType(buttonElement);
 
-    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter);
+    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
 
     this.#changeMovieUserDetail(filterType);
 
     this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
-
   }
 
   #handlePopupClose = () => {

@@ -1,5 +1,5 @@
 import { render, replace } from '../framework/render.js';
-import { UPDATE_TYPE } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import MovieCommentsWrapperView from '../view/popup/comments/movie-comments-wrapper-view.js';
 import MovieCommentsListView from '../view/popup/comments/movie-comments-list-view.js';
 import MovieAddCommentFormView from '../view/popup/comments/movie-add-comment-form-view.js';
@@ -9,35 +9,36 @@ import TempCommentModel from '../model/temp-comment-model.js';
 export default class PopupCommentsPresenter {
 
   #mainContainer = null;
-  #moviesModel = null;
   #commentsModel = null;
+  #onChangeData = null;
   #movie = null;
+  #moviesModel = null;
   #commentsWrapperComponent = null;
   #commentsListComponent = null;
   #addCommentFormComponent = null;
   #tempComment = null;
 
-  init(mainContainer, moviesModel, commentsModel, movie) {
+  init(mainContainer, moviesModel, commentsModel, onChangeData, movie) {
 
     this.#mainContainer = mainContainer;
     this.#moviesModel = moviesModel;
     this.#commentsModel = commentsModel;
+    this.#onChangeData = onChangeData;
     this.#movie = movie;
 
-    this.#commentsModel.addObserver(this.#renderComments);
+    this.#commentsModel.addObserver(this.#handleModelEvent);
 
-    this.#commentsModel.init(this.#movie.id);
+    this.#commentsModel.init(UPDATE_TYPE.init, this.#movie.id);
 
     this.#tempComment = new TempCommentModel().comment;
     this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
 
     this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
-
   }
 
   #renderComments = () => {
 
-    this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#movie);
+    this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#commentsModel.comments.length);
     this.#commentsListComponent = new MovieCommentsListView;
 
     render(this.#commentsWrapperComponent, this.#mainContainer);
@@ -45,20 +46,20 @@ export default class PopupCommentsPresenter {
     render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
 
     this.#renderCommentsList();
-    
+
   };
 
-  rerenderCommentsList(movie) {
+  rerenderCommentsList() {
 
-    this.#movie = movie;
-
-    this.#commentsWrapperComponent.changeCommentsCounter(this.#movie);
+    this.#commentsWrapperComponent.changeCommentsCounter(this.#commentsModel.comments.length);
 
     const newCommentsListComponent = new MovieCommentsListView;
     replace(newCommentsListComponent, this.#commentsListComponent);
     this.#commentsListComponent = newCommentsListComponent;
 
     this.#renderCommentsList();
+
+    this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
 
   }
 
@@ -70,23 +71,37 @@ export default class PopupCommentsPresenter {
     }
   }
 
-  #handleDeleteClick = (commentToDelete) => {
-    this.#movie.comments = this.#movie.comments.filter((commentId) =>
-      commentId !== commentToDelete.id
-    );
-    this.#commentsModel.deleteComment(commentToDelete);
-    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
-  };
-
-  #handleAddComment = (newComment) => {
-    const commentNewId = nanoid(3);
-    this.#movie.comments.push(commentNewId);
-    this.#commentsModel.addComment({ id: commentNewId, movieId: this.#movie.id, ...newComment });
-    this.#moviesModel.updateMovie(UPDATE_TYPE.patch, this.#movie);
-  };
-
   removeAddCommentHandler() {
     this.#addCommentFormComponent.removeAddCommentHandler();
   }
+
+  #handleDeleteClick = (commentToDelete) => {
+    this.#movie.comments = this.#movie.comments.filter((commentId) => commentId !== commentToDelete.id);
+    this.#handleViewAction(USER_ACTION.deleteComment, UPDATE_TYPE.patch, commentToDelete);
+  };
+
+  #handleAddComment = () => {
+
+  };
+
+  #handleViewAction = (userAction, updateType, update) => {
+    switch (userAction) {
+      case USER_ACTION.deleteComment:
+        this.#commentsModel.deleteComment(updateType, update);
+        break;
+      case USER_ACTION.addComment:
+        this.#commentsModel.addComment(update);
+    }
+  };
+
+  #handleModelEvent = (updateType) => {
+    switch (updateType) {
+      case UPDATE_TYPE.init:
+        this.#renderComments();
+        break;
+      case UPDATE_TYPE.patch:
+        this.rerenderCommentsList();
+    }
+  };
 
 }

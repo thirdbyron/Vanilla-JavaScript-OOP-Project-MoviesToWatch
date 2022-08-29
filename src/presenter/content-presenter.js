@@ -164,13 +164,9 @@ export default class ContentPresenter {
 
     updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
 
-    if (updatedMoviePresenter?.isPopupOpen) {
-      updatedMoviePresenter.rerenderCommentsList(updatedMovie);
-      updatedMoviePresenter.rerenderPopupControllButtons(updatedMovie);
+    if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
+      movieForPopupPresenter?.rerenderPopupControllButtons(updatedMovie);
     }
-
-    movieForPopupPresenter?.rerenderPopupControllButtons(updatedMovie);
-    movieForPopupPresenter?.rerenderCommentsList(updatedMovie);
 
   }
 

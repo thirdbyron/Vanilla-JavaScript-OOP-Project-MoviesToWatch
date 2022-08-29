@@ -13,6 +13,4 @@ export const generateFilters = (movies) => Object.entries(moviesPerFilter).map((
   type: Object.keys(FILTER_TYPE).find((key) => filterName === FILTER_TYPE[key])
 }));
 
-export const checkForMinorUpdate = (currentFilter) => {
-  Object.keys(FILTER_TYPE).some((key) => key === currentFilter && key !== 'all');
-};
+export const checkForMinorUpdate = (currentFilter, filterType) => Object.keys(FILTER_TYPE).some((key) => key === currentFilter && key !== 'all') && currentFilter === filterType;
