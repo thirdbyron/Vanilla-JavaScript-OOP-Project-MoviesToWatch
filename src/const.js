@@ -57,6 +57,6 @@ export const METHOD = {
   DELETE: 'DELETE'
 };
 
-export const AUTHORIZATION = 'Basic jjk5562qqlkwfffgghtr';
+export const AUTHORIZATION = 'Basic jjk5g562qqkwfffgghtr';
 
 export const END_POINT = 'https://18.ecmascript.pages.academy/cinemaddict';

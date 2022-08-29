@@ -59,9 +59,11 @@ export default class PopupCommentsPresenter {
 
     this.#renderCommentsList();
 
+    this.#movie.comments = this.#commentsModel.comments.map((comment) => comment.id);
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
 
   }
+
 
   #renderCommentsList() {
     for (let i = 0; i < this.#commentsModel.comments.length; i++) {
@@ -76,12 +78,11 @@ export default class PopupCommentsPresenter {
   }
 
   #handleDeleteClick = (commentToDelete) => {
-    this.#movie.comments = this.#movie.comments.filter((commentId) => commentId !== commentToDelete.id);
     this.#handleViewAction(USER_ACTION.deleteComment, UPDATE_TYPE.patch, commentToDelete);
   };
 
-  #handleAddComment = () => {
-
+  #handleAddComment = (newComment) => {
+    this.#handleViewAction(USER_ACTION.addComment, UPDATE_TYPE.patch, newComment);
   };
 
   #handleViewAction = (userAction, updateType, update) => {
@@ -90,7 +91,7 @@ export default class PopupCommentsPresenter {
         this.#commentsModel.deleteComment(updateType, update);
         break;
       case USER_ACTION.addComment:
-        this.#commentsModel.addComment(update);
+        this.#commentsModel.addComment(updateType, update, this.#movie);
     }
   };
 

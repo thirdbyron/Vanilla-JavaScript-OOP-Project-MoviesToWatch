@@ -30,10 +30,15 @@ export default class CommentsModel extends Observable {
     this._notify(updateType);
   };
 
-  addComment = () => {
-    this.#comments = [
-      ...this.#comments,
-    ];
+  addComment = async (updateType, newComment, movie) => {
+    try {
+      const response = await this.#commentsApiService.addComment(newComment, movie.id);
+      this.#comments = response.comments;
+
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t add comment');
+    }
 
   };
 
@@ -61,3 +66,4 @@ export default class CommentsModel extends Observable {
   };
 
 }
+
