@@ -1,9 +1,9 @@
 import AbstractView from '../../framework/view/abstract-view.js';
-import { FILTER_FROM_DATA } from '../../const.js';
+import { FILTER_TYPE } from '../../const.js';
 
 const createMovieControlsTemplate = (movie) => {
 
-  const {watchlist, already_watched: watched, favorite} = movie.user_details;
+  const {watchlist, watched, favorite} = movie.userDetails;
 
   return `<section class="film-details__controls">
   <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlist ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
@@ -39,7 +39,7 @@ export default class MovieControlsView extends AbstractView{
   }
 
   getButtonType(buttonElement) {
-    const buttonType = FILTER_FROM_DATA[buttonElement.id];
+    const buttonType = Object.keys(FILTER_TYPE).find((key) => FILTER_TYPE[key] === FILTER_TYPE[buttonElement.id]);
     return buttonType;
   }
 

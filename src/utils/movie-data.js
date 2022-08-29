@@ -64,14 +64,27 @@ const getWeightForNullDate = (movieA, movieB) => {
 };
 
 export const sortMovieByDate = (movieA, movieB) => {
-  const weight = getWeightForNullDate(movieA.film_info.runtime, movieB.film_info.runtime);
+  const weight = getWeightForNullDate(movieA.filmInfo.release.rawDate, movieB.filmInfo.release.rawDate);
 
-  return weight ?? dayjs(movieB.film_info.release.date).diff(dayjs(movieA.film_info.release.date));
+  return weight ?? dayjs(movieB.filmInfo.release.rawDate).diff(dayjs(movieA.filmInfo.release.rawDate));
 };
 
 export const sortMovieByRating = (movieA, movieB) => {
-  const weight = getWeightForNullDate(movieA.film_info.total_rating, movieB.film_info.total_rating);
+  const weight = getWeightForNullDate(movieA.filmInfo.totalRating, movieB.filmInfo.totalRating);
 
-  return weight ?? (movieB.film_info.total_rating - movieA.film_info.total_rating);
+  return weight ?? (movieB.filmInfo.totalRating - movieA.filmInfo.totalRating);
+};
+
+export const getNameOfSectionWithGenres = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
+
+export const createGenresListTemplate = (genres) => {
+  if (genres.length > 0) {
+    let genresListTemplate = '';
+    for (let i = 0; i < genres.length; i++) {
+      genresListTemplate += `<span class="film-details__genre">${genres[i]}</span>`;
+    }
+    return genresListTemplate;
+  }
+  return '';
 };
 

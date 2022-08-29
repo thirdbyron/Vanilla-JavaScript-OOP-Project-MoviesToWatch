@@ -1,5 +1,6 @@
 import { render, remove, replace } from '../framework/render.js';
-import { FILTER_FROM_DATA_TO_TYPE, UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { UPDATE_TYPE, USER_ACTION } from '../const.js';
+import { checkForMinorUpdate } from '../utils/filters.js';
 import MovieCardView from '../view/content/movie-card-view.js';
 import PopupPresenter from './popup-presenter.js';
 
@@ -8,10 +9,10 @@ export default class MovieCardPresenter {
   #moviesListComponent = null;
   #movie = null;
   #isPopupOnly = null;
+  #scrollPosition = null;
   #commentsModel = null;
   #bodyNode = null;
   #removePreviousPopup = null;
-  #hideOverflow = null;
   #onChangeData = null;
   #currentFilter = null;
   #moviesModel = null;
@@ -38,16 +39,20 @@ export default class MovieCardPresenter {
     return this.#isPopupOnly;
   }
 
+  get popupScrollPoistion() {
+    return this.#popupPresenter.popupScrollPosition;
+  }
 
-  init(moviesListComponent, movie, isPopupOnly, commentsModel, bodyNode, onRemovePreviousPopup, onHideOverflow, onChangeData, currentFilter, moviesModel) {
+
+  init(moviesListComponent, movie, isPopupOnly, scrollPosition, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter, moviesModel) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
     this.#isPopupOnly = isPopupOnly;
+    this.#scrollPosition = scrollPosition;
     this.#commentsModel = commentsModel;
     this.#bodyNode = bodyNode;
     this.#removePreviousPopup = onRemovePreviousPopup;
-    this.#hideOverflow = onHideOverflow;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
     this.#moviesModel = moviesModel;
@@ -110,6 +115,7 @@ export default class MovieCardPresenter {
       this.#onChangeData,
       this.#moviesModel,
       this.#currentFilter,
+      this.#scrollPosition,
       this.#handlePopupClose
     );
   }
@@ -125,7 +131,7 @@ export default class MovieCardPresenter {
   #renderMovieCard(movie) {
     this.#movieCardComponent = new MovieCardView(movie);
 
-    if (this.#isPopupOnly) {
+    if (this.isPopupOnly) {
       this.#presentPopup();
     }
 
@@ -134,24 +140,28 @@ export default class MovieCardPresenter {
     this.#setHandlers();
   }
 
+  #hideOverflow = () => {
+    if (!document.querySelector('body').classList.contains('hide-overflow')) {
+      document.querySelector('body').classList.add('hide-overflow');
+    }
+  };
+
   #changeMovieUserDetail(type) {
-    this.#movie.user_details[type] = !(this.#movie.user_details[type]);
+    this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
   }
 
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#movieCardComponent.getButtonType(buttonElement);
 
-    const isMinorUpdate = FILTER_FROM_DATA_TO_TYPE[filterType] === this.#currentFilter;
+    const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
 
     this.#changeMovieUserDetail(filterType);
 
     this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
-
   }
 
   #handlePopupClose = () => {
     this.isPopupOpen = false;
   };
-
 
 }

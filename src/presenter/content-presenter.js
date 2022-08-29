@@ -2,8 +2,11 @@ import { remove, render } from '../framework/render.js';
 import { UPDATE_TYPE, USER_ACTION, SORT_TYPE, FILTER_TYPE, MOVIE_ONLY_FOR_POPUP_ID, MOVIES_PER_ROW } from '../const.js';
 import { sortMovieByDate, sortMovieByRating } from '../utils/movie-data.js';
 import { moviesPerFilter } from '../utils/filters.js';
+import { END_POINT, AUTHORIZATION } from '../const.js';
 import ContentView from '../view/content/content-view.js';
 import CommentsModel from '../model/comments-model.js';
+import CommentsApiService from '../comments-api-service.js';
+import LoadingView from '../view/content/loading-view.js';
 import MoviesListWrapperView from '../view/content/movies-list-wrapper-view.js';
 import MoviesListPresenter from './movies-list-presenter.js';
 import SortingBarPresenter from './sorting-bar-presenter.js';
@@ -15,16 +18,19 @@ export default class ContentPresenter {
   #filtersModel = null;
   #commentsModel = null;
   #contentComponent = null;
+  #loadingComponent = null;
   #moviesListWrapperComponent = null;
   #moviesListPresenter = null;
   #sortingBarPresenter = null;
   #currentSortType = null;
   #quantityOfRenderedMovies = MOVIES_PER_ROW;
+  #isLoading = true;
 
   get movies() {
 
     const filterType = this.#filtersModel.filter;
     const movies = this.#moviesModel.movies;
+
     const filteredMovies = moviesPerFilter[FILTER_TYPE[filterType]](movies);
 
     switch (this.#currentSortType) {
@@ -41,17 +47,20 @@ export default class ContentPresenter {
     this.#mainContainer = mainContainer;
     this.#moviesModel = moviesModel;
     this.#filtersModel = filtersModel;
-    this.#commentsModel = new CommentsModel;
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     this.#currentSortType = SORT_TYPE.default;
 
     this.#moviesModel.addObserver(this.#handleModelEvent);
-    this.#moviesModel.setComments(this.#commentsModel.comments);
 
     this.#filtersModel.addObserver(this.#handleModelEvent);
 
     this.#moviesListPresenter = new MoviesListPresenter;
 
-    this.#checkForMovies();
+    if (this.#isLoading) {
+      this.#renderContentTemplate();
+      this.#loadingComponent = new LoadingView;
+      render(this.#loadingComponent, this.#moviesListWrapperComponent.element);
+    }
 
   }
 
@@ -61,6 +70,7 @@ export default class ContentPresenter {
 
     render(this.#contentComponent, this.#mainContainer);
     render(this.#moviesListWrapperComponent, this.#contentComponent.element);
+
   }
 
   #renderContent() {
@@ -121,13 +131,16 @@ export default class ContentPresenter {
     const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
 
     if (movieForPopupPresenter) {
+
+      const isPopupOnly = true;
+      const scrollPosition = movieForPopupPresenter.popupScrollPoistion;
+
       if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
         this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
         this.#moviesListPresenter.getMovieCardPresenters().delete(MOVIE_ONLY_FOR_POPUP_ID);
       }
 
-      const isPopupOnly = true;
-      this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly);
+      this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly, scrollPosition);
     }
 
   };
@@ -149,18 +162,10 @@ export default class ContentPresenter {
 
     const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
 
-    if (movieForPopupPresenter && updatedMoviePresenter) {
-      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
+    updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
+
+    if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
       movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
-      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
-    } else if (movieForPopupPresenter && updatedMoviePresenter === undefined) {
-      movieForPopupPresenter.rerenderCommentsList(updatedMovie);
-      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
-    } else {
-      if (updatedMoviePresenter.isPopupOpen) {
-        updatedMoviePresenter.rerenderCommentsList(updatedMovie);
-      }
-      updatedMoviePresenter.rerenderMovieCard(updatedMovie);
     }
 
   }
@@ -170,6 +175,11 @@ export default class ContentPresenter {
     const isforSorting = Object.values(SORT_TYPE).some((value) => update === value);
 
     switch (updateType) {
+      case UPDATE_TYPE.init:
+        this.#isLoading = false;
+        remove(this.#contentComponent);
+        this.#checkForMovies();
+        break;
       case UPDATE_TYPE.patch:
         this.#handlePatchUpdate(update);
         break;

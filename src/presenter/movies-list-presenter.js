@@ -64,7 +64,7 @@ export default class MoviesListPresenter {
     this.#showMoreButtonPresenter.destroy();
   }
 
-  presentMovieCard = (movie, isPopupOnly = false) => {
+  presentMovieCard = (movie, isPopupOnly = false, scrollPosition = 0) => {
 
     const moviePresenter = new MovieCardPresenter;
 
@@ -72,10 +72,10 @@ export default class MoviesListPresenter {
       this.#moviesListComponent,
       movie,
       isPopupOnly,
+      scrollPosition,
       this.#commentsModel,
       this.#bodyNode,
       this.#removePreviousPopup,
-      this.#hideOverflow,
       this.#onChangeData,
       this.#currentFilter,
       this.#moviesModel,
@@ -108,15 +108,12 @@ export default class MoviesListPresenter {
   #removePreviousPopup = () => {
     const previousPopup = Array.from(this.#movieCardPresenters.values()).find((presenter) => presenter.isPopupOpen);
     if (previousPopup) {
+      const movieForPopupPresenter = this.#movieCardPresenters.get(MOVIE_ONLY_FOR_POPUP_ID);
+      if (movieForPopupPresenter) {
+        this.#movieCardPresenters.delete(MOVIE_ONLY_FOR_POPUP_ID);
+      }
       previousPopup.clearPreviousPopup();
     }
   };
-
-  #hideOverflow = () => {
-    if (!(document.querySelector('body').classList.contains('hide-overflow'))) {
-      document.querySelector('body').classList.add('hide-overflow');
-    }
-  };
-
 
 }

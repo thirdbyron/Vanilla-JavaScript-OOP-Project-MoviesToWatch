@@ -1,14 +1,22 @@
-import AbstractView from '../framework/view/abstract-view.js';
 import { FILTER_TYPE } from '../const.js';
+import { generateFilters } from '../utils/filters.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createFilterCounterTemplate = (name, quantity) => FILTER_TYPE.all !== name ? `<span class="main-navigation__item-count">${quantity.length}</span>` : '';
+
+const createFilterCounterTemplate = (name, filteredMovies) => FILTER_TYPE.all !== name ? `<span class="main-navigation__item-count">${filteredMovies.length}</span>` : '';
 
 const createFilterItemTemplate = (filter, currentType) => {
-  const { name, quantity, type } = filter;
-  return `<a href="#${type}" class="main-navigation__item ${currentType === type ? 'main-navigation__item--active' : ''}" data-filter-type="${type}"> ${name} ${createFilterCounterTemplate(name, quantity)}</a>`;
+
+  const { name, filteredMovies, type } = filter;
+
+  return `<a href="#${type}" class="main-navigation__item ${currentType === type ? 'main-navigation__item--active' : ''}" data-filter-type="${type}"> ${name} ${createFilterCounterTemplate(name, filteredMovies)}</a>`;
+
 };
 
-const createFiltersTemplate = (filters, currentType) => {
+const createFiltersTemplate = (movies, currentType) => {
+
+  const filters = generateFilters(movies);
+
   const filtersWithMovieQuantityTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentType)).join('');
 
   return `<nav class="main-navigation">
@@ -18,19 +26,20 @@ const createFiltersTemplate = (filters, currentType) => {
 
 export default class FiltersView extends AbstractView {
 
-  #filters = null;
+  #movies = null;
   #currentType = null;
 
-  constructor(filters, currentType) {
+  constructor(movies, currentType) {
     super();
-    this.#filters = filters;
+
+    this.#movies = movies;
     this.#currentType = currentType;
 
     this.#checkForAllMoviesElementClass();
   }
 
   get template() {
-    return createFiltersTemplate(this.#filters, this.#currentType);
+    return createFiltersTemplate(this.#movies, this.#currentType);
   }
 
   get filterElements() {
