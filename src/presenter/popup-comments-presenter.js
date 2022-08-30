@@ -31,8 +31,8 @@ export default class PopupCommentsPresenter {
 
     this.#commentsModel.init(UPDATE_TYPE.init, this.#movie.id);
 
-    this.#tempComment = new TempCommentModel().comment;
-    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
+    this.#tempComment = new TempCommentModel;
+    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment.comment);
 
     this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
   }
@@ -60,11 +60,10 @@ export default class PopupCommentsPresenter {
 
     this.#renderCommentsList();
 
-    this.#movie.comments = this.#commentsModel.comments;
+    this.#movie.comments = this.#commentsModel.comments.map((comment) => comment.id);
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
 
   }
-
 
   #renderCommentsList() {
     for (let i = 0; i < this.#commentsModel.comments.length; i++) {
@@ -77,6 +76,7 @@ export default class PopupCommentsPresenter {
   }
 
   removeAddCommentHandler() {
+    this.#tempComment.reset();
     this.#addCommentFormComponent.removeAddCommentHandler();
   }
 
@@ -85,12 +85,19 @@ export default class PopupCommentsPresenter {
   };
 
   #handleAddComment = (newComment) => {
-    this.#handleViewAction(USER_ACTION.addComment, UPDATE_TYPE.patch, newComment);
+    this.#handleViewAction(USER_ACTION.addComment, UPDATE_TYPE.minor, newComment);
   };
 
   #handleDeletingCommentError(commentId) {
     const commentToDeleteView = this.#commentViews.get(commentId);
-    commentToDeleteView.shake(commentToDeleteView.activeDeleteButton);
+    commentToDeleteView.shake(commentToDeleteView.handleActivationDeleteButton);
+  }
+
+  #handleAddingCommentError() {
+    const isError = true;
+    this.#addCommentFormComponent.shake(this.#addCommentFormComponent.handleResponseAfterAddComment(isError));
+    this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
+    this.#tempComment.reset();
   }
 
   #handleCommentsError = (err) => {
@@ -99,6 +106,7 @@ export default class PopupCommentsPresenter {
         this.#handleDeletingCommentError(err.commentId);
         break;
       case USER_ACTION.addComment:
+        this.#handleAddingCommentError();
         break;
     }
 
@@ -114,10 +122,23 @@ export default class PopupCommentsPresenter {
     }
   };
 
-  #handleModelEvent = (updateType, err = null) => {
+  #handleModelEvent = (updateType, err) => {
     switch (updateType) {
       case UPDATE_TYPE.init:
-        this.#renderComments();
+        if (!err) {
+          this.#renderComments();
+        } else {
+
+        }
+        break;
+      case UPDATE_TYPE.minor:
+        if (!err) {
+          this.#addCommentFormComponent.handleResponseAfterAddComment();
+          this.#tempComment.reset();
+          this.rerenderCommentsList();
+        } else {
+          this.#handleCommentsError(err);
+        }
         break;
       case UPDATE_TYPE.patch:
         if (!err) {

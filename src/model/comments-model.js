@@ -38,7 +38,8 @@ export default class CommentsModel extends Observable {
 
       this._notify(updateType);
     } catch (err) {
-      throw new Error('Can\'t add comment');
+      const commentToAddError = { type: USER_ACTION.addComment };
+      this._notify(updateType, commentToAddError);
     }
 
   };
@@ -61,7 +62,7 @@ export default class CommentsModel extends Observable {
       this._notify(updateType);
 
     } catch (err) {
-      const commentToDeleteError = {commentId: commentToDelete.id, type: USER_ACTION.deleteComment};
+      const commentToDeleteError = { commentId: commentToDelete.id, type: USER_ACTION.deleteComment };
       this._notify(updateType, commentToDeleteError);
     }
 

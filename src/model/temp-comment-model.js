@@ -11,4 +11,11 @@ export default class TempCommentModel {
   set comment(value) {
     this.#comment = value;
   }
+
+  reset() {
+    this.#comment = {
+      comment: '',
+      emotion: ''
+    };
+  }
 }

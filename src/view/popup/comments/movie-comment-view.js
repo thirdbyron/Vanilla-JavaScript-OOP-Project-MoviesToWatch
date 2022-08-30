@@ -54,7 +54,7 @@ export default class MovieCommentView extends AbstractView{
     this.deleteButton.disabled = true;
   }
 
-  activeDeleteButton = () => {
+  handleActivationDeleteButton = () => {
     this.deleteButton.textContent = 'Delete';
     this.deleteButton.disabled = false;
   };
