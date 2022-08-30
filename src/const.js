@@ -43,7 +43,7 @@ export const UPDATE_TYPE = {
   patch: 'PATCH',
   minor: 'MINOR',
   major: 'MAJOR',
-  init: 'INIT'
+  init: 'INIT',
 };
 
 export const KEYS_CODE = {

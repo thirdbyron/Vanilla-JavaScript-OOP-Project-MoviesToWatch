@@ -1,3 +1,4 @@
+import { USER_ACTION } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class CommentsModel extends Observable {
@@ -60,7 +61,8 @@ export default class CommentsModel extends Observable {
       this._notify(updateType);
 
     } catch (err) {
-      throw new Error('Can\'t delete comment');
+      const commentToDeleteError = {commentId: commentToDelete.id, type: USER_ACTION.deleteComment};
+      this._notify(updateType, commentToDeleteError);
     }
 
   };

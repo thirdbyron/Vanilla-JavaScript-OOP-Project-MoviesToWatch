@@ -17,6 +17,7 @@ export default class PopupCommentsPresenter {
   #commentsListComponent = null;
   #addCommentFormComponent = null;
   #tempComment = null;
+  #commentViews = new Map();
 
   init(mainContainer, moviesModel, commentsModel, onChangeData, movie) {
 
@@ -59,7 +60,7 @@ export default class PopupCommentsPresenter {
 
     this.#renderCommentsList();
 
-    this.#movie.comments = this.#commentsModel.comments.map((comment) => comment.id);
+    this.#movie.comments = this.#commentsModel.comments;
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
 
   }
@@ -70,6 +71,8 @@ export default class PopupCommentsPresenter {
       const commentComponent = new MovieCommentView(this.#commentsModel.comments[i]);
       render(commentComponent, this.#commentsListComponent.element);
       commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
+
+      this.#commentViews.set(this.#commentsModel.comments[i].id, commentComponent);
     }
   }
 
@@ -85,6 +88,22 @@ export default class PopupCommentsPresenter {
     this.#handleViewAction(USER_ACTION.addComment, UPDATE_TYPE.patch, newComment);
   };
 
+  #handleDeletingCommentError(commentId) {
+    const commentToDeleteView = this.#commentViews.get(commentId);
+    commentToDeleteView.shake(commentToDeleteView.activeDeleteButton);
+  }
+
+  #handleCommentsError = (err) => {
+    switch (err.type) {
+      case USER_ACTION.deleteComment:
+        this.#handleDeletingCommentError(err.commentId);
+        break;
+      case USER_ACTION.addComment:
+        break;
+    }
+
+  };
+
   #handleViewAction = (userAction, updateType, update) => {
     switch (userAction) {
       case USER_ACTION.deleteComment:
@@ -95,13 +114,18 @@ export default class PopupCommentsPresenter {
     }
   };
 
-  #handleModelEvent = (updateType) => {
+  #handleModelEvent = (updateType, err = null) => {
     switch (updateType) {
       case UPDATE_TYPE.init:
         this.#renderComments();
         break;
       case UPDATE_TYPE.patch:
-        this.rerenderCommentsList();
+        if (!err) {
+          this.rerenderCommentsList();
+        } else {
+          this.#handleCommentsError(err);
+        }
+        break;
     }
   };
 
