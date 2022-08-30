@@ -128,7 +128,9 @@ export default class PopupCommentsPresenter {
         if (!err) {
           this.#renderComments();
         } else {
-
+          this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#commentsModel.comments.length);
+          render(this.#commentsWrapperComponent, this.#mainContainer);
+          this.#commentsWrapperComponent.addErrorTemplate();
         }
         break;
       case UPDATE_TYPE.minor:

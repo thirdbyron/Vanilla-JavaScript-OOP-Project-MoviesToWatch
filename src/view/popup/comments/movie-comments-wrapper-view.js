@@ -25,5 +25,11 @@ export default class MovieCommentsWrapperView extends AbstractView {
     this.element.querySelector('.film-details__comments-count').innerHTML = commentsQuantity;
   }
 
+  addErrorTemplate = () => {
+    this.shake();
+    const errorTemplate = 'Can\'t get response from server, sorry!';
+    this.element.querySelector('.film-details__comments-wrap').insertAdjacentHTML('beforeend', errorTemplate);
+  };
+
 }
 

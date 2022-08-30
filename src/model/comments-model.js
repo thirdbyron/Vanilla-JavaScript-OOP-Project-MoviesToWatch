@@ -24,11 +24,12 @@ export default class CommentsModel extends Observable {
     try {
       const commentsData = await this.#commentsApiService.getComments(movieId);
       this.#comments = commentsData;
+      this._notify(updateType);
     } catch (err) {
       this.#comments = [];
+      const initCommentsError = true;
+      this._notify(updateType, initCommentsError);
     }
-
-    this._notify(updateType);
   };
 
   addComment = async (updateType, newComment, movie) => {
