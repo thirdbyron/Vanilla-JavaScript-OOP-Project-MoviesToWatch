@@ -86,6 +86,12 @@ export default class MovieCardView extends AbstractView {
     this.favoriteButtonElement.removeEventListener('click', this.#favoriteClickHandler);
   }
 
+  disableControlButtons = () => {
+    this.element.querySelectorAll('button').forEach((button) => {
+      button.disabled = true;
+    });
+  };
+
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();

@@ -89,6 +89,10 @@ export default class MovieCardPresenter {
     }
   }
 
+  shakeElementWhileError = () => {
+    this.#movieCardComponent.shake();
+  };
+
   #setHandlers() {
     this.#movieCardComponent.setPopupClickHandler(() => {
       this.#removePreviousPopup();
@@ -96,13 +100,19 @@ export default class MovieCardPresenter {
       this.#presentPopup();
     });
     this.#movieCardComponent.setFavoriteClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.favoriteButtonElement);
+      this.#handleDisablingControlButtons();
+      this.#handleDisablingPopupControlButtons();
+      this.#handleControllButtonClick(this.#movieCardComponent.favoriteButtonElement);
     });
     this.#movieCardComponent.setWatchedClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.watchedButtonElement);
+      this.#handleDisablingControlButtons();
+      this.#handleDisablingPopupControlButtons();
+      this.#handleControllButtonClick(this.#movieCardComponent.watchedButtonElement);
     });
     this.#movieCardComponent.setWatchlistClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.watchlistButtonElement);
+      this.#handleDisablingControlButtons();
+      this.#handleDisablingPopupControlButtons();
+      this.#handleControllButtonClick(this.#movieCardComponent.watchlistButtonElement);
     });
   }
 
@@ -116,7 +126,8 @@ export default class MovieCardPresenter {
       this.#moviesModel,
       this.#currentFilter,
       this.#scrollPosition,
-      this.#handlePopupClose
+      this.#handlePopupClose,
+      this.#handleDisablingControlButtons
     );
   }
 
@@ -150,7 +161,7 @@ export default class MovieCardPresenter {
     this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
   }
 
-  #handleControlButtonClick(buttonElement) {
+  #handleControllButtonClick(buttonElement) {
     const filterType = this.#movieCardComponent.getButtonType(buttonElement);
 
     const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
@@ -162,6 +173,16 @@ export default class MovieCardPresenter {
 
   #handlePopupClose = () => {
     this.isPopupOpen = false;
+  };
+
+  #handleDisablingControlButtons = () => {
+    this.#movieCardComponent.disableControlButtons();
+  };
+
+  #handleDisablingPopupControlButtons = () => {
+    if (this.isPopupOpen) {
+      this.#popupPresenter.getMovieDescriptionPresenter().disablePopupControlButtons();
+    }
   };
 
 }

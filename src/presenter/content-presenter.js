@@ -170,6 +170,10 @@ export default class ContentPresenter {
 
   }
 
+  #handleModelEventError(update) {
+    this.#moviesListPresenter.getMovieCardPresenters().get(update.id).shakeElementWhileError();
+  }
+
   #handleModelEvent = (updateType, update) => {
 
     const isforSorting = Object.values(SORT_TYPE).some((value) => update === value);
@@ -195,6 +199,9 @@ export default class ContentPresenter {
         this.#checkForPopupOpen();
         this.#clearContent({ needSortTypeReset: true });
         this.#checkForMovies();
+        break;
+      case UPDATE_TYPE.error:
+        this.#handleModelEventError(update);
         break;
     }
   };

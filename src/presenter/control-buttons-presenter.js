@@ -10,12 +10,15 @@ export default class ControlButtonsPresenter {
   #controlButtonsComponent = null;
   #onChangeData = null;
   #currentFilter = null;
+  #onDisableControlButtons = null;
 
-  init(mainContainer, movie, onChangeData, currentFilter) {
+  init(mainContainer, movie, onChangeData, currentFilter, onDisableControlButtons) {
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
+    this.#onDisableControlButtons = onDisableControlButtons;
+
     this.#controlButtonsComponent = new MovieControlsView(this.#movie);
 
     render(this.#controlButtonsComponent, this.#mainContainer);
@@ -33,14 +36,24 @@ export default class ControlButtonsPresenter {
     this.#setHandlers();
   }
 
+  disableControlButtons = () => {
+    this.#controlButtonsComponent.disableControlButtons();
+  };
+
   #setHandlers() {
     this.#controlButtonsComponent.setFavoriteClickHandler(() => {
+      this.disableControlButtons();
+      this.#onDisableControlButtons();
       this.#handleControlButtonClick(this.#controlButtonsComponent.favoriteButtonElement);
     });
     this.#controlButtonsComponent.setWatchedClickHandler(() => {
+      this.disableControlButtons();
+      this.#onDisableControlButtons();
       this.#handleControlButtonClick(this.#controlButtonsComponent.watchedButtonElement);
     });
     this.#controlButtonsComponent.setWatchlistClickHandler(() => {
+      this.disableControlButtons();
+      this.#onDisableControlButtons();
       this.#handleControlButtonClick(this.#controlButtonsComponent.watchlistButtonElement);
     });
   }

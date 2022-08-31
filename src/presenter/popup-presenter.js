@@ -13,6 +13,7 @@ export default class PopupPresenter {
   #currentFilter = null;
   #scrollPosition = null;
   #turnPopupClose = null;
+  #onDisableControllButtons = null;
   #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
@@ -22,7 +23,7 @@ export default class PopupPresenter {
   }
 
 
-  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, scrollPosition, turnPopupClose) {
+  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, scrollPosition, turnPopupClose, onDisableControllButtons) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
@@ -32,6 +33,7 @@ export default class PopupPresenter {
     this.#currentFilter = currentFilter;
     this.#scrollPosition = scrollPosition;
     this.#turnPopupClose = turnPopupClose;
+    this.#onDisableControllButtons = onDisableControllButtons;
 
     this.#renderPopup();
 
@@ -46,7 +48,8 @@ export default class PopupPresenter {
       this.#handlePopupCloseClick,
       this.#onChangeData,
       this.#moviesModel,
-      this.#currentFilter
+      this.#currentFilter,
+      this.#onDisableControllButtons
     );
   }
 

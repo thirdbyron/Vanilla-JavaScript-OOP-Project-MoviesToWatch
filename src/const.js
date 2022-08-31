@@ -44,6 +44,7 @@ export const UPDATE_TYPE = {
   minor: 'MINOR',
   major: 'MAJOR',
   init: 'INIT',
+  error: 'ERROR'
 };
 
 export const KEYS_CODE = {

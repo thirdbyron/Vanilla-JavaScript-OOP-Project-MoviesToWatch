@@ -43,9 +43,11 @@ export default class MovieControlsView extends AbstractView{
     return buttonType;
   }
 
-  toggleClass(buttonType) {
-    buttonType.classList.toggle('film-details__control-button--active');
-  }
+  disableControlButtons = () => {
+    this.element.querySelectorAll('button').forEach((button) => {
+      button.disabled = true;
+    });
+  };
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
