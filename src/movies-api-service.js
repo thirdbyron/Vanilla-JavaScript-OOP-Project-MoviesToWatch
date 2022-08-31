@@ -10,7 +10,7 @@ export default class MoviesApiService extends ApiService {
 
   updateMovie = async (movie) => {
     const response = await this._load({
-      url: `moviesg/${movie.id}`,
+      url: `movifes/${movie.id}`,
       method: METHOD.PUT,
       body: JSON.stringify(this.#adaptToServer(movie)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -56,6 +56,8 @@ export default class MoviesApiService extends ApiService {
     delete adaptedMovie['film_info'].totalRating;
     delete adaptedMovie['user_details'].watched;
     delete adaptedMovie['user_details'].watchingDate;
+    delete adaptedMovie.isPopupChange;
+    delete adaptedMovie.isCommentsChange;
 
     return adaptedMovie;
 

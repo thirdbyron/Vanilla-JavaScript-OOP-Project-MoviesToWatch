@@ -91,7 +91,9 @@ export default class MoviesModel extends Observable {
         ...movie.user_details,
         watched: movie.user_details.already_watched,
         watchingDate: movie.user_details.watching_date,
-      }
+      },
+      isPopupChange: null,
+      isCommentsChange: null,
     };
 
     delete adaptedMovie.film_info;

@@ -123,17 +123,17 @@ export default class ContentPresenter {
 
     remove(this.#contentComponent);
     remove(this.#moviesListWrapperComponent);
-
   }
 
   #checkForPopupOpen = () => {
-
     const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
 
     if (movieForPopupPresenter) {
-
+      const updatedMovie = this.#moviesModel.movies.find((movie) => movie.id === movieForPopupPresenter.movie.id);
       const isPopupOnly = true;
-      const scrollPosition = movieForPopupPresenter.popupScrollPoistion;
+      const scrollPosition = movieForPopupPresenter.popupScrollPosition;
+
+      movieForPopupPresenter.setMovie(updatedMovie);
 
       if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
         this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
@@ -142,7 +142,6 @@ export default class ContentPresenter {
 
       this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly, scrollPosition);
     }
-
   };
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -157,21 +156,25 @@ export default class ContentPresenter {
   };
 
   #handlePatchUpdate(updatedMovie) {
-
     const movieForPopupPresenter = this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID);
 
     const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
 
-    updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
+    updatedMoviePresenter?.setMovie(updatedMovie);
+    updatedMoviePresenter?.rerenderMovieCard();
 
     if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
+      movieForPopupPresenter.setMovie(updatedMovie);
       movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
     }
-
   }
 
   #handleModelEventError(update) {
-    this.#moviesListPresenter.getMovieCardPresenters().get(update.id).shakeElementWhileError();
+    if (!update.isPopupChange) {
+      this.#moviesListPresenter.getMovieCardPresenters().get(update.id).shakeElementWhileError();
+    } else {
+      this.#moviesListPresenter.getMovieCardPresenters().get(update.id).getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+    }
   }
 
   #handleModelEvent = (updateType, update) => {

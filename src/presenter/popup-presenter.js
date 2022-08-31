@@ -22,6 +22,13 @@ export default class PopupPresenter {
     return this.#wrapperComponent.scrollPosition;
   }
 
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
 
   init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, scrollPosition, turnPopupClose, onDisableControllButtons) {
 
@@ -72,6 +79,7 @@ export default class PopupPresenter {
   clear() {
     this.#turnPopupClose();
     this.#movieDescriptionPresenter.removeAddCommentHandler();
+    this.#movieDescriptionPresenter.clearCommentObserver();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);
   }

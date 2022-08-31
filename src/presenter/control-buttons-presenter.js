@@ -10,14 +10,22 @@ export default class ControlButtonsPresenter {
   #controlButtonsComponent = null;
   #onChangeData = null;
   #currentFilter = null;
-  #onDisableControlButtons = null;
+  #onDisableMovieCardControlButtons = null;
 
-  init(mainContainer, movie, onChangeData, currentFilter, onDisableControlButtons) {
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
+
+  init(mainContainer, movie, onChangeData, currentFilter, onDisableMovieCardControlButtons) {
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
-    this.#onDisableControlButtons = onDisableControlButtons;
+    this.#onDisableMovieCardControlButtons = onDisableMovieCardControlButtons;
 
     this.#controlButtonsComponent = new MovieControlsView(this.#movie);
 
@@ -26,8 +34,9 @@ export default class ControlButtonsPresenter {
     this.#setHandlers();
   }
 
-  rerenderControllButtons(movie) {
-    const newControlButtonsComponent = new MovieControlsView(movie);
+  rerenderControllButtons() {
+
+    const newControlButtonsComponent = new MovieControlsView(this.#movie);
 
     replace(newControlButtonsComponent, this.#controlButtonsComponent);
 
@@ -36,30 +45,35 @@ export default class ControlButtonsPresenter {
     this.#setHandlers();
   }
 
-  disableControlButtons = () => {
-    this.#controlButtonsComponent.disableControlButtons();
+  disableControlButtons = (isDisabled) => {
+    this.#controlButtonsComponent.disableControlButtons(isDisabled);
   };
+
+  shakeElementWhileError() {
+    this.#controlButtonsComponent.shake(this.#handleActivationControlButtons);
+  }
 
   #setHandlers() {
     this.#controlButtonsComponent.setFavoriteClickHandler(() => {
-      this.disableControlButtons();
-      this.#onDisableControlButtons();
+      this.disableControlButtons(true);
+      this.#onDisableMovieCardControlButtons(true);
       this.#handleControlButtonClick(this.#controlButtonsComponent.favoriteButtonElement);
     });
     this.#controlButtonsComponent.setWatchedClickHandler(() => {
-      this.disableControlButtons();
-      this.#onDisableControlButtons();
+      this.disableControlButtons(true);
+      this.#onDisableMovieCardControlButtons(true);
       this.#handleControlButtonClick(this.#controlButtonsComponent.watchedButtonElement);
     });
     this.#controlButtonsComponent.setWatchlistClickHandler(() => {
-      this.disableControlButtons();
-      this.#onDisableControlButtons();
+      this.disableControlButtons(true);
+      this.#onDisableMovieCardControlButtons(true);
       this.#handleControlButtonClick(this.#controlButtonsComponent.watchlistButtonElement);
     });
   }
 
   #changeMovieUserDetail(type) {
     this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
+    this.#movie.isPopupChange = true;
   }
 
   #handleControlButtonClick(buttonElement) {
@@ -67,9 +81,21 @@ export default class ControlButtonsPresenter {
 
     const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
 
-    this.#changeMovieUserDetail(filterType);
+    const movie = {
+      ...this.#movie,
+      userDetails: {
+        ...this.#movie.userDetails,
+        [filterType]: !(this.#movie.userDetails[filterType])
+      },
+      isPopupChange: true
+    };
 
-    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, movie);
   }
+
+  #handleActivationControlButtons = () => {
+    this.disableControlButtons(false);
+    this.#onDisableMovieCardControlButtons(false);
+  };
 
 }

@@ -19,6 +19,14 @@ export default class PopupCommentsPresenter {
   #tempComment = null;
   #commentViews = new Map();
 
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
+
   init(mainContainer, moviesModel, commentsModel, onChangeData, movie) {
 
     this.#mainContainer = mainContainer;
@@ -61,6 +69,7 @@ export default class PopupCommentsPresenter {
     this.#renderCommentsList();
 
     this.#movie.comments = this.#commentsModel.comments.map((comment) => comment.id);
+    this.#movie.isCommentsChange = true;
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
 
   }
@@ -73,6 +82,10 @@ export default class PopupCommentsPresenter {
 
       this.#commentViews.set(this.#commentsModel.comments[i].id, commentComponent);
     }
+  }
+
+  clearCommentObserver() {
+    this.#commentsModel.removeObserver(this.#handleModelEvent);
   }
 
   removeAddCommentHandler() {
@@ -109,7 +122,6 @@ export default class PopupCommentsPresenter {
         this.#handleAddingCommentError();
         break;
     }
-
   };
 
   #handleViewAction = (userAction, updateType, update) => {

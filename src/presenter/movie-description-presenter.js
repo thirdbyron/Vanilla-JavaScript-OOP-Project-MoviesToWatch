@@ -18,6 +18,14 @@ export default class MovieDescriptionPresenter {
   #controlButtonsPresenter = null;
   #popupCommentsPresenter = null;
 
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
+
   init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel, currentFilter, onDisableControllButtons) {
 
     this.#mainContainer = mainContainer;
@@ -39,20 +47,34 @@ export default class MovieDescriptionPresenter {
 
   }
 
+  setMovie(newMovie) {
+    this.#movie = newMovie;
+    this.#controlButtonsPresenter.movie = newMovie;
+    this.#popupCommentsPresenter.movie = newMovie;
+  }
+
   removeAddCommentHandler = () => {
     this.#popupCommentsPresenter.removeAddCommentHandler();
   };
 
-  rerenderControllButtons(movie) {
-    this.#controlButtonsPresenter.rerenderControllButtons(movie);
+  clearCommentObserver() {
+    this.#popupCommentsPresenter.clearCommentObserver();
+  }
+
+  rerenderControllButtons() {
+    this.#controlButtonsPresenter.rerenderControllButtons();
   }
 
   rerenderCommentsList(movie) {
     this.#popupCommentsPresenter.rerenderCommentsList(movie);
   }
 
-  disablePopupControlButtons() {
-    this.#controlButtonsPresenter.disableControlButtons();
+  disablePopupControlButtons(isDisabled) {
+    this.#controlButtonsPresenter.disableControlButtons(isDisabled);
+  }
+
+  shakePopupControlButtons() {
+    this.#controlButtonsPresenter.shakeElementWhileError();
   }
 
   #presentControlButtons() {

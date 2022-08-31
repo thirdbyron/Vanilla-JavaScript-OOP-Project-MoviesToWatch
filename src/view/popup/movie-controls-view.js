@@ -43,9 +43,9 @@ export default class MovieControlsView extends AbstractView{
     return buttonType;
   }
 
-  disableControlButtons = () => {
+  disableControlButtons = (isDisabled) => {
     this.element.querySelectorAll('button').forEach((button) => {
-      button.disabled = true;
+      button.disabled = isDisabled;
     });
   };
 
