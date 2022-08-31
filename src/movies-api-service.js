@@ -10,7 +10,7 @@ export default class MoviesApiService extends ApiService {
 
   updateMovie = async (movie) => {
     const response = await this._load({
-      url: `movifes/${movie.id}`,
+      url: `movies/${movie.id}`,
       method: METHOD.PUT,
       body: JSON.stringify(this.#adaptToServer(movie)),
       headers: new Headers({ 'Content-Type': 'application/json' }),

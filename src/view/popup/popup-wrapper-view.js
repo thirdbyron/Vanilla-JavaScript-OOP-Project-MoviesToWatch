@@ -10,6 +10,7 @@ export default class PopupWrapperView extends AbstractView{
     super();
 
     this.#scrollPosition = scrollPosition;
+
   }
 
   get template() {
@@ -20,9 +21,9 @@ export default class PopupWrapperView extends AbstractView{
     return this.element.scrollTop;
   }
 
-  setScrollPosition() {
-    this.element.scrollTop += this.#scrollPosition;
-  }
+  setScrollPosition = () => {
+    this.element.scrollTop = this.#scrollPosition;
+  };
 
 }
 

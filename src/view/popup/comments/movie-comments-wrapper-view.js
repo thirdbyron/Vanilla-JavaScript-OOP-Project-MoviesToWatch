@@ -31,5 +31,13 @@ export default class MovieCommentsWrapperView extends AbstractView {
     this.element.querySelector('.film-details__comments-wrap').insertAdjacentHTML('beforeend', errorTemplate);
   };
 
+  showError = () => {
+    if (this.element.querySelector('#error')) {
+      this.element.querySelector('#error').remove();
+    }
+    const errorTemplate = '<p id="error" style="color: red; font-size: 25px"> An incorrect response came from the server. Some information may be wrong. We will fix it soon! </p>';
+    this.element.insertAdjacentHTML('afterbegin', errorTemplate);
+  };
+
 }
 

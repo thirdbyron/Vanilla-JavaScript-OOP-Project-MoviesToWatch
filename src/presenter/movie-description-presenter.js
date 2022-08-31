@@ -12,7 +12,6 @@ export default class MovieDescriptionPresenter {
   #descriptionWrapperComponent = null;
   #closeHandler = null;
   #onChangeData = null;
-  #moviesModel = null;
   #currentFilter = null;
   #onDisableControllButtons = null;
   #controlButtonsPresenter = null;
@@ -26,14 +25,13 @@ export default class MovieDescriptionPresenter {
     this.#movie = value;
   }
 
-  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel, currentFilter, onDisableControllButtons) {
+  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, currentFilter, onDisableControllButtons) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#commentsModel = commentsModel;
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
-    this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
     this.#onDisableControllButtons = onDisableControllButtons;
 
@@ -77,6 +75,14 @@ export default class MovieDescriptionPresenter {
     this.#controlButtonsPresenter.shakeElementWhileError();
   }
 
+  destroy() {
+    remove(this.#descriptionWrapperComponent);
+  }
+
+  showCommentsChangeMovieModelError = () => {
+    this.#popupCommentsPresenter.showMovieModelError();
+  };
+
   #presentControlButtons() {
     this.#controlButtonsPresenter.init(
       this.#descriptionWrapperComponent.element,
@@ -87,15 +93,10 @@ export default class MovieDescriptionPresenter {
     );
   }
 
-  destroy() {
-    remove(this.#descriptionWrapperComponent);
-  }
-
   #presentPopupComments() {
     this.#popupCommentsPresenter = new PopupCommentsPresenter;
     this.#popupCommentsPresenter.init(
       this.#descriptionWrapperComponent.element,
-      this.#moviesModel,
       this.#commentsModel,
       this.#onChangeData,
       this.#movie

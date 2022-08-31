@@ -83,7 +83,6 @@ export default class ContentPresenter {
       this.#handleViewAction,
       this.#filtersModel.filter,
       this.#commentsModel,
-      this.#moviesModel,
       this.#quantityOfRenderedMovies
     );
   }
@@ -130,6 +129,7 @@ export default class ContentPresenter {
 
     if (movieForPopupPresenter) {
       const updatedMovie = this.#moviesModel.movies.find((movie) => movie.id === movieForPopupPresenter.movie.id);
+
       const isPopupOnly = true;
       const scrollPosition = movieForPopupPresenter.popupScrollPosition;
 
@@ -144,38 +144,33 @@ export default class ContentPresenter {
     }
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
-    switch (actionType) {
-      case USER_ACTION.updateMovie:
-        this.#moviesModel.updateMovie(updateType, update);
-        break;
-      case USER_ACTION.sortMovies:
-        this.#moviesModel.sortMovies(updateType, update);
-        break;
-    }
-  };
+  #getMoviePresenter = (movieId) => this.#moviesListPresenter.getMovieCardPresenters().get(movieId);
 
-  #handlePatchUpdate(updatedMovie) {
-    const movieForPopupPresenter = this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID);
+  #handlePatchUpdate(update) {
+    this.#getMoviePresenter(update.id)?.setMovie(update);
+    this.#getMoviePresenter(update.id)?.rerenderMovieCard();
 
-    const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
-
-    updatedMoviePresenter?.setMovie(updatedMovie);
-    updatedMoviePresenter?.rerenderMovieCard();
-
-    if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
-      movieForPopupPresenter.setMovie(updatedMovie);
-      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
+    if (this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.movie.id === update.id) {
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).setMovie(update);
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).rerenderPopupControllButtons(update);
     }
   }
 
   #handleModelEventError(update) {
     if (!update.isPopupChange) {
-      this.#moviesListPresenter.getMovieCardPresenters().get(update.id).shakeElementWhileError();
+      this.#getMoviePresenter(update.id).shakeElementWhileError();
     } else {
-      this.#moviesListPresenter.getMovieCardPresenters().get(update.id).getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+      this.#getMoviePresenter(update.id)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
     }
   }
+
+  #handleCommentChangeMovieModelError = (update) => {
+    update.isCommentsChange = false;
+    this.#getMoviePresenter(update.id)?.getPopupPresenter().getMovieDescriptionPresenter().showCommentsChangeMovieModelError();
+
+    this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.getPopupPresenter().getMovieDescriptionPresenter().showCommentsChangeMovieModelError();
+  };
 
   #handleModelEvent = (updateType, update) => {
 
@@ -204,7 +199,22 @@ export default class ContentPresenter {
         this.#checkForMovies();
         break;
       case UPDATE_TYPE.error:
-        this.#handleModelEventError(update);
+        if (update.isCommentsChange) {
+          this.#handleCommentChangeMovieModelError(update);
+        } else {
+          this.#handleModelEventError(update);
+        }
+        break;
+    }
+  };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case USER_ACTION.updateMovie:
+        this.#moviesModel.updateMovie(updateType, update);
+        break;
+      case USER_ACTION.sortMovies:
+        this.#moviesModel.sortMovies(updateType, update);
         break;
     }
   };

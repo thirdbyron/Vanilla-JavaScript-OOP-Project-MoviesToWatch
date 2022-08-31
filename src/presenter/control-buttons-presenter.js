@@ -35,9 +35,7 @@ export default class ControlButtonsPresenter {
   }
 
   rerenderControllButtons() {
-
     const newControlButtonsComponent = new MovieControlsView(this.#movie);
-
     replace(newControlButtonsComponent, this.#controlButtonsComponent);
 
     this.#controlButtonsComponent = newControlButtonsComponent;
@@ -69,11 +67,6 @@ export default class ControlButtonsPresenter {
       this.#onDisableMovieCardControlButtons(true);
       this.#handleControlButtonClick(this.#controlButtonsComponent.watchlistButtonElement);
     });
-  }
-
-  #changeMovieUserDetail(type) {
-    this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
-    this.#movie.isPopupChange = true;
   }
 
   #handleControlButtonClick(buttonElement) {

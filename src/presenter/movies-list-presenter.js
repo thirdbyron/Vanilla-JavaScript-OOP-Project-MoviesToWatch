@@ -12,14 +12,13 @@ export default class MoviesListPresenter {
   #onChangeData = null;
   #currentFilter = null;
   #commentsModel = null;
-  #moviesModel = null;
   #quantityOfRenderedMovies = null;
   #moviesListComponent = null;
   #movieCardPresenters = new Map();
   #showMoreButtonPresenter = new ShowMoreButtonPresenter;
 
 
-  init(mainContainer, movies, bodyNode, onChangeData, currentFilter, commentsModel, moviesModel, quantityOfRenderedMovies) {
+  init(mainContainer, movies, bodyNode, onChangeData, currentFilter, commentsModel, quantityOfRenderedMovies) {
 
     this.#mainContainer = mainContainer;
     this.#movies = movies;
@@ -27,7 +26,6 @@ export default class MoviesListPresenter {
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
     this.#commentsModel = commentsModel;
-    this.#moviesModel = moviesModel;
     this.#quantityOfRenderedMovies = quantityOfRenderedMovies;
 
     this.#moviesListComponent = new MoviesListView;
@@ -65,7 +63,6 @@ export default class MoviesListPresenter {
   }
 
   presentMovieCard = (movie, isPopupOnly = false, scrollPosition = 0) => {
-
     const moviePresenter = new MovieCardPresenter;
 
     moviePresenter.init(
@@ -78,7 +75,6 @@ export default class MoviesListPresenter {
       this.#removePreviousPopup,
       this.#onChangeData,
       this.#currentFilter,
-      this.#moviesModel,
     );
 
     if (isPopupOnly) {
@@ -86,7 +82,6 @@ export default class MoviesListPresenter {
     } else {
       this.#movieCardPresenters.set(movie.id, moviePresenter);
     }
-
   };
 
   getMovieCardPresenters = () => this.#movieCardPresenters;

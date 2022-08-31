@@ -16,7 +16,6 @@ export default class MovieCardPresenter {
   #removePreviousPopup = null;
   #onChangeData = null;
   #currentFilter = null;
-  #moviesModel = null;
   #movieCardComponent = null;
   #movieCardControlButtonsComponent = null;
   #popupPresenter = null;
@@ -46,7 +45,7 @@ export default class MovieCardPresenter {
   }
 
 
-  init(moviesListComponent, movie, isPopupOnly, scrollPosition, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter, moviesModel) {
+  init(moviesListComponent, movie, isPopupOnly, scrollPosition, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
@@ -57,7 +56,6 @@ export default class MovieCardPresenter {
     this.#removePreviousPopup = onRemovePreviousPopup;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
-    this.#moviesModel = moviesModel;
 
     this.#popupPresenter = new PopupPresenter;
 
@@ -161,7 +159,6 @@ export default class MovieCardPresenter {
       this.#movie,
       this.#commentsModel,
       this.#onChangeData,
-      this.#moviesModel,
       this.#currentFilter,
       this.#scrollPosition,
       this.#handlePopupClose,
@@ -177,17 +174,10 @@ export default class MovieCardPresenter {
     }
   };
 
-  #changeMovieUserDetail(type) {
-    this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
-    this.#movie.isPopupChange = false;
-  }
-
   #handleControlButtonClick(buttonElement) {
     const filterType = this.#movieCardControlButtonsComponent.getButtonType(buttonElement);
 
     const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
-
-    // this.#changeMovieUserDetail(filterType);
 
     const movie = {
       ...this.#movie,
