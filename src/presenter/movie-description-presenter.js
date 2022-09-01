@@ -12,20 +12,28 @@ export default class MovieDescriptionPresenter {
   #descriptionWrapperComponent = null;
   #closeHandler = null;
   #onChangeData = null;
-  #moviesModel = null;
   #currentFilter = null;
+  #onDisableControllButtons = null;
   #controlButtonsPresenter = null;
   #popupCommentsPresenter = null;
 
-  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, moviesModel, currentFilter) {
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
+
+  init(mainContainer, movie, commentsModel, closeHandler, onChangeData, currentFilter, onDisableControllButtons) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#commentsModel = commentsModel;
     this.#closeHandler = closeHandler;
     this.#onChangeData = onChangeData;
-    this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
+    this.#onDisableControllButtons = onDisableControllButtons;
 
     this.#controlButtonsPresenter = new ControlButtonsPresenter(this.#movie);
 
@@ -37,36 +45,58 @@ export default class MovieDescriptionPresenter {
 
   }
 
+  setMovie(newMovie) {
+    this.#movie = newMovie;
+    this.#controlButtonsPresenter.movie = newMovie;
+    this.#popupCommentsPresenter.movie = newMovie;
+  }
+
   removeAddCommentHandler = () => {
     this.#popupCommentsPresenter.removeAddCommentHandler();
   };
 
-  rerenderControllButtons(movie) {
-    this.#controlButtonsPresenter.rerenderControllButtons(movie);
+  clearCommentObserver() {
+    this.#popupCommentsPresenter.clearCommentObserver();
+  }
+
+  rerenderControllButtons() {
+    this.#controlButtonsPresenter.rerenderControllButtons();
   }
 
   rerenderCommentsList(movie) {
     this.#popupCommentsPresenter.rerenderCommentsList(movie);
   }
 
-  #presentControlButtons() {
-    this.#controlButtonsPresenter.init(
-      this.#descriptionWrapperComponent.element,
-      this.#movie,
-      this.#onChangeData,
-      this.#currentFilter
-    );
+  disablePopupControlButtons(isDisabled) {
+    this.#controlButtonsPresenter.disableControlButtons(isDisabled);
+  }
+
+  shakePopupControlButtons() {
+    this.#controlButtonsPresenter.shakeElementWhileError();
   }
 
   destroy() {
     remove(this.#descriptionWrapperComponent);
   }
 
+  showCommentsChangeMovieModelError = () => {
+    this.#popupCommentsPresenter.showMovieModelError();
+  };
+
+  #presentControlButtons() {
+    this.#controlButtonsPresenter.init(
+      this.#descriptionWrapperComponent.element,
+      this.#movie,
+      this.#onChangeData,
+      this.#currentFilter,
+      this.#onDisableControllButtons
+    );
+  }
+
   #presentPopupComments() {
     this.#popupCommentsPresenter = new PopupCommentsPresenter;
     this.#popupCommentsPresenter.init(
       this.#descriptionWrapperComponent.element,
-      this.#moviesModel,
       this.#commentsModel,
       this.#onChangeData,
       this.#movie

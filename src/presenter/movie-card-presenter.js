@@ -2,6 +2,7 @@ import { render, remove, replace } from '../framework/render.js';
 import { UPDATE_TYPE, USER_ACTION } from '../const.js';
 import { checkForMinorUpdate } from '../utils/filters.js';
 import MovieCardView from '../view/content/movie-card-view.js';
+import MovieCardControlButtonsView from '../view/content/movie-card-control-buttons-view.js';
 import PopupPresenter from './popup-presenter.js';
 
 export default class MovieCardPresenter {
@@ -15,8 +16,8 @@ export default class MovieCardPresenter {
   #removePreviousPopup = null;
   #onChangeData = null;
   #currentFilter = null;
-  #moviesModel = null;
   #movieCardComponent = null;
+  #movieCardControlButtonsComponent = null;
   #popupPresenter = null;
   #isPopupOpen = false;
 
@@ -39,12 +40,12 @@ export default class MovieCardPresenter {
     return this.#isPopupOnly;
   }
 
-  get popupScrollPoistion() {
+  get popupScrollPosition() {
     return this.#popupPresenter.popupScrollPosition;
   }
 
 
-  init(moviesListComponent, movie, isPopupOnly, scrollPosition, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter, moviesModel) {
+  init(moviesListComponent, movie, isPopupOnly, scrollPosition, commentsModel, bodyNode, onRemovePreviousPopup, onChangeData, currentFilter) {
 
     this.#moviesListComponent = moviesListComponent;
     this.#movie = movie;
@@ -55,7 +56,6 @@ export default class MovieCardPresenter {
     this.#removePreviousPopup = onRemovePreviousPopup;
     this.#onChangeData = onChangeData;
     this.#currentFilter = currentFilter;
-    this.#moviesModel = moviesModel;
 
     this.#popupPresenter = new PopupPresenter;
 
@@ -65,9 +65,19 @@ export default class MovieCardPresenter {
 
   destroy() {
     this.#movieCardComponent.removeHandlers();
+    this.#movieCardControlButtonsComponent.removeHandlers();
+    remove(this.#movieCardControlButtonsComponent);
     remove(this.#movieCardComponent);
     if (this.isPopupOpen) {
       this.clearPreviousPopup();
+    }
+  }
+
+  setMovie(newMovie) {
+    this.#movie = newMovie;
+    if (this.isPopupOpen) {
+      this.#popupPresenter.movie = newMovie;
+      this.#popupPresenter.getMovieDescriptionPresenter().setMovie(newMovie);
     }
   }
 
@@ -75,49 +85,26 @@ export default class MovieCardPresenter {
     this.#popupPresenter.clear();
   }
 
-  rerenderMovieCard(movie) {
-    const newMovieCardComponent = new MovieCardView(movie);
+  shakeElementWhileError = () => {
+    this.#movieCardControlButtonsComponent.shakeAbsolute(this.#handleActivationControlButtons);
+
+  };
+
+  rerenderMovieCard() {
+    const newMovieCardComponent = new MovieCardView(this.#movie);
 
     replace(newMovieCardComponent, this.#movieCardComponent);
 
     this.#movieCardComponent = newMovieCardComponent;
 
+    this.#movieCardControlButtonsComponent = new MovieCardControlButtonsView(this.#movie);
+    render(this.#movieCardControlButtonsComponent, this.#movieCardComponent.element);
+
     this.#setHandlers();
 
     if (this.isPopupOpen) {
-      this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
+      this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons();
     }
-  }
-
-  #setHandlers() {
-    this.#movieCardComponent.setPopupClickHandler(() => {
-      this.#removePreviousPopup();
-      this.#hideOverflow();
-      this.#presentPopup();
-    });
-    this.#movieCardComponent.setFavoriteClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.favoriteButtonElement);
-    });
-    this.#movieCardComponent.setWatchedClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.watchedButtonElement);
-    });
-    this.#movieCardComponent.setWatchlistClickHandler(() => {
-      this.#handleControlButtonClick(this.#movieCardComponent.watchlistButtonElement);
-    });
-  }
-
-  #presentPopup() {
-    this.isPopupOpen = true;
-    this.#popupPresenter.init(
-      this.#bodyNode,
-      this.#movie,
-      this.#commentsModel,
-      this.#onChangeData,
-      this.#moviesModel,
-      this.#currentFilter,
-      this.#scrollPosition,
-      this.#handlePopupClose
-    );
   }
 
   rerenderPopupControllButtons(movie) {
@@ -130,15 +117,56 @@ export default class MovieCardPresenter {
 
   #renderMovieCard(movie) {
     this.#movieCardComponent = new MovieCardView(movie);
+    this.#movieCardControlButtonsComponent = new MovieCardControlButtonsView(movie);
 
     if (this.isPopupOnly) {
       this.#presentPopup();
     }
 
     render(this.#movieCardComponent, this.#moviesListComponent.element);
+    render(this.#movieCardControlButtonsComponent, this.#movieCardComponent.element);
 
     this.#setHandlers();
   }
+
+  #setHandlers() {
+    this.#movieCardComponent.setPopupClickHandler(() => {
+      this.#removePreviousPopup();
+      this.#hideOverflow();
+      this.#presentPopup();
+    });
+    this.#movieCardControlButtonsComponent.setFavoriteClickHandler(() => {
+      this.#handleDisablingControlButtons(true);
+      this.#handleDisablingPopupControlButtons(true);
+      this.#handleControlButtonClick(this.#movieCardControlButtonsComponent.favoriteButtonElement);
+    });
+    this.#movieCardControlButtonsComponent.setWatchedClickHandler(() => {
+      this.#handleDisablingControlButtons(true);
+      this.#handleDisablingPopupControlButtons(true);
+      this.#handleControlButtonClick(this.#movieCardControlButtonsComponent.watchedButtonElement);
+    });
+    this.#movieCardControlButtonsComponent.setWatchlistClickHandler(() => {
+      this.#handleDisablingControlButtons(true);
+      this.#handleDisablingPopupControlButtons(true);
+      this.#handleControlButtonClick(this.#movieCardControlButtonsComponent.watchlistButtonElement);
+    });
+  }
+
+  #presentPopup() {
+    this.isPopupOpen = true;
+    this.#popupPresenter.init(
+      this.#bodyNode,
+      this.#movie,
+      this.#commentsModel,
+      this.#onChangeData,
+      this.#currentFilter,
+      this.#scrollPosition,
+      this.#handlePopupClose,
+      this.#handleDisablingControlButtons
+    );
+  }
+
+  getPopupPresenter = () => this.#popupPresenter;
 
   #hideOverflow = () => {
     if (!document.querySelector('body').classList.contains('hide-overflow')) {
@@ -146,22 +174,40 @@ export default class MovieCardPresenter {
     }
   };
 
-  #changeMovieUserDetail(type) {
-    this.#movie.userDetails[type] = !(this.#movie.userDetails[type]);
-  }
-
   #handleControlButtonClick(buttonElement) {
-    const filterType = this.#movieCardComponent.getButtonType(buttonElement);
+    const filterType = this.#movieCardControlButtonsComponent.getButtonType(buttonElement);
 
     const isMinorUpdate = checkForMinorUpdate(this.#currentFilter, filterType);
 
-    this.#changeMovieUserDetail(filterType);
+    const movie = {
+      ...this.#movie,
+      userDetails: {
+        ...this.#movie.userDetails,
+        [filterType]: !(this.#movie.userDetails[filterType])
+      },
+      isPopupChange: false
+    };
 
-    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, this.#movie);
+    this.#onChangeData(USER_ACTION.updateMovie, isMinorUpdate ? UPDATE_TYPE.minor : UPDATE_TYPE.patch, movie);
   }
 
   #handlePopupClose = () => {
     this.isPopupOpen = false;
+  };
+
+  #handleDisablingControlButtons = (isDisabled) => {
+    this.#movieCardControlButtonsComponent.disableControlButtons(isDisabled);
+  };
+
+  #handleDisablingPopupControlButtons = (isDisabled) => {
+    if (this.isPopupOpen) {
+      this.#popupPresenter.getMovieDescriptionPresenter().disablePopupControlButtons(isDisabled);
+    }
+  };
+
+  #handleActivationControlButtons = () => {
+    this.#handleDisablingControlButtons(false);
+    this.#handleDisablingPopupControlButtons(false);
   };
 
 }

@@ -1,6 +1,6 @@
-import he from 'he';
 import { KEYS_CODE } from '../../../const.js';
 import AbstractStatefulView from '../../../framework/view/abstract-stateful-view.js';
+import he from 'he';
 
 const createMovieAddCommentFormtTemplate = (state) => `<form class="film-details__new-comment" action="" method="get">
 <div class="film-details__add-emoji-label">${state.emojiImgTemplate}</div>
@@ -55,6 +55,21 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     return this.element.querySelector('.film-details__comment-input');
   }
 
+  static parseStateToComment = (state) => {
+    const comment = { ...state };
+
+    delete comment.emojiImgTemplate;
+    delete comment.error;
+
+    return comment;
+  };
+
+  static parseCommentToState = (comment) => ({
+    ...comment,
+    emojiImgTemplate: '',
+    error: ''
+  });
+
   #setHandlers() {
     this.emojiInputElements.forEach((item) => item.addEventListener('click', this.#choosingEmojiHandler));
     this.commentInputElement.addEventListener('input', this.#commentInputChangeHandler);
@@ -64,14 +79,12 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     evt.preventDefault();
     if (evt.target.value === this._state.emotion) {
       this.updateElement({
-        comment: this._state.comment,
         emotion: '',
         emojiImgTemplate: '',
         error: ''
       });
     } else {
       this.updateElement({
-        comment: this._state.comment,
         emotion: `${evt.target.value}`,
         emojiImgTemplate: `<img src="./images/emoji/${evt.target.value}.png" width="100%" height="100%" alt="emoji"></img>`,
         error: ''
@@ -104,42 +117,46 @@ export default class MovieAddCommentFormView extends AbstractStatefulView {
     document.removeEventListener('keyup', this.#addCommentHandler);
   }
 
+  #disableFormDuringPosting(isDisabled) {
+    this.removeAddCommentHandler();
+    this.element.querySelectorAll('input, textarea').forEach((formEl) => {
+      formEl.disabled = isDisabled;
+    });
+  }
+
   #addCommentHandler = (evt) => {
+    evt.preventDefault();
     if ((evt.ctrlKey || evt.metaKey) && (evt.keyCode === KEYS_CODE.enter)) {
       if (this._state.comment === '' || this._state.emotion === '') {
-        this.updateElement({
-          comment: this._state.comment,
+        this.shake(this.updateElement({
           emotion: '',
           emojiImgTemplate: '',
-          error: '<p> Чтобы отправить комментарий, выберите эмоцию и введите текст </p>'
-        });
+          error: '<p> Choose emotion and write something </p>'
+        }));
       } else {
         this._callback.addComment(MovieAddCommentFormView.parseStateToComment(this._state));
-        this.updateElement({
-          comment: '',
-          emotion: '',
-          emojiImgTemplate: '',
-          error: ''
-        });
+        this.#disableFormDuringPosting(true);
       }
 
     }
   };
 
-  static parseStateToComment = (state) => {
-    const comment = { ...state };
-
-    delete comment.emojiImgTemplate;
-    delete comment.error;
-
-    return comment;
-  };
-
-  static parseCommentToState = (comment) => ({
-    ...comment,
-    emojiImgTemplate: '',
-    error: ''
-  });
+  handleResponseAfterAddComment(isError = null) {
+    if (!isError) {
+      this.updateElement({
+        comment: '',
+        emotion: '',
+        emojiImgTemplate: '',
+        error: ''
+      });
+    } else {
+      this.updateElement({
+        error: '<p> Can\'t do that right now, sorry! </p>'
+      });
+      this.#checkForActiveEmoji();
+    }
+    this.#disableFormDuringPosting(false);
+  }
 
 }
 

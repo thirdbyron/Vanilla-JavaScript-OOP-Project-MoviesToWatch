@@ -12,16 +12,23 @@ export default class PopupCommentsPresenter {
   #commentsModel = null;
   #onChangeData = null;
   #movie = null;
-  #moviesModel = null;
   #commentsWrapperComponent = null;
   #commentsListComponent = null;
   #addCommentFormComponent = null;
   #tempComment = null;
+  #commentViews = new Map();
 
-  init(mainContainer, moviesModel, commentsModel, onChangeData, movie) {
+  get movie() {
+    return this.#movie;
+  }
+
+  set movie(value) {
+    this.#movie = value;
+  }
+
+  init(mainContainer, commentsModel, onChangeData, movie) {
 
     this.#mainContainer = mainContainer;
-    this.#moviesModel = moviesModel;
     this.#commentsModel = commentsModel;
     this.#onChangeData = onChangeData;
     this.#movie = movie;
@@ -30,14 +37,13 @@ export default class PopupCommentsPresenter {
 
     this.#commentsModel.init(UPDATE_TYPE.init, this.#movie.id);
 
-    this.#tempComment = new TempCommentModel().comment;
-    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment);
+    this.#tempComment = new TempCommentModel;
+    this.#addCommentFormComponent = new MovieAddCommentFormView(this.#tempComment.comment);
 
     this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
   }
 
   #renderComments = () => {
-
     this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#commentsModel.comments.length);
     this.#commentsListComponent = new MovieCommentsListView;
 
@@ -46,11 +52,19 @@ export default class PopupCommentsPresenter {
     render(this.#addCommentFormComponent, this.#commentsWrapperComponent.element);
 
     this.#renderCommentsList();
-
   };
 
-  rerenderCommentsList() {
+  #renderCommentsList() {
+    for (let i = 0; i < this.#commentsModel.comments.length; i++) {
+      const commentComponent = new MovieCommentView(this.#commentsModel.comments[i]);
+      render(commentComponent, this.#commentsListComponent.element);
+      commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
 
+      this.#commentViews.set(this.#commentsModel.comments[i].id, commentComponent);
+    }
+  }
+
+  rerenderCommentsList() {
     this.#commentsWrapperComponent.changeCommentsCounter(this.#commentsModel.comments.length);
 
     const newCommentsListComponent = new MovieCommentsListView;
@@ -59,29 +73,83 @@ export default class PopupCommentsPresenter {
 
     this.#renderCommentsList();
 
+    this.#movie.comments = this.#commentsModel.comments.map((comment) => comment.id);
+    this.#movie.isCommentsChange = true;
     this.#onChangeData(USER_ACTION.updateMovie, UPDATE_TYPE.patch, this.#movie);
-
   }
 
-  #renderCommentsList() {
-    for (let i = 0; i < this.#commentsModel.comments.length; i++) {
-      const commentComponent = new MovieCommentView(this.#commentsModel.comments[i]);
-      render(commentComponent, this.#commentsListComponent.element);
-      commentComponent.setDeleteCommentClickHandler(this.#handleDeleteClick);
-    }
+  showMovieModelError = () => {
+    this.#commentsWrapperComponent.showError();
+  };
+
+  clearCommentObserver() {
+    this.#commentsModel.removeObserver(this.#handleModelEvent);
   }
 
   removeAddCommentHandler() {
+    this.#tempComment.reset();
     this.#addCommentFormComponent.removeAddCommentHandler();
   }
 
   #handleDeleteClick = (commentToDelete) => {
-    this.#movie.comments = this.#movie.comments.filter((commentId) => commentId !== commentToDelete.id);
     this.#handleViewAction(USER_ACTION.deleteComment, UPDATE_TYPE.patch, commentToDelete);
   };
 
-  #handleAddComment = () => {
+  #handleAddComment = (newComment) => {
+    this.#handleViewAction(USER_ACTION.addComment, UPDATE_TYPE.minor, newComment);
+  };
 
+  #handleDeletingCommentError(commentId) {
+    const commentToDeleteView = this.#commentViews.get(commentId);
+    commentToDeleteView.shake(commentToDeleteView.handleActivationDeleteButton);
+  }
+
+  #handleAddingCommentError() {
+    const isError = true;
+    this.#addCommentFormComponent.shake(this.#addCommentFormComponent.handleResponseAfterAddComment(isError));
+    this.#addCommentFormComponent.setAddCommentHandler(this.#handleAddComment);
+    this.#tempComment.reset();
+  }
+
+  #handleCommentsError = (err) => {
+    switch (err.type) {
+      case USER_ACTION.deleteComment:
+        this.#handleDeletingCommentError(err.commentId);
+        break;
+      case USER_ACTION.addComment:
+        this.#handleAddingCommentError();
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, err) => {
+    switch (updateType) {
+      case UPDATE_TYPE.init:
+        if (!err) {
+          this.#renderComments();
+        } else {
+          this.#commentsWrapperComponent = new MovieCommentsWrapperView(this.#commentsModel.comments.length);
+          render(this.#commentsWrapperComponent, this.#mainContainer);
+          this.#commentsWrapperComponent.addErrorTemplate();
+        }
+        break;
+      case UPDATE_TYPE.minor:
+        if (!err) {
+          this.#addCommentFormComponent.handleResponseAfterAddComment();
+          this.#tempComment.reset();
+          this.rerenderCommentsList();
+        } else {
+          this.#handleCommentsError(err);
+        }
+        break;
+      case UPDATE_TYPE.patch:
+        if (!err) {
+          this.rerenderCommentsList();
+        } else {
+          this.#handleCommentsError(err);
+        }
+        break;
+    }
   };
 
   #handleViewAction = (userAction, updateType, update) => {
@@ -90,17 +158,7 @@ export default class PopupCommentsPresenter {
         this.#commentsModel.deleteComment(updateType, update);
         break;
       case USER_ACTION.addComment:
-        this.#commentsModel.addComment(update);
-    }
-  };
-
-  #handleModelEvent = (updateType) => {
-    switch (updateType) {
-      case UPDATE_TYPE.init:
-        this.#renderComments();
-        break;
-      case UPDATE_TYPE.patch:
-        this.rerenderCommentsList();
+        this.#commentsModel.addComment(updateType, update, this.#movie);
     }
   };
 

@@ -56,6 +56,8 @@ export default class MoviesApiService extends ApiService {
     delete adaptedMovie['film_info'].totalRating;
     delete adaptedMovie['user_details'].watched;
     delete adaptedMovie['user_details'].watchingDate;
+    delete adaptedMovie.isPopupChange;
+    delete adaptedMovie.isCommentsChange;
 
     return adaptedMovie;
 

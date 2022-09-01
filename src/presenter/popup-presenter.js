@@ -9,10 +9,10 @@ export default class PopupPresenter {
   #movie = null;
   #commentsModel = null;
   #onChangeData = null;
-  #moviesModel = null;
   #currentFilter = null;
   #scrollPosition = null;
   #turnPopupClose = null;
+  #onDisableControllButtons = null;
   #movieDescriptionPresenter = null;
   #wrapperComponent = null;
   #contentComponent = null;
@@ -21,17 +21,24 @@ export default class PopupPresenter {
     return this.#wrapperComponent.scrollPosition;
   }
 
+  get movie() {
+    return this.#movie;
+  }
 
-  init(mainContainer, movie, commentsModel, onChangeData, moviesModel, currentFilter, scrollPosition, turnPopupClose) {
+  set movie(value) {
+    this.#movie = value;
+  }
+
+  init(mainContainer, movie, commentsModel, onChangeData, currentFilter, scrollPosition, turnPopupClose, onDisableControllButtons) {
 
     this.#mainContainer = mainContainer;
     this.#movie = movie;
     this.#commentsModel = commentsModel;
     this.#onChangeData = onChangeData;
-    this.#moviesModel = moviesModel;
     this.#currentFilter = currentFilter;
     this.#scrollPosition = scrollPosition;
     this.#turnPopupClose = turnPopupClose;
+    this.#onDisableControllButtons = onDisableControllButtons;
 
     this.#renderPopup();
 
@@ -45,8 +52,8 @@ export default class PopupPresenter {
       this.#commentsModel,
       this.#handlePopupCloseClick,
       this.#onChangeData,
-      this.#moviesModel,
-      this.#currentFilter
+      this.#currentFilter,
+      this.#onDisableControllButtons
     );
   }
 
@@ -69,6 +76,7 @@ export default class PopupPresenter {
   clear() {
     this.#turnPopupClose();
     this.#movieDescriptionPresenter.removeAddCommentHandler();
+    this.#movieDescriptionPresenter.clearCommentObserver();
     remove(this.#wrapperComponent);
     window.removeEventListener('keydown', this.#onEscKeyDown);
   }

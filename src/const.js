@@ -43,7 +43,8 @@ export const UPDATE_TYPE = {
   patch: 'PATCH',
   minor: 'MINOR',
   major: 'MAJOR',
-  init: 'INIT'
+  init: 'INIT',
+  error: 'ERROR'
 };
 
 export const KEYS_CODE = {
@@ -57,6 +58,6 @@ export const METHOD = {
   DELETE: 'DELETE'
 };
 
-export const AUTHORIZATION = 'Basic jjk5562qqlkwfffgghtr';
+export const AUTHORIZATION = 'Basic jjkfg2qqkfffgghtr';
 
 export const END_POINT = 'https://18.ecmascript.pages.academy/cinemaddict';

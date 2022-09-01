@@ -34,14 +34,28 @@ export default class MovieCommentView extends AbstractView{
     return createMovieCommentTemplate(this.#comment);
   }
 
+  get deleteButton() {
+    return this.element.querySelector('.film-details__comment-delete');
+  }
+
   setDeleteCommentClickHandler(callback) {
     this._callback.deleteComment = callback;
-    this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#deleteCommentClickHandler);
+    this.deleteButton.addEventListener('click', this.#deleteCommentClickHandler);
   }
 
   #deleteCommentClickHandler = (evt) => {
     evt.preventDefault();
+    this.#disableDeleteButton();
     this._callback.deleteComment(this.#comment);
   };
 
+  #disableDeleteButton() {
+    this.deleteButton.textContent = 'Deleting...';
+    this.deleteButton.disabled = true;
+  }
+
+  handleActivationDeleteButton = () => {
+    this.deleteButton.textContent = 'Delete';
+    this.deleteButton.disabled = false;
+  };
 }

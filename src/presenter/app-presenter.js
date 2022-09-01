@@ -38,7 +38,6 @@ export default class AppPresenter {
   }
 
   #renderApp() {
-
     this.#renderProfile();
 
     this.#filtersPresenter.init(
@@ -52,7 +51,6 @@ export default class AppPresenter {
       this.#moviesModel,
       this.#filtersModel,
     );
-
   }
 
 }

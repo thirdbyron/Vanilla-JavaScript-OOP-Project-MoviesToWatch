@@ -83,7 +83,6 @@ export default class ContentPresenter {
       this.#handleViewAction,
       this.#filtersModel.filter,
       this.#commentsModel,
-      this.#moviesModel,
       this.#quantityOfRenderedMovies
     );
   }
@@ -123,17 +122,18 @@ export default class ContentPresenter {
 
     remove(this.#contentComponent);
     remove(this.#moviesListWrapperComponent);
-
   }
 
   #checkForPopupOpen = () => {
-
     const movieForPopupPresenter = Array.from(this.#moviesListPresenter.getMovieCardPresenters().values()).find((presenter) => presenter.isPopupOpen);
 
     if (movieForPopupPresenter) {
+      const updatedMovie = this.#moviesModel.movies.find((movie) => movie.id === movieForPopupPresenter.movie.id);
 
       const isPopupOnly = true;
-      const scrollPosition = movieForPopupPresenter.popupScrollPoistion;
+      const scrollPosition = movieForPopupPresenter.popupScrollPosition;
+
+      movieForPopupPresenter.setMovie(updatedMovie);
 
       if (this.#moviesListPresenter.getMovieCardPresenters().has(MOVIE_ONLY_FOR_POPUP_ID)) {
         this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID).destroy();
@@ -142,33 +142,35 @@ export default class ContentPresenter {
 
       this.#moviesListPresenter.presentMovieCard(movieForPopupPresenter.movie, isPopupOnly, scrollPosition);
     }
-
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
-    switch (actionType) {
-      case USER_ACTION.updateMovie:
-        this.#moviesModel.updateMovie(updateType, update);
-        break;
-      case USER_ACTION.sortMovies:
-        this.#moviesModel.sortMovies(updateType, update);
-        break;
+  #getMoviePresenter = (movieId) => this.#moviesListPresenter.getMovieCardPresenters().get(movieId);
+
+  #handlePatchUpdate(update) {
+    this.#getMoviePresenter(update.id)?.setMovie(update);
+    this.#getMoviePresenter(update.id)?.rerenderMovieCard();
+
+    if (this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.movie.id === update.id) {
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).setMovie(update);
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).rerenderPopupControllButtons(update);
     }
-  };
-
-  #handlePatchUpdate(updatedMovie) {
-
-    const movieForPopupPresenter = this.#moviesListPresenter.getMovieCardPresenters().get(MOVIE_ONLY_FOR_POPUP_ID);
-
-    const updatedMoviePresenter = this.#moviesListPresenter.getMovieCardPresenters().get(updatedMovie.id);
-
-    updatedMoviePresenter?.rerenderMovieCard(updatedMovie);
-
-    if (movieForPopupPresenter?.movie.id === updatedMovie.id) {
-      movieForPopupPresenter.rerenderPopupControllButtons(updatedMovie);
-    }
-
   }
+
+  #handleModelEventError(update) {
+    if (!update.isPopupChange) {
+      this.#getMoviePresenter(update.id).shakeElementWhileError();
+    } else {
+      this.#getMoviePresenter(update.id)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+      this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+    }
+  }
+
+  #handleCommentChangeMovieModelError = (update) => {
+    update.isCommentsChange = false;
+    this.#getMoviePresenter(update.id)?.getPopupPresenter().getMovieDescriptionPresenter().showCommentsChangeMovieModelError();
+
+    this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.getPopupPresenter().getMovieDescriptionPresenter().showCommentsChangeMovieModelError();
+  };
 
   #handleModelEvent = (updateType, update) => {
 
@@ -195,6 +197,24 @@ export default class ContentPresenter {
         this.#checkForPopupOpen();
         this.#clearContent({ needSortTypeReset: true });
         this.#checkForMovies();
+        break;
+      case UPDATE_TYPE.error:
+        if (update.isCommentsChange) {
+          this.#handleCommentChangeMovieModelError(update);
+        } else {
+          this.#handleModelEventError(update);
+        }
+        break;
+    }
+  };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case USER_ACTION.updateMovie:
+        this.#moviesModel.updateMovie(updateType, update);
+        break;
+      case USER_ACTION.sortMovies:
+        this.#moviesModel.sortMovies(updateType, update);
         break;
     }
   };

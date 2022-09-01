@@ -34,6 +34,7 @@ export default class MoviesModel extends Observable {
   };
 
   updateMovie = async (updateType, update) => {
+
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
 
     if (index === -1) {
@@ -54,6 +55,8 @@ export default class MoviesModel extends Observable {
       this._notify(updateType, update);
 
     } catch (err) {
+      updateType = UPDATE_TYPE.error;
+      this._notify(updateType, update);
       throw new Error('Can\'t update movie');
     }
 
@@ -88,7 +91,9 @@ export default class MoviesModel extends Observable {
         ...movie.user_details,
         watched: movie.user_details.already_watched,
         watchingDate: movie.user_details.watching_date,
-      }
+      },
+      isPopupChange: null,
+      isCommentsChange: null,
     };
 
     delete adaptedMovie.film_info;

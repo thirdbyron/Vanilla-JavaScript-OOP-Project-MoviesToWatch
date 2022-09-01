@@ -1,3 +1,4 @@
+import { USER_ACTION } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class CommentsModel extends Observable {
@@ -23,17 +24,24 @@ export default class CommentsModel extends Observable {
     try {
       const commentsData = await this.#commentsApiService.getComments(movieId);
       this.#comments = commentsData;
+      this._notify(updateType);
     } catch (err) {
       this.#comments = [];
+      const initCommentsError = true;
+      this._notify(updateType, initCommentsError);
     }
-
-    this._notify(updateType);
   };
 
-  addComment = () => {
-    this.#comments = [
-      ...this.#comments,
-    ];
+  addComment = async (updateType, newComment, movie) => {
+    try {
+      const response = await this.#commentsApiService.addComment(newComment, movie.id);
+      this.#comments = response.comments;
+
+      this._notify(updateType);
+    } catch (err) {
+      const commentToAddError = { type: USER_ACTION.addComment };
+      this._notify(updateType, commentToAddError);
+    }
 
   };
 
@@ -55,9 +63,11 @@ export default class CommentsModel extends Observable {
       this._notify(updateType);
 
     } catch (err) {
-      throw new Error('Can\'t delete comment');
+      const commentToDeleteError = { commentId: commentToDelete.id, type: USER_ACTION.deleteComment };
+      this._notify(updateType, commentToDeleteError);
     }
 
   };
 
 }
+
