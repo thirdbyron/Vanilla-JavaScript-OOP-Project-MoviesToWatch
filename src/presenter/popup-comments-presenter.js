@@ -64,7 +64,7 @@ export default class PopupCommentsPresenter {
     }
   }
 
-  rerenderCommentsList() {
+  #rerenderCommentsList() {
     this.#commentsWrapperComponent.changeCommentsCounter(this.#commentsModel.comments.length);
 
     const newCommentsListComponent = new MovieCommentsListView;
@@ -137,14 +137,14 @@ export default class PopupCommentsPresenter {
         if (!err) {
           this.#addCommentFormComponent.handleResponseAfterAddComment();
           this.#tempComment.reset();
-          this.rerenderCommentsList();
+          this.#rerenderCommentsList();
         } else {
           this.#handleCommentsError(err);
         }
         break;
       case UPDATE_TYPE.patch:
         if (!err) {
-          this.rerenderCommentsList();
+          this.#rerenderCommentsList();
         } else {
           this.#handleCommentsError(err);
         }

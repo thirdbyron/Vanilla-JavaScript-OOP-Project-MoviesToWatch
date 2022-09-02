@@ -152,6 +152,7 @@ export default class ContentPresenter {
 
     if (this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.movie.id === update.id) {
       this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).setMovie(update);
+
       this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID).rerenderPopupControllButtons(update);
     }
   }
@@ -161,6 +162,7 @@ export default class ContentPresenter {
       this.#getMoviePresenter(update.id).shakeElementWhileError();
     } else {
       this.#getMoviePresenter(update.id)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
+
       this.#getMoviePresenter(MOVIE_ONLY_FOR_POPUP_ID)?.getPopupPresenter().getMovieDescriptionPresenter().shakePopupControlButtons();
     }
   }

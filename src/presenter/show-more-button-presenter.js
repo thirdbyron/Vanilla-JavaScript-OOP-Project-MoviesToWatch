@@ -25,18 +25,17 @@ export default class ShowMoreButtonPresenter {
     this.#renderShowMoreButton();
 
     this.#setShowMoreHandlers();
-
-  }
-
-  #renderShowMoreButton() {
-    this.#showMoreButtonComponent = new ShowMoreButtonView;
-    render(this.#showMoreButtonComponent, this.#mainContainer);
   }
 
   destroy() {
     if (!this.#isDestroyed) {
       remove(this.#showMoreButtonComponent);
     }
+  }
+
+  #renderShowMoreButton() {
+    this.#showMoreButtonComponent = new ShowMoreButtonView;
+    render(this.#showMoreButtonComponent, this.#mainContainer);
   }
 
   #setShowMoreHandlers() {

@@ -23,16 +23,13 @@ export default class ProfileThumbnailPresenter {
     let needToUpdate = false;
 
     if (this.#profileThumbnailComponent.movies.length !== 0) {
-
       for (let i = 0; i < this.#moviesModel.movies.length; i++) {
         const updatedMovie = this.#moviesModel.movies[i];
         const prevMovie = this.#profileThumbnailComponent.movies[i];
-
         if (updatedMovie.userDetails.watched !== prevMovie.userDetails.watched) {
           needToUpdate = true;
           break;
         }
-
       }
     }
 
@@ -43,7 +40,6 @@ export default class ProfileThumbnailPresenter {
 
       this.#profileThumbnailComponent = this.#updatedProfileThumbnailComponent;
     }
-
   };
 
 }

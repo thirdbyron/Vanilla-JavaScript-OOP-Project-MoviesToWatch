@@ -60,7 +60,6 @@ export default class MovieCardPresenter {
     this.#popupPresenter = new PopupPresenter;
 
     this.#renderMovieCard(this.#movie);
-
   }
 
   destroy() {
@@ -87,7 +86,6 @@ export default class MovieCardPresenter {
 
   shakeElementWhileError = () => {
     this.#movieCardControlButtonsComponent.shakeAbsolute(this.#handleActivationControlButtons);
-
   };
 
   rerenderMovieCard() {
@@ -109,10 +107,6 @@ export default class MovieCardPresenter {
 
   rerenderPopupControllButtons(movie) {
     this.#popupPresenter.getMovieDescriptionPresenter().rerenderControllButtons(movie);
-  }
-
-  rerenderCommentsList(movie) {
-    this.#popupPresenter.getMovieDescriptionPresenter().rerenderCommentsList(movie);
   }
 
   #renderMovieCard(movie) {

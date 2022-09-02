@@ -42,7 +42,6 @@ export default class MovieDescriptionPresenter {
     this.#presentControlButtons();
 
     this.#presentPopupComments();
-
   }
 
   setMovie(newMovie) {
@@ -61,10 +60,6 @@ export default class MovieDescriptionPresenter {
 
   rerenderControllButtons() {
     this.#controlButtonsPresenter.rerenderControllButtons();
-  }
-
-  rerenderCommentsList(movie) {
-    this.#popupCommentsPresenter.rerenderCommentsList(movie);
   }
 
   disablePopupControlButtons(isDisabled) {

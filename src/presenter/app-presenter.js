@@ -34,12 +34,15 @@ export default class AppPresenter {
   }
 
   #renderApp() {
-    this.#profileThumbnailPresenter.init(this.#siteHeaderElement, this.#moviesModel);
+    this.#profileThumbnailPresenter.init(
+      this.#siteHeaderElement,
+      this.#moviesModel,
+    );
 
     this.#filtersPresenter.init(
       this.#siteMainElement,
       this.#moviesModel,
-      this.#filtersModel
+      this.#filtersModel,
     );
 
     this.#contentPresenter.init(

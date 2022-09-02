@@ -41,7 +41,6 @@ export default class PopupPresenter {
     this.#onDisableControllButtons = onDisableControllButtons;
 
     this.#renderPopup();
-
   }
 
   #presentMovieDescription() {

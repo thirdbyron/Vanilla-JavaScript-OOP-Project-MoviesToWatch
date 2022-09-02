@@ -31,18 +31,14 @@ export default class MoviesListPresenter {
     this.#moviesListComponent = new MoviesListView;
 
     this.renderMoviesList();
-
   }
 
   renderMoviesList() {
     render(this.#moviesListComponent, this.#mainContainer);
 
     for (let i = 0; i < Math.min(this.#movies.length, this.#quantityOfRenderedMovies); i++) {
-
       this.presentMovieCard(this.#movies[i]);
-
     }
-
     this.#presentShowMoreButton();
   }
 

@@ -20,7 +20,6 @@ export default class FiltersPresenter {
     this.#moviesModel.addObserver(this.#handleUpdateFiltersView);
 
     this.#renderFilters();
-
   }
 
   #renderFilters() {
