@@ -78,6 +78,3 @@ export const PROFILE_RATING = {
   },
 };
 
-export const PROFILE_RATING_GRADATION = {
-
-};
