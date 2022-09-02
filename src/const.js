@@ -61,3 +61,23 @@ export const METHOD = {
 export const AUTHORIZATION = 'Basic jjkfg2qqkfffgghtr';
 
 export const END_POINT = 'https://18.ecmascript.pages.academy/cinemaddict';
+
+export const PROFILE_RATING = {
+  noRatingGradation: 0,
+  novice: {
+    gradation: 10,
+    name: 'novice'
+  },
+  fan: {
+    gradation: 20,
+    name: 'fan'
+  },
+  movieBuff: {
+    gradation: 30,
+    name: 'movie buff'
+  },
+};
+
+export const PROFILE_RATING_GRADATION = {
+
+};

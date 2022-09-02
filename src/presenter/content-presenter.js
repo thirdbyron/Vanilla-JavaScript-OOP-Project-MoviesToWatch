@@ -181,6 +181,7 @@ export default class ContentPresenter {
         this.#isLoading = false;
         remove(this.#contentComponent);
         this.#checkForMovies();
+        document.querySelector('.footer__statistics').textContent = `${this.movies.length} movies inside`;
         break;
       case UPDATE_TYPE.patch:
         this.#handlePatchUpdate(update);
